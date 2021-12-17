@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .a {
+        fill: #fff;
+        stroke: gray;
+      }
+
+      .a, .b, .c {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .b {
+        fill: #006837;
+        stroke: #006837;
+      }
+
+      .c {
+        fill: #2e3192;
+        stroke: #2e3192;
+      }
+    </style>
+  </defs>
+  <title>send</title>
+  <rect class="a" x="0.5" y="0.5" width="63" height="63"/>
+  <polyline class="b" points="16.196 50.235 33.216 32 16.196 14.98 16.196 50.235"/>
+  <polyline class="c" points="33.216 50.235 50.235 32 33.216 14.98 33.216 50.235"/>
+</svg>

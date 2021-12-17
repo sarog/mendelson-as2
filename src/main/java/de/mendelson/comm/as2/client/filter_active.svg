@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .a, .c {
+        fill: #fff;
+      }
+
+      .a, .b {
+        stroke: gray;
+        stroke-linejoin: round;
+      }
+
+      .a, .b, .e {
+        stroke-linecap: round;
+      }
+
+      .b {
+        fill: gray;
+        stroke-width: 2px;
+      }
+
+      .d {
+        fill: #4d4d4d;
+      }
+
+      .e {
+        fill: #006837;
+        stroke: #006837;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <title>filter_active</title>
+  <rect class="a" x="0.5" y="0.5" width="63" height="63"/>
+  <polyline class="b" points="11.333 23.49 27.137 36.863 27.137 51.451 36.863 51.451 36.863 36.863 52.667 23.49 52.667 14.98 11.333 14.98 11.333 23.49"/>
+  <g>
+    <g>
+      <rect class="c" x="31.5" y="31.5" width="30" height="30"/>
+      <path class="d" d="M61,32V61H32V32H61m1-1H31V62H62V31Z" transform="translate(0)"/>
+    </g>
+    <polyline class="e" points="36 50.229 37.792 48.438 43.167 52.917 55.708 35 57.5 39.479 43.167 58.292 36 50.229"/>
+  </g>
+</svg>

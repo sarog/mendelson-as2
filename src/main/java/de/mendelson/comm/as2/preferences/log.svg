@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63.967" height="64.099" viewBox="0 0 63.967 64.099">
+  <defs>
+    <style>
+      .a {
+        fill: #fff;
+        stroke: #666;
+      }
+
+      .a, .b {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .b {
+        fill: #333;
+        stroke: #333;
+      }
+    </style>
+  </defs>
+  <title>log</title>
+  <polygon class="a" points="63.467 63.599 0.5 63.269 0.5 0.5 63.467 0.5 63.467 63.599"/>
+  <path class="b" d="M44.5,21.5v-7h-24a2,2,0,0,0-2,2v30a2,2,0,0,0,2,2h24v-3h3v6h-27a5,5,0,0,1-5-5v-30a5,5,0,0,1,5-5h27v7l-3,3" transform="translate(-0.104 -0.104)"/>
+  <rect class="b" x="23.396" y="22.396" width="16" height="3"/>
+  <rect class="b" x="23.396" y="30.396" width="16" height="3"/>
+  <rect class="b" x="23.396" y="38.396" width="16" height="3"/>
+</svg>

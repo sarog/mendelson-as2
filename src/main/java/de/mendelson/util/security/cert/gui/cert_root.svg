@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .a {
+        fill: #fff;
+        stroke: gray;
+      }
+
+      .a, .b, .c {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .b {
+        fill: #006837;
+      }
+
+      .b, .c {
+        stroke: #006837;
+      }
+
+      .c {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <title>cert_root</title>
+  <rect class="a" x="0.5" y="0.5" width="31" height="31"/>
+  <circle class="b" cx="10" cy="9" r="3.5"/>
+  <circle class="c" cx="24" cy="24" r="3.5"/>
+  <circle class="c" cx="10" cy="24" r="3.5"/>
+  <line class="c" x1="9.5" y1="14.5" x2="9.5" y2="18.5"/>
+  <line class="c" x1="14.5" y1="13.5" x2="19.5" y2="18.5"/>
+</svg>
