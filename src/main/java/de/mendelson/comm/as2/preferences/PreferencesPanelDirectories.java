@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
 public class PreferencesPanelDirectories extends PreferencesPanel {
 
     private final static MendelsonMultiResolutionImage ICON_FOLDER
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/folder.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/folder.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
     
     /**Localize the GUI*/

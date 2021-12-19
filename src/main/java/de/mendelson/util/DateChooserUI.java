@@ -32,7 +32,7 @@ import javax.swing.plaf.PanelUI;
 public class DateChooserUI extends PanelUI {
 
     private static final MendelsonMultiResolutionImage IMAGE_CALENDAR
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/calendar.svg", 14, 28);
+            = MendelsonMultiResolutionImage.fromSVG("/util/calendar.svg", 14, 28);
 
     public static ComponentUI createUI(JComponent c) {
         return new DateChooserUI();

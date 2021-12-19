@@ -57,7 +57,7 @@ public class JDialogManualSend extends JDialog {
     private BaseClient baseClient;
     private AS2StatusBar statusbar;
     private final MendelsonMultiResolutionImage IMAGE_MANUAL_SEND
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/send.svg", 32, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/send.svg", 32, 48);
     /**
      * String that is displayed while the client uploads data to the server to
      * send
@@ -342,7 +342,7 @@ public class JDialogManualSend extends JDialog {
         jPanelEdit.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelEdit.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/manualsend/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/manualsend/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;

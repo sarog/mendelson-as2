@@ -35,7 +35,7 @@ public class AS2Shutdown {
     /**
      * Method to start the server on from the command line
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         String user = "admin";
         String password = "admin";
         int optind;

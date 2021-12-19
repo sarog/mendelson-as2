@@ -41,10 +41,10 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
     private BaseClient baseClient;
 
     private final static MendelsonMultiResolutionImage ICON_CERTIFICATE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/certificate.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/certificate.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
     private final static MendelsonMultiResolutionImage ICON_WARNING_SIGN
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/warning_sign.svg", 64, 128);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/warning_sign.svg", 64, 128);
     
     /**
      * Creates new form PreferencesPanelDirectories
@@ -214,7 +214,7 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
         jPanelWarning.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jPanelWarning.setLayout(new java.awt.GridBagLayout());
 
-        jLabelSecurityHint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/preferences/missing_image32x32.gif"))); // NOI18N
+        jLabelSecurityHint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/preferences/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;

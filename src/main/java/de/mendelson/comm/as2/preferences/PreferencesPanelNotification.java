@@ -46,10 +46,10 @@ public class PreferencesPanelNotification extends PreferencesPanel {
     private Logger logger = Logger.getLogger("de.mendelson.as2.client");
 
     private final static MendelsonMultiResolutionImage ICON_NOTIFICATION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/notification.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/notification.svg",
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT * 2);
     private final static MendelsonMultiResolutionImage ICON_TESTCONNECTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/testconnection.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/testconnection.svg", 24, 48);
 
     /**
      * Creates new form PreferencesPanelDirectories
@@ -391,7 +391,7 @@ public class PreferencesPanelNotification extends PreferencesPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelMargin.add(jTextFieldReplyTo, gridBagConstraints);
 
-        jButtonSendTestMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/preferences/missing_image24x24.gif"))); // NOI18N
+        jButtonSendTestMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/preferences/missing_image24x24.gif"))); // NOI18N
         jButtonSendTestMail.setText(this.rb.getResourceString("button.testmail"));
         jButtonSendTestMail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSendTestMail.setMargin(new java.awt.Insets(2, 5, 2, 5));

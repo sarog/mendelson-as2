@@ -45,7 +45,7 @@ import javax.swing.SwingUtilities;
 public class DialogSendCEM extends JDialog {
 
     private final static MendelsonMultiResolutionImage ICON_CEM
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/cem/gui/cem.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/cem/gui/cem.svg", 32, 64);
     
     private MecResourceBundle rb = null;
     private CertificateManager certificateManagerEncSign;
@@ -222,7 +222,7 @@ public class DialogSendCEM extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         jPanelMain.add(jLabelRemotePartner, gridBagConstraints);
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;

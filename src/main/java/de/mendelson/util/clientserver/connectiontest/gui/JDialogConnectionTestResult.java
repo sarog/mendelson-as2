@@ -66,9 +66,9 @@ public class JDialogConnectionTestResult extends JDialog {
     private MecResourceBundle rbCerts;
 
     private static final MendelsonMultiResolutionImage IMAGE_CONNECTIONTEST
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/clientserver/connectiontest/gui/testconnection.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/util/clientserver/connectiontest/gui/testconnection.svg", 24, 48);
     private static final MendelsonMultiResolutionImage IMAGE_IMPORT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/clientserver/connectiontest/gui/import.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/util/clientserver/connectiontest/gui/import.svg", 24, 48);
 
     /**
      * Creates new form JDialogTestResult
@@ -300,7 +300,7 @@ public class JDialogConnectionTestResult extends JDialog {
         jPanelOverview.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelOverview.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/clientserver/connectiontest/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/clientserver/connectiontest/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(15, 10, 10, 10);
         jPanelOverview.add(jLabelIcon, gridBagConstraints);
@@ -389,7 +389,7 @@ public class JDialogConnectionTestResult extends JDialog {
         gridBagConstraints.weighty = 1.0;
         jPanelOverview.add(jPanelSpace, gridBagConstraints);
 
-        jButtonImportCertificates.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/clientserver/connectiontest/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonImportCertificates.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/clientserver/connectiontest/gui/missing_image24x24.gif"))); // NOI18N
         jButtonImportCertificates.setText(this.rb.getResourceString( "button.viewcert"));
         jButtonImportCertificates.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonImportCertificates.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);

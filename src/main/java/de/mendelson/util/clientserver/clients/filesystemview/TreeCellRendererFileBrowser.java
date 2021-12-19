@@ -29,9 +29,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 public class TreeCellRendererFileBrowser extends DefaultTreeCellRenderer {
 
     private final ImageIcon ROOT_ICON = new ImageIcon(TreeCellRendererFileBrowser.class.getResource(
-            "/de/mendelson/util/clientserver/clients/filesystemview/root16x16.gif"));
+            "/util/clientserver/clients/filesystemview/root16x16.gif"));
     private final ImageIcon WAIT_ICON = new ImageIcon(TreeCellRendererFileBrowser.class.getResource(
-            "/de/mendelson/util/clientserver/clients/filesystemview/waiting16x16.gif"));
+            "/util/clientserver/clients/filesystemview/waiting16x16.gif"));
     /**
      * Stores the currently selected node
      */

@@ -302,7 +302,7 @@ public class JDialogInfoOnExternalCertificate extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 20);
         jPanelHeader.add(jButtonIndexUp, gridBagConstraints);
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;

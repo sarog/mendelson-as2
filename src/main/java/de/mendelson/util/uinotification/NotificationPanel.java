@@ -127,7 +127,7 @@ public class NotificationPanel extends JPanel {
         setBackground(new java.awt.Color(222, 231, 251));
         setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/uinotification/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/uinotification/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -158,7 +158,7 @@ public class NotificationPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         add(jLabelNotificationTitle, gridBagConstraints);
 
-        jLabelCross.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/uinotification/missing_image16x16.gif"))); // NOI18N
+        jLabelCross.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/uinotification/missing_image16x16.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;

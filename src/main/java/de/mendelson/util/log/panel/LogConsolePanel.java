@@ -69,9 +69,9 @@ public class LogConsolePanel extends JPanel implements ClipboardOwner {
     private JTextPaneLoggingHandler handler;
 
     private static final MendelsonMultiResolutionImage IMAGE_DELESECT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/log/panel/deselect.svg", 18, 36);
+            = MendelsonMultiResolutionImage.fromSVG("/util/log/panel/deselect.svg", 18, 36);
     private static final MendelsonMultiResolutionImage IMAGE_CLIPBOARD
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/log/panel/notes.svg", 18, 36);
+            = MendelsonMultiResolutionImage.fromSVG("/util/log/panel/notes.svg", 18, 36);
     
     public LogConsolePanel(Logger logger, Formatter logFormatter) {
         //load resource bundle
@@ -182,7 +182,7 @@ public class LogConsolePanel extends JPanel implements ClipboardOwner {
         jScrollPane = new javax.swing.JScrollPane();
         jTextPane = new javax.swing.JTextPane();
 
-        jMenuItemClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/log/panel/missing_image16x16.gif"))); // NOI18N
+        jMenuItemClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/log/panel/missing_image16x16.gif"))); // NOI18N
         jMenuItemClear.setText(this.rb.getResourceString( "label.clear" ));
         jMenuItemClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,7 +192,7 @@ public class LogConsolePanel extends JPanel implements ClipboardOwner {
         jPopupMenu.add(jMenuItemClear);
         jPopupMenu.add(jSeparator1);
 
-        jMenuItemCopyToClipBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/log/panel/missing_image16x16.gif"))); // NOI18N
+        jMenuItemCopyToClipBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/log/panel/missing_image16x16.gif"))); // NOI18N
         jMenuItemCopyToClipBoard.setText(this.rb.getResourceString( "label.toclipboard" ));
         jMenuItemCopyToClipBoard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

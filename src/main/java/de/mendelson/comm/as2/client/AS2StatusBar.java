@@ -42,25 +42,25 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
     private MecResourceBundle rb;
     public static final MendelsonMultiResolutionImage IMAGE_WARNING
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/warning_sign.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/warning_sign.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_PENDING
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/state_pending.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/state_pending.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_STOPPED
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/state_stopped.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/state_stopped.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_FINISHED
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/state_finished.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/state_finished.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_SERVED
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/state_all.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/state_all.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
      public static final MendelsonMultiResolutionImage IMAGE_ALL
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/state_all_sum.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/state_all_sum.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_ALL_SELECTED
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/client/state_allselected.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+                    "/comm/as2/client/state_allselected.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     private ModuleStarter moduleStarter;
     private BaseClient baseClient = null;
     private ConfigurationCheckThread checkThread = null;
@@ -182,7 +182,7 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
 
         jPanelTransactionCount.setLayout(new java.awt.GridBagLayout());
 
-        jLabelTransactionsAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelTransactionsAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelTransactionsAll.setText("0");
         jLabelTransactionsAll.setToolTipText(this.rb.getResourceString( "count.all.available"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -191,7 +191,7 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelTransactionCount.add(jLabelTransactionsAll, gridBagConstraints);
 
-        jLabelTransactionsServed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelTransactionsServed.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelTransactionsServed.setText("0");
         jLabelTransactionsServed.setToolTipText(this.rb.getResourceString( "count.all.served"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -200,7 +200,7 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelTransactionCount.add(jLabelTransactionsServed, gridBagConstraints);
 
-        jLabelTransactionsOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelTransactionsOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelTransactionsOk.setText("0");
         jLabelTransactionsOk.setToolTipText(this.rb.getResourceString( "count.ok"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -209,7 +209,7 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelTransactionCount.add(jLabelTransactionsOk, gridBagConstraints);
 
-        jLabelTransactionsPending.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelTransactionsPending.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelTransactionsPending.setText("0");
         jLabelTransactionsPending.setToolTipText(this.rb.getResourceString( "count.pending"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -218,7 +218,7 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelTransactionCount.add(jLabelTransactionsPending, gridBagConstraints);
 
-        jLabelTransactionsFailure.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelTransactionsFailure.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelTransactionsFailure.setText("0");
         jLabelTransactionsFailure.setToolTipText(this.rb.getResourceString( "count.failure"));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -227,7 +227,7 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelTransactionCount.add(jLabelTransactionsFailure, gridBagConstraints);
 
-        jLabelTransactionsSelected.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelTransactionsSelected.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelTransactionsSelected.setText("0");
         jLabelTransactionsSelected.setToolTipText(this.rb.getResourceString( "count.selected"));
         gridBagConstraints = new java.awt.GridBagConstraints();

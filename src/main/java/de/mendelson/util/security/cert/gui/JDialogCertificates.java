@@ -90,21 +90,21 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
     protected static final int IMAGE_SIZE_TOOLBAR = 24;
 
     protected final static MendelsonMultiResolutionImage IMAGE_DELETE_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/delete.svg", IMAGE_SIZE_MENUITEM, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/delete.svg", IMAGE_SIZE_MENUITEM, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_DELETE_EXPIRED_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/delete_expired.svg", IMAGE_SIZE_MENUITEM, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/delete_expired.svg", IMAGE_SIZE_MENUITEM, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_IMPORT_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/import.svg", IMAGE_SIZE_MENUITEM, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/import.svg", IMAGE_SIZE_MENUITEM, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_EXPORT_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/export.svg", IMAGE_SIZE_MENUITEM, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/export.svg", IMAGE_SIZE_MENUITEM, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_EDIT_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/edit.svg", IMAGE_SIZE_MENUITEM, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/edit.svg", IMAGE_SIZE_MENUITEM, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_ADD_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/add.svg", IMAGE_SIZE_MENUITEM, IMAGE_SIZE_MENUITEM * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/add.svg", IMAGE_SIZE_MENUITEM, IMAGE_SIZE_MENUITEM * 2);
     protected final static MendelsonMultiResolutionImage IMAGE_CA_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/ca.svg", IMAGE_SIZE_MENUITEM, IMAGE_SIZE_MENUITEM * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/ca.svg", IMAGE_SIZE_MENUITEM, IMAGE_SIZE_MENUITEM * 2);
     protected final static MendelsonMultiResolutionImage IMAGE_CERTIFICATE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/certificate.svg", IMAGE_SIZE_MENUITEM, IMAGE_SIZE_MENUITEM * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/certificate.svg", IMAGE_SIZE_MENUITEM, IMAGE_SIZE_MENUITEM * 2);
 
     /**
      * Resource to localize the GUI
@@ -764,7 +764,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
 
         jMenuFile.setText(this.rb.getResourceString( "menu.file"));
 
-        jMenuItemFileEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemFileEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemFileEdit.setText(this.rb.getResourceString( "button.edit"));
         jMenuItemFileEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -773,7 +773,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jMenuFile.add(jMenuItemFileEdit);
 
-        jMenuItemFileDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemFileDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemFileDelete.setText(this.rb.getResourceString( "button.delete"));
         jMenuItemFileDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -782,7 +782,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jMenuFile.add(jMenuItemFileDelete);
 
-        jMenuItemFileDeleteAllExpired.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemFileDeleteAllExpired.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemFileDeleteAllExpired.setText(this.rb.getResourceString( "button.delete.all.expired"));
         jMenuItemFileDeleteAllExpired.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -804,7 +804,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
 
         jMenuImport.setText(this.rb.getResourceString( "menu.import" ));
 
-        jMenuItemImportKeyPEM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemImportKeyPEM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemImportKeyPEM.setText(this.rb.getResourceString( "label.key.import.pem" ));
         jMenuItemImportKeyPEM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -813,7 +813,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jMenuImport.add(jMenuItemImportKeyPEM);
 
-        jMenuItemImportKeyPKCS12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemImportKeyPKCS12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemImportKeyPKCS12.setText(this.rb.getResourceString( "label.key.import.pkcs12" ));
         jMenuItemImportKeyPKCS12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -822,7 +822,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jMenuImport.add(jMenuItemImportKeyPKCS12);
 
-        jMenuItemImportKeyJKS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemImportKeyJKS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemImportKeyJKS.setText(this.rb.getResourceString( "label.key.import.jks" ));
         jMenuItemImportKeyJKS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -832,7 +832,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         jMenuImport.add(jMenuItemImportKeyJKS);
         jMenuImport.add(jSeparator1);
 
-        jMenuItemImportCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemImportCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemImportCertificate.setText(this.rb.getResourceString( "label.cert.import" ));
         jMenuItemImportCertificate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -845,7 +845,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
 
         jMenuExport.setText(this.rb.getResourceString( "menu.export" ));
 
-        jMenuItemExportKeyPKCS12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemExportKeyPKCS12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemExportKeyPKCS12.setText(this.rb.getResourceString( "label.key.export.pkcs12" ));
         jMenuItemExportKeyPKCS12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -855,7 +855,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         jMenuExport.add(jMenuItemExportKeyPKCS12);
         jMenuExport.add(jSeparator2);
 
-        jMenuItemExportCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemExportCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemExportCertificate.setText(this.rb.getResourceString( "label.cert.export" ));
         jMenuItemExportCertificate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -868,7 +868,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
 
         jMenuTools.setText(this.rb.getResourceString( "menu.tools"));
 
-        jMenuItemGenerateKey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemGenerateKey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemGenerateKey.setText(this.rb.getResourceString( "menu.tools.generatekey"));
         jMenuItemGenerateKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -878,7 +878,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         jMenuTools.add(jMenuItemGenerateKey);
         jMenuTools.add(jSeparator4);
 
-        jMenuItemGenerateCSRInitial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemGenerateCSRInitial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemGenerateCSRInitial.setText(this.rb.getResourceString( "menu.tools.generatecsr"));
         jMenuItemGenerateCSRInitial.setEnabled(false);
         jMenuItemGenerateCSRInitial.addActionListener(new java.awt.event.ActionListener() {
@@ -888,7 +888,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jMenuTools.add(jMenuItemGenerateCSRInitial);
 
-        jMenuItemImportCSRResponseInitial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemImportCSRResponseInitial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemImportCSRResponseInitial.setText(this.rb.getResourceString( "menu.tools.importcsr"));
         jMenuItemImportCSRResponseInitial.setEnabled(false);
         jMenuItemImportCSRResponseInitial.addActionListener(new java.awt.event.ActionListener() {
@@ -899,7 +899,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         jMenuTools.add(jMenuItemImportCSRResponseInitial);
         jMenuTools.add(jSeparator5);
 
-        jMenuItemGenerateCSRRenew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemGenerateCSRRenew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemGenerateCSRRenew.setText(this.rb.getResourceString( "menu.tools.generatecsr.renew"));
         jMenuItemGenerateCSRRenew.setEnabled(false);
         jMenuItemGenerateCSRRenew.addActionListener(new java.awt.event.ActionListener() {
@@ -909,7 +909,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jMenuTools.add(jMenuItemGenerateCSRRenew);
 
-        jMenuItemImportCSRResponseRenew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemImportCSRResponseRenew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemImportCSRResponseRenew.setText(this.rb.getResourceString( "menu.tools.importcsr.renew"));
         jMenuItemImportCSRResponseRenew.setEnabled(false);
         jMenuItemImportCSRResponseRenew.addActionListener(new java.awt.event.ActionListener() {
@@ -930,7 +930,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         jToolBar.setFloatable(false);
         jToolBar.setRollover(true);
 
-        jButtonAddCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonAddCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         jButtonAddCertificate.setText(this.rb.getResourceString( "button.newcertificate"));
         jButtonAddCertificate.setFocusable(false);
         jButtonAddCertificate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -943,7 +943,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jToolBar.add(jButtonAddCertificate);
 
-        jButtonExportCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonExportCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         jButtonExportCertificate.setText(this.rb.getResourceString( "button.export"));
         jButtonExportCertificate.setFocusable(false);
         jButtonExportCertificate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -956,7 +956,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jToolBar.add(jButtonExportCertificate);
 
-        jButtonEditCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonEditCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         jButtonEditCertificate.setText(this.rb.getResourceString( "button.edit"));
         jButtonEditCertificate.setFocusable(false);
         jButtonEditCertificate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -969,7 +969,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         });
         jToolBar.add(jButtonEditCertificate);
 
-        jButtonDeleteCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonDeleteCertificate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         jButtonDeleteCertificate.setText(this.rb.getResourceString( "button.delete"));
         jButtonDeleteCertificate.setFocusable(false);
         jButtonDeleteCertificate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

@@ -58,44 +58,44 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
 
     public static final ImageIcon ICON_LOCALSTATION
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/localstation.svg", 24, 48));
+                    "/comm/as2/message/loggui/localstation.svg", 24, 48));
     public static final ImageIcon ICON_REMOTEPARTNER
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/singlepartner.svg", 24, 48));
+                    "/comm/as2/message/loggui/singlepartner.svg", 24, 48));
     public static final ImageIcon ICON_ARROW_OUTBOUND
-            = new ImageIcon(DialogMessageDetails.class.getResource("/de/mendelson/comm/as2/message/loggui/arrow32x16.gif"));
+            = new ImageIcon(DialogMessageDetails.class.getResource("/comm/as2/message/loggui/arrow32x16.gif"));
     public static final ImageIcon ICON_ARROW_INBOUND
-            = new ImageIcon(DialogMessageDetails.class.getResource("/de/mendelson/comm/as2/message/loggui/arrow_in32x16.gif"));
+            = new ImageIcon(DialogMessageDetails.class.getResource("/comm/as2/message/loggui/arrow_in32x16.gif"));
     public static final ImageIcon ICON_PENDING
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_pending.svg", 15, 48));
+                    "/comm/as2/message/loggui/state_pending.svg", 15, 48));
     public static final ImageIcon ICON_STOPPED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_stopped.svg", 15, 48));
+                    "/comm/as2/message/loggui/state_stopped.svg", 15, 48));
     public static final ImageIcon ICON_FINISHED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_finished.svg", 15, 48));
+                    "/comm/as2/message/loggui/state_finished.svg", 15, 48));
     public static final ImageIcon OVERVIEWSTATE_OUTBOUND_OK
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_ok_outbound.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_ok_outbound.svg", 170, 230));
     public static final ImageIcon OVERVIEWSTATE_OUTBOUND_FAILED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_failed_outbound.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_failed_outbound.svg", 170, 230));
     public static final ImageIcon OVERVIEWSTATE_INBOUND_FAILED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_failed_inbound.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_failed_inbound.svg", 170, 230));
     public static final ImageIcon OVERVIEWSTATE_INBOUND_OK
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_ok_inbound.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_ok_inbound.svg", 170, 230));
     public static final ImageIcon OVERVIEWSTATE_OUTBOUND_CONN_FAILED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_failed_outbound_conn.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_failed_outbound_conn.svg", 170, 230));
     public static final ImageIcon OVERVIEWSTATE_INBOUND_ANSWER_FAILED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_failed_inbound_answer.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_failed_inbound_answer.svg", 170, 230));
     public static final ImageIcon OVERVIEWSTATE_PENDING
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/comm_pending.svg", 170, 230));
+                    "/comm/as2/message/loggui/comm_pending.svg", 170, 230));
 
     private Logger logger = Logger.getLogger("de.mendelson.as2.client");
     /**
@@ -523,7 +523,7 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
         jPanelHeader.add(jLabelAS2TransmissionGraph, gridBagConstraints);
 
-        jLabelAS2TransmissionGraphLocalstation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/message/loggui/missing_image24x24.gif"))); // NOI18N
+        jLabelAS2TransmissionGraphLocalstation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/message/loggui/missing_image24x24.gif"))); // NOI18N
         jLabelAS2TransmissionGraphLocalstation.setText("Local station");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -533,7 +533,7 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
         jPanelHeader.add(jLabelAS2TransmissionGraphLocalstation, gridBagConstraints);
 
-        jLabelAS2TransmissionArrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/message/loggui/arrow32x16.gif"))); // NOI18N
+        jLabelAS2TransmissionArrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/message/loggui/arrow32x16.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
@@ -541,7 +541,7 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
         jPanelHeader.add(jLabelAS2TransmissionArrow, gridBagConstraints);
 
-        jLabelAS2TransmissionGraphRemotepartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/message/loggui/missing_image24x24.gif"))); // NOI18N
+        jLabelAS2TransmissionGraphRemotepartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/message/loggui/missing_image24x24.gif"))); // NOI18N
         jLabelAS2TransmissionGraphRemotepartner.setText("Remote Partner");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -634,7 +634,7 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
 
         jPanelOverviewImage.setLayout(new java.awt.GridBagLayout());
 
-        jLabelStateOverviewImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/message/loggui/comm_ok_outbound.png"))); // NOI18N
+        jLabelStateOverviewImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/message/loggui/comm_ok_outbound.png"))); // NOI18N
         jLabelStateOverviewImage.setMaximumSize(new java.awt.Dimension(170, 90));
         jLabelStateOverviewImage.setMinimumSize(new java.awt.Dimension(170, 90));
         jLabelStateOverviewImage.setPreferredSize(new java.awt.Dimension(170, 90));

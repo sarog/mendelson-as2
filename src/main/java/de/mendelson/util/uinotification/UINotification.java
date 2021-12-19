@@ -33,17 +33,17 @@ import javax.swing.JOptionPane;
 public class UINotification implements INotificationHandler {
 
     protected final static MendelsonMultiResolutionImage IMAGE_SUCCESS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/uinotification/notification_ok.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/uinotification/notification_ok.svg", 32, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_ERROR
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/uinotification/notification_error.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/uinotification/notification_error.svg", 32, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_WARNING
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/uinotification/notification_warning.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/uinotification/notification_warning.svg", 32, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_INFORMATION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/uinotification/notification_information.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/uinotification/notification_information.svg", 32, 64);
     protected final static MendelsonMultiResolutionImage IMAGE_CROSS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/uinotification/notification_cross.svg", 10, 32);
+            = MendelsonMultiResolutionImage.fromSVG("/util/uinotification/notification_cross.svg", 10, 32);
     protected final static MendelsonMultiResolutionImage IMAGE_CROSS_MOUSEOVER
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/uinotification/notification_cross_mouseover.svg", 10, 32);
+            = MendelsonMultiResolutionImage.fromSVG("/util/uinotification/notification_cross_mouseover.svg", 10, 32);
 
     public static final Color DEFAULT_COLOR_BACKGROUND_SUCCESS = NotificationPanel.DEFAULT_COLOR_BACKGROUND_SUCCESS;
     public static final Color DEFAULT_COLOR_BACKGROUND_WARNING = NotificationPanel.DEFAULT_COLOR_BACKGROUND_WARNING;

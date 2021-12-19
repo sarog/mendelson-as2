@@ -39,7 +39,7 @@ public class JDialogDisplayHTTPConfiguration extends JDialog {
     private BaseClient baseClient;
     private IStatusBar statusbar;
     private final MendelsonMultiResolutionImage ICON_PORTS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/httpconfig/gui/ports.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/httpconfig/gui/ports.svg", 32, 64);
 
     /**
      * Creates new form JDialogPartnerConfig
@@ -163,7 +163,7 @@ public class JDialogDisplayHTTPConfiguration extends JDialog {
         jPanelEdit.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelEdit.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/httpconfig/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/httpconfig/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(15, 10, 10, 10);

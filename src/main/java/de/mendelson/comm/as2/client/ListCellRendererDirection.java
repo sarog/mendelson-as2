@@ -23,9 +23,9 @@ import javax.swing.SwingConstants;
 public class ListCellRendererDirection extends JLabel implements ListCellRenderer {
 
     private final static MendelsonMultiResolutionImage ICON_DIRECTION_INBOUND
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/message/loggui/in.svg", 16, 32);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/message/loggui/in.svg", 16, 32);
     private final static MendelsonMultiResolutionImage ICON_DIRECTION_OUTBOUND
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/message/loggui/out.svg", 16, 32);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/message/loggui/out.svg", 16, 32);
     private MecResourceBundle rb = null;
 
     /**

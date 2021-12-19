@@ -110,17 +110,17 @@ public class JPanelPartner extends JPanel {
     private Component lastSelectedPanel = null;
 
     private final static MendelsonMultiResolutionImage IMAGE_DELETE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/delete.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/delete.svg", 24, 48);
     private final static MendelsonMultiResolutionImage IMAGE_ADD
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/add.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/add.svg", 24, 48);
     private final static MendelsonMultiResolutionImage IMAGE_EDIT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/event/edit.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/event/edit.svg", 24, 48);
     private final static MendelsonMultiResolutionImage IMAGE_TESTCONNECTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/testconnection.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/testconnection.svg", 24, 48);
     private final static MendelsonMultiResolutionImage IMAGE_SYNC_MDN
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/sync_mdn.svg", 90, 130);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/sync_mdn.svg", 90, 130);
     private final static MendelsonMultiResolutionImage IMAGE_ASYNC_MDN
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/async_mdn.svg", 90, 130);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/async_mdn.svg", 90, 130);
 
     /**
      * Creates new form JPanelFunctionGraph
@@ -1224,7 +1224,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
         jPanelSendMain.add(jComboBoxHTTPProtocolVersion, gridBagConstraints);
 
-        jButtonTestConnection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonTestConnection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonTestConnection.setText(this.rb.getResourceString("label.test.connection"));
         jButtonTestConnection.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonTestConnection.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1350,7 +1350,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 5);
         jPanelMDNMain.add(jLabelMDNURLHint, gridBagConstraints);
 
-        jLabelIconSyncMDN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIconSyncMDN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -1360,7 +1360,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(20, 2, 20, 15);
         jPanelMDNMain.add(jLabelIconSyncMDN, gridBagConstraints);
 
-        jLabelIconAsyncMDN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIconAsyncMDN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;
@@ -1768,7 +1768,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(15, 5, 5, 5);
         jPanelHTTPHeader.add(jScrollPaneHttpHeader, gridBagConstraints);
 
-        jButtonHttpHeaderAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonHttpHeaderAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonHttpHeaderAdd.setText(this.rb.getResourceString( "httpheader.add"));
         jButtonHttpHeaderAdd.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonHttpHeaderAdd.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -1784,7 +1784,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(15, 5, 5, 5);
         jPanelHTTPHeader.add(jButtonHttpHeaderAdd, gridBagConstraints);
 
-        jButtonHttpHeaderRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonHttpHeaderRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonHttpHeaderRemove.setText(this.rb.getResourceString( "httpheader.delete"));
         jButtonHttpHeaderRemove.setEnabled(false);
         jButtonHttpHeaderRemove.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1994,7 +1994,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.weighty = 1.0;
         jPanelEventsMain.add(jPanelSpace, gridBagConstraints);
 
-        jButtonAddEventOnReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonAddEventOnReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonAddEventOnReceipt.setToolTipText(this.rb.getResourceString("tooltip.button.addevent"));
         jButtonAddEventOnReceipt.setMargin(new java.awt.Insets(5, 5, 5, 5));
         jButtonAddEventOnReceipt.addActionListener(new java.awt.event.ActionListener() {
@@ -2008,7 +2008,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelEventsMain.add(jButtonAddEventOnReceipt, gridBagConstraints);
 
-        jButtonEditEventOnReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonEditEventOnReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonEditEventOnReceipt.setToolTipText(this.rb.getResourceString("tooltip.button.editevent"));
         jButtonEditEventOnReceipt.setMargin(new java.awt.Insets(5, 5, 5, 5));
         jButtonEditEventOnReceipt.addActionListener(new java.awt.event.ActionListener() {
@@ -2022,14 +2022,14 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelEventsMain.add(jButtonEditEventOnReceipt, gridBagConstraints);
 
-        jLabelIconProcessTypeOnReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jLabelIconProcessTypeOnReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         jPanelEventsMain.add(jLabelIconProcessTypeOnReceipt, gridBagConstraints);
 
-        jButtonEditEventOnSendError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonEditEventOnSendError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonEditEventOnSendError.setToolTipText(this.rb.getResourceString("tooltip.button.editevent"));
         jButtonEditEventOnSendError.setMargin(new java.awt.Insets(5, 5, 5, 5));
         jButtonEditEventOnSendError.addActionListener(new java.awt.event.ActionListener() {
@@ -2043,7 +2043,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelEventsMain.add(jButtonEditEventOnSendError, gridBagConstraints);
 
-        jButtonAddEventOnSendError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonAddEventOnSendError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonAddEventOnSendError.setToolTipText(this.rb.getResourceString("tooltip.button.addevent"));
         jButtonAddEventOnSendError.setMargin(new java.awt.Insets(5, 5, 5, 5));
         jButtonAddEventOnSendError.addActionListener(new java.awt.event.ActionListener() {
@@ -2057,7 +2057,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelEventsMain.add(jButtonAddEventOnSendError, gridBagConstraints);
 
-        jButtonEditEventOnSendSuccess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonEditEventOnSendSuccess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonEditEventOnSendSuccess.setToolTipText(this.rb.getResourceString("tooltip.button.editevent"));
         jButtonEditEventOnSendSuccess.setMargin(new java.awt.Insets(5, 5, 5, 5));
         jButtonEditEventOnSendSuccess.addActionListener(new java.awt.event.ActionListener() {
@@ -2071,7 +2071,7 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelEventsMain.add(jButtonEditEventOnSendSuccess, gridBagConstraints);
 
-        jButtonAddEventOnSendSuccess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonAddEventOnSendSuccess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonAddEventOnSendSuccess.setToolTipText(this.rb.getResourceString("tooltip.button.addevent"));
         jButtonAddEventOnSendSuccess.setMargin(new java.awt.Insets(5, 5, 5, 5));
         jButtonAddEventOnSendSuccess.addActionListener(new java.awt.event.ActionListener() {
@@ -2085,14 +2085,14 @@ public class JPanelPartner extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanelEventsMain.add(jButtonAddEventOnSendSuccess, gridBagConstraints);
 
-        jLabelIconProcessTypeOnSendError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jLabelIconProcessTypeOnSendError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         jPanelEventsMain.add(jLabelIconProcessTypeOnSendError, gridBagConstraints);
 
-        jLabelIconProcessTypeOnSendSuccess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jLabelIconProcessTypeOnSendSuccess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;

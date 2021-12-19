@@ -41,10 +41,10 @@ public class JDialogPreferences extends JDialog {
     public static final int IMAGE_HEIGHT = 28;
 
     private final static MendelsonMultiResolutionImage IMAGE_LANGUAGE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/language.svg", IMAGE_HEIGHT,
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/language.svg", IMAGE_HEIGHT,
                     IMAGE_HEIGHT * 2);
     private final static MendelsonMultiResolutionImage IMAGE_COLORBLIND
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/color_blindness.svg", 18,
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/color_blindness.svg", 18,
                     36, MendelsonMultiResolutionImage.SVGScalingOption.KEEP_HEIGHT);    
 
     /**
@@ -251,7 +251,7 @@ public class JDialogPreferences extends JDialog {
         jPanelLanguage.add(jRadioButtonLangEN, gridBagConstraints);
 
         buttonGroupLanguage.add(jRadioButtonLangFR);
-        jRadioButtonLangFR.setText("Français");
+        jRadioButtonLangFR.setText("Franï¿½ais");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -337,7 +337,7 @@ public class JDialogPreferences extends JDialog {
 
         jPanelColorBlindness.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIconBlind.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/preferences/missing_image24x24.gif"))); // NOI18N
+        jLabelIconBlind.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/preferences/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelColorBlindness.add(jLabelIconBlind, gridBagConstraints);

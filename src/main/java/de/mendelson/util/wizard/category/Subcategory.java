@@ -21,7 +21,7 @@ public class Subcategory{
     
     public final static ImageIcon ICON_NO_CATEGORY_ICON
             = new ImageIcon( Subcategory.class.getResource(
-            "/de/mendelson/util/wizard/category/emptycategory32x32.gif"));
+            "/util/wizard/category/emptycategory32x32.gif"));
     
     private String description = null;    
     /**The categories title

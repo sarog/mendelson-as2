@@ -183,7 +183,7 @@ public class AboutDialog extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 5);
         jPanelInfo.add(jLabelCopyright, gridBagConstraints);
 
-        jLabelImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/about/missing_image32x32.gif"))); // NOI18N
+        jLabelImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/about/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;

@@ -77,9 +77,9 @@ public class Splash extends JWindow implements SwingConstants {
      * @param imageHeight Scaling height of the splash - only valid if this is a SVG, else the image size is taken
      */
     public Splash(String imageResource, int imageHeight) {
-        /**The scaling factor of the UI (e.g. windows: scale UI by 120% etc).*/
+        /*The scaling factor of the UI (e.g. windows: scale UI by 120% etc).*/
         float scalingFactor = 1.0f;
-        if(imageResource.endsWith( ".svg")){
+        if (imageResource.endsWith( ".svg")) {
             scalingFactor = (float)getScalingFactor();
         }
         this.splashImage = this.loadImage(imageResource, (int)(imageHeight*scalingFactor));                
@@ -369,14 +369,13 @@ public class Splash extends JWindow implements SwingConstants {
      * @param resource image resource to load the image
      */
     private BufferedImage loadImage(String resource, int imageHeight) {
-        if( resource.endsWith(".svg")){
+        if (resource.endsWith(".svg")) {
           MendelsonMultiResolutionImage image = MendelsonMultiResolutionImage.fromSVG(resource, imageHeight, imageHeight, 
                   MendelsonMultiResolutionImage.SVGScalingOption.KEEP_HEIGHT);
-          return( image.getResolutionVariant(imageHeight, imageHeight));
+          return image.getResolutionVariant(imageHeight, imageHeight);
         }
-        else return( this.loadImageBitmap(resource));
+        else return this.loadImageBitmap(resource);
     }
-
     
     private BufferedImage loadImageBitmap(String resource) {
         BufferedImage bufferedImage = null;
@@ -391,8 +390,6 @@ public class Splash extends JWindow implements SwingConstants {
         }
         return (bufferedImage);
     }
-    
-    
     
     @Override
     public void setVisible(boolean flag) {

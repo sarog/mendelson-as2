@@ -55,13 +55,13 @@ import javax.swing.event.ListSelectionListener;
 public class DialogCEMOverview extends JDialog implements ListSelectionListener, ClientsideMessageProcessor {
 
     private final static MendelsonMultiResolutionImage ICON_EXIT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/cem/gui/exit.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/cem/gui/exit.svg", 24, 48);
     private final static MendelsonMultiResolutionImage ICON_DELETE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/cem/gui/delete.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/cem/gui/delete.svg", 24, 48);
     private final static MendelsonMultiResolutionImage ICON_MESSAGEDETAILS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/cem/gui/messagedetails.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/cem/gui/messagedetails.svg", 24, 48);
     private final static MendelsonMultiResolutionImage ICON_CEM
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/cem/gui/cem.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/cem/gui/cem.svg", 24, 48);
     
     /**
      * Manages all internal certificates
@@ -211,7 +211,7 @@ public class DialogCEMOverview extends JDialog implements ListSelectionListener,
         jToolBar.setFloatable(false);
         jToolBar.setRollover(true);
 
-        jButtonExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
         jButtonExit.setText(this.rb.getResourceString( "button.exit"));
         jButtonExit.setFocusable(false);
         jButtonExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -223,7 +223,7 @@ public class DialogCEMOverview extends JDialog implements ListSelectionListener,
         });
         jToolBar.add(jButtonExit);
 
-        jButtonSendCEM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonSendCEM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
         jButtonSendCEM.setText(this.rb.getResourceString( "button.sendcem"));
         jButtonSendCEM.setFocusable(false);
         jButtonSendCEM.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -235,7 +235,7 @@ public class DialogCEMOverview extends JDialog implements ListSelectionListener,
         });
         jToolBar.add(jButtonSendCEM);
 
-        jButtonDisplayRequestDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonDisplayRequestDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
         jButtonDisplayRequestDetails.setText(this.rb.getResourceString( "button.requestdetails"));
         jButtonDisplayRequestDetails.setFocusable(false);
         jButtonDisplayRequestDetails.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -247,7 +247,7 @@ public class DialogCEMOverview extends JDialog implements ListSelectionListener,
         });
         jToolBar.add(jButtonDisplayRequestDetails);
 
-        jButtonDisplayResponseDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonDisplayResponseDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
         jButtonDisplayResponseDetails.setText(this.rb.getResourceString( "button.responsedetails"));
         jButtonDisplayResponseDetails.setFocusable(false);
         jButtonDisplayResponseDetails.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -259,7 +259,7 @@ public class DialogCEMOverview extends JDialog implements ListSelectionListener,
         });
         jToolBar.add(jButtonDisplayResponseDetails);
 
-        jButtonRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
         jButtonRemove.setText(this.rb.getResourceString( "button.remove"));
         jButtonRemove.setFocusable(false);
         jButtonRemove.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -271,7 +271,7 @@ public class DialogCEMOverview extends JDialog implements ListSelectionListener,
         });
         jToolBar.add(jButtonRemove);
 
-        jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/cem/gui/missing_image24x24.gif"))); // NOI18N
         jButtonCancel.setText(this.rb.getResourceString( "button.cancel"));
         jButtonCancel.setFocusable(false);
         jButtonCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

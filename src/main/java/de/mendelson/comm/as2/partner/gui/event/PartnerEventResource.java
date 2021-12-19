@@ -19,10 +19,10 @@ import de.mendelson.util.MendelsonMultiResolutionImage;
  */
 public class PartnerEventResource{
     public final static MendelsonMultiResolutionImage IMAGE_PROCESS_EXECUTE_SHELL
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/event/external.svg", 24, 96);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/event/external.svg", 24, 96);
     public final static MendelsonMultiResolutionImage IMAGE_PROCESS_MOVE_TO_PARTNER
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/event/send_to_singlepartner.svg", 24, 96);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/event/send_to_singlepartner.svg", 24, 96);
     public final static MendelsonMultiResolutionImage IMAGE_PROCESS_MOVE_TO_DIR
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/event/send_to_folder.svg", 24, 96);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/event/send_to_folder.svg", 24, 96);
 
 }

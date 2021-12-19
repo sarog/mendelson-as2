@@ -22,16 +22,16 @@ public class ListCellRendererPartner extends JLabel implements ListCellRenderer 
 
     public static final MendelsonMultiResolutionImage IMAGE_LOCALSTATION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/partner/gui/localstation.svg", 16, 32);
+                    "/comm/as2/partner/gui/localstation.svg", 16, 32);
     public static final MendelsonMultiResolutionImage IMAGE_REMOTESTATION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/partner/gui/singlepartner.svg", 16, 32);
+                    "/comm/as2/partner/gui/singlepartner.svg", 16, 32);
     public static final MendelsonMultiResolutionImage IMAGE_REMOTESTATION_CONFIGERROR
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/partner/gui/singlepartner_error.svg", 16, 32);
+                    "/comm/as2/partner/gui/singlepartner_error.svg", 16, 32);
     public static final MendelsonMultiResolutionImage IMAGE_LOCALSTATION_CONFIGERROR
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/partner/gui/localstation_error.svg", 16, 32);
+                    "/comm/as2/partner/gui/localstation_error.svg", 16, 32);
 
     public static final ImageIcon ICON_LOCALSTATION
             = new ImageIcon(IMAGE_LOCALSTATION.toMinResolution(16));

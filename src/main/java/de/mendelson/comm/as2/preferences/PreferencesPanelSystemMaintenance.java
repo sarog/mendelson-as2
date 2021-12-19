@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
 public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
 
     private final static MendelsonMultiResolutionImage ICON_MAINTENANCE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/maintenance.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/maintenance.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
     
     /**Localize the GUI*/

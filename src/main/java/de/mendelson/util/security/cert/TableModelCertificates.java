@@ -36,17 +36,17 @@ public class TableModelCertificates extends AbstractTableModel {
      * Icons, multi resolution
      */
     public final static MendelsonMultiResolutionImage ICON_CERTIFICATE_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/certificate.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/certificate.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
     public final static MendelsonMultiResolutionImage ICON_KEY_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/key.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);    
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/key.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);    
     public final static MendelsonMultiResolutionImage ICON_INVALID_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/cert_invalid.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/cert_invalid.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
     public final static MendelsonMultiResolutionImage ICON_VALID_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/cert_valid.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/cert_valid.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
     public final static MendelsonMultiResolutionImage ICON_ROOT_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/cert_root.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/cert_root.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
     public final static MendelsonMultiResolutionImage ICON_UNTRUSTED_MULTIRESOLUTION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/cert_untrusted.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/cert_untrusted.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*2);
 
     public static final ImageIcon ICON_CERTIFICATE = new ImageIcon(ICON_CERTIFICATE_MULTIRESOLUTION.toMinResolution(IMAGE_HEIGHT));
     public static final ImageIcon ICON_KEY = new ImageIcon(ICON_KEY_MULTIRESOLUTION.toMinResolution(IMAGE_HEIGHT));

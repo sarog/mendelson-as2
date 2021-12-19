@@ -74,11 +74,11 @@ public class JDialogPartnerConfig extends JDialog {
     private List<AllowModificationCallback> allowModificationCallbackList = new ArrayList<AllowModificationCallback>();
     private LockClientInformation lockKeeper;
     private final static MendelsonMultiResolutionImage IMAGE_DELETE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/delete.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/delete.svg", 24, 48);
     private final static MendelsonMultiResolutionImage IMAGE_COPY
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/copypartner.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/copypartner.svg", 24, 48);
     private final static MendelsonMultiResolutionImage IMAGE_ADD
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/add.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/add.svg", 24, 48);
 
     /**
      * Creates new form JDialogMessageMapping
@@ -451,7 +451,7 @@ public class JDialogPartnerConfig extends JDialog {
         jToolBar.setFloatable(false);
         jToolBar.setRollover(true);
 
-        jButtonNewPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonNewPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonNewPartner.setText(this.rb.getResourceString( "button.new"));
         jButtonNewPartner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNewPartner.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -462,7 +462,7 @@ public class JDialogPartnerConfig extends JDialog {
         });
         jToolBar.add(jButtonNewPartner);
 
-        jButtonClonePartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonClonePartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonClonePartner.setText(this.rb.getResourceString( "button.clone"));
         jButtonClonePartner.setFocusable(false);
         jButtonClonePartner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -474,7 +474,7 @@ public class JDialogPartnerConfig extends JDialog {
         });
         jToolBar.add(jButtonClonePartner);
 
-        jButtonDeletePartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonDeletePartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/partner/gui/missing_image24x24.gif"))); // NOI18N
         jButtonDeletePartner.setText(this.rb.getResourceString( "button.delete"));
         jButtonDeletePartner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDeletePartner.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

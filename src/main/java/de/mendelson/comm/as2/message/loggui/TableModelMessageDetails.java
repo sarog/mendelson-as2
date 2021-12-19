@@ -36,19 +36,19 @@ public class TableModelMessageDetails extends AbstractTableModel {
     
     public static final ImageIcon ICON_IN 
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-            "/de/mendelson/comm/as2/message/loggui/in.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
+            "/comm/as2/message/loggui/in.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
     public static final ImageIcon ICON_OUT 
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-            "/de/mendelson/comm/as2/message/loggui/out.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
+            "/comm/as2/message/loggui/out.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
     public static final ImageIcon ICON_MESSAGE
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-            "/de/mendelson/comm/as2/message/loggui/message.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
+            "/comm/as2/message/loggui/message.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
     public static final ImageIcon ICON_SIGNAL_OK
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-            "/de/mendelson/comm/as2/message/loggui/signal_ok.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
+            "/comm/as2/message/loggui/signal_ok.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
     public static final ImageIcon ICON_SIGNAL_FAILURE
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-            "/de/mendelson/comm/as2/message/loggui/signal_failure.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
+            "/comm/as2/message/loggui/signal_failure.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3 ));
     /**
      * ResourceBundle to localize the headers
      */

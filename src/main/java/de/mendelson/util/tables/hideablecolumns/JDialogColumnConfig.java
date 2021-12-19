@@ -37,7 +37,7 @@ public class JDialogColumnConfig extends JDialog {
     private MecResourceBundle rb = null;
     
     private final MendelsonMultiResolutionImage ICON_COLUMN
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/tables/hideablecolumns/column.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/tables/hideablecolumns/column.svg", 32, 64);
 
     /**
      * Creates new form JDialogRowInfo
@@ -112,7 +112,7 @@ public class JDialogColumnConfig extends JDialog {
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelMain.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/tables/hideablecolumns/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/tables/hideablecolumns/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);

@@ -177,74 +177,74 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
      * Icons, multi resolution
      */
     private static final MendelsonMultiResolutionImage ICON_DELETE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/delete.svg", IMAGE_SIZE_MENU_ITEM,
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/delete.svg", IMAGE_SIZE_MENU_ITEM,
                     IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage IMAGE_FILTER
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/filter.svg", IMAGE_SIZE_MENU_ITEM,
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/filter.svg", IMAGE_SIZE_MENU_ITEM,
                     IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage IMAGE_FILTER_ACTIVE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/filter_active.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/filter_active.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_MESSAGE_DETAILS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/messagedetails.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/messagedetails.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_CERTIFICATE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/certificate.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/certificate.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_MANUAL_SEND
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/send.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/send.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_TOOLBAR * 2);
     private static final MendelsonMultiResolutionImage ICON_PARTNER
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/partner/gui/singlepartner.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/partner/gui/singlepartner.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_STOP
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/stop.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/stop.svg",
                     IMAGE_SIZE_TOOLBAR, IMAGE_SIZE_TOOLBAR * 2);
     private static final MendelsonMultiResolutionImage ICON_COLUMN
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/tables/hideablecolumns/column.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/util/tables/hideablecolumns/column.svg",
                     IMAGE_SIZE_TOOLBAR, IMAGE_SIZE_TOOLBAR * 2);
     private static final MendelsonMultiResolutionImage ICON_LOG_SEARCH
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/clientserver/log/search/gui/magnifying_glass.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/util/clientserver/log/search/gui/magnifying_glass.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_TOOLBAR * 2);
     private static final MendelsonMultiResolutionImage ICON_PORTS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/httpconfig/gui/ports.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/util/httpconfig/gui/ports.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_EXIT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/exit.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/exit.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_PREFERENCES
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/preferences.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/preferences.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     public static final MendelsonMultiResolutionImage IMAGE_PRODUCT_LOGO_WITH_TEXT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/logo_open_source_with_text.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/logo_open_source_with_text.svg",
                     100, 180);
     private final static MendelsonMultiResolutionImage IMAGE_PRODUCT_LOGO
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/logo_open_source.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/logo_open_source.svg",
                     16, 128);
     private static final MendelsonMultiResolutionImage ICON_PENDING
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_pending.svg",
+                    "/comm/as2/message/loggui/state_pending.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_STOPPED
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_stopped.svg",
+                    "/comm/as2/message/loggui/state_stopped.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_FINISHED
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_finished.svg",
+                    "/comm/as2/message/loggui/state_finished.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private final static MendelsonMultiResolutionImage ICON_HIDE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/hide.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/hide.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2,
                     SVGScalingOption.KEEP_HEIGHT);
     private final static MendelsonMultiResolutionImage ICON_SYSINFO
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/systemevents/gui/sysinfo.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/util/systemevents/gui/sysinfo.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private final static MendelsonMultiResolutionImage ICON_CEM
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/cem/gui/cem.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/cem/gui/cem.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage IMAGE_NEW_VERSION
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/client/import_red.svg", 16, 32);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/import_red.svg", 16, 32);
 
     /**
      * Preferences of the application
@@ -1458,7 +1458,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jMenuItemHelpAbout = new javax.swing.JMenuItem();
         jMenuItemHelpSystem = new javax.swing.JMenuItem();
 
-        jMenuItemPopupMessageDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupMessageDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupMessageDetails.setText(this.rb.getResourceString( "details" ));
         jMenuItemPopupMessageDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1467,7 +1467,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jPopupMenu.add(jMenuItemPopupMessageDetails);
 
-        jMenuItemPopupSendAgain.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupSendAgain.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupSendAgain.setText(this.rb.getResourceString("menu.file.resend"));
         jMenuItemPopupSendAgain.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1477,7 +1477,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jPopupMenu.add(jMenuItemPopupSendAgain);
         jPopupMenu.add(jSeparator9);
 
-        jMenuItemPopupDeleteMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupDeleteMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupDeleteMessage.setText(this.rb.getResourceString( "delete.msg"));
         jMenuItemPopupDeleteMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1496,7 +1496,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jToolBar.setFloatable(false);
         jToolBar.setRollover(true);
 
-        jButtonPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonPartner.setText(this.rb.getResourceString( "menu.file.partner" ));
         jButtonPartner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonPartner.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1507,7 +1507,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jButtonPartner);
 
-        jButtonCertificatesSignEncrypt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonCertificatesSignEncrypt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonCertificatesSignEncrypt.setText(this.rb.getResourceString( "menu.file.certificate.signcrypt" ));
         jButtonCertificatesSignEncrypt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonCertificatesSignEncrypt.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1518,7 +1518,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jButtonCertificatesSignEncrypt);
 
-        jButtonCertificatesTLS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonCertificatesTLS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonCertificatesTLS.setText(this.rb.getResourceString( "menu.file.certificate.ssl" ));
         jButtonCertificatesTLS.setFocusable(false);
         jButtonCertificatesTLS.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1530,7 +1530,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jButtonCertificatesTLS);
 
-        jButtonMessageDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonMessageDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonMessageDetails.setText(this.rb.getResourceString( "details" ));
         jButtonMessageDetails.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonMessageDetails.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1541,7 +1541,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jButtonMessageDetails);
 
-        jButtonFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonFilter.setText(this.rb.getResourceString( "filter"));
         jButtonFilter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonFilter.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1552,7 +1552,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jButtonFilter);
 
-        jToggleButtonStopRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jToggleButtonStopRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jToggleButtonStopRefresh.setText(this.rb.getResourceString( "stoprefresh.msg"));
         jToggleButtonStopRefresh.setFocusable(false);
         jToggleButtonStopRefresh.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1564,7 +1564,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jToggleButtonStopRefresh);
 
-        jButtonConfigureColumns.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonConfigureColumns.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonConfigureColumns.setText(this.rb.getResourceString( "configurecolumns" ));
         jButtonConfigureColumns.setFocusable(false);
         jButtonConfigureColumns.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -1576,7 +1576,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jToolBar.add(jButtonConfigureColumns);
 
-        jButtonDeleteMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image24x24.gif"))); // NOI18N
+        jButtonDeleteMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image24x24.gif"))); // NOI18N
         jButtonDeleteMessage.setText(this.rb.getResourceString( "delete.msg"));
         jButtonDeleteMessage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDeleteMessage.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -1641,7 +1641,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         jPanelFilterOverview.add(jCheckBoxFilterShowStopped, gridBagConstraints);
 
-        jLabelFilterShowOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelFilterShowOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelFilterShowOk.setText(this.rb.getResourceString( "filter.showfinished"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1650,7 +1650,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelFilterOverview.add(jLabelFilterShowOk, gridBagConstraints);
 
-        jLabelFilterShowPending.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelFilterShowPending.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelFilterShowPending.setText(this.rb.getResourceString( "filter.showpending"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1659,7 +1659,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelFilterOverview.add(jLabelFilterShowPending, gridBagConstraints);
 
-        jLabelFilterShowError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jLabelFilterShowError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jLabelFilterShowError.setText(this.rb.getResourceString( "filter.showstopped"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1668,7 +1668,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelFilterOverview.add(jLabelFilterShowError, gridBagConstraints);
 
-        jButtonHideFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jButtonHideFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jButtonHideFilter.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jButtonHideFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1912,7 +1912,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 3);
         jPanelMain.add(browserLinkedPanel, gridBagConstraints);
 
-        jButtonNewVersion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jButtonNewVersion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jButtonNewVersion.setToolTipText(this.rb.getResourceString("new.version") );
         jButtonNewVersion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1929,7 +1929,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
 
         jMenuFile.setText(this.rb.getResourceString( "menu.file" ));
 
-        jMenuItemFileSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemFileSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemFileSend.setText(this.rb.getResourceString( "menu.file.send"));
         jMenuItemFileSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1939,7 +1939,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jMenuFile.add(jMenuItemFileSend);
         jMenuFile.add(jSeparator2);
 
-        jMenuItemFilePreferences.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemFilePreferences.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemFilePreferences.setText(this.rb.getResourceString( "menu.file.preferences"));
         jMenuItemFilePreferences.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1948,7 +1948,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jMenuFile.add(jMenuItemFilePreferences);
 
-        jMenuItemPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemPartner.setText(this.rb.getResourceString( "menu.file.partner"));
         jMenuItemPartner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1957,7 +1957,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jMenuFile.add(jMenuItemPartner);
 
-        jMenuItemDatasheet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemDatasheet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemDatasheet.setText(this.rb.getResourceString( "menu.file.datasheet"));
         jMenuItemDatasheet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1967,10 +1967,10 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jMenuFile.add(jMenuItemDatasheet);
         jMenuFile.add(jSeparator6);
 
-        jMenuFileCertificates.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuFileCertificates.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuFileCertificates.setText(this.rb.getResourceString( "menu.file.certificates" ));
 
-        jMenuItemCertificatesSignCrypt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemCertificatesSignCrypt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemCertificatesSignCrypt.setText(this.rb.getResourceString( "menu.file.certificate.signcrypt"));
         jMenuItemCertificatesSignCrypt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1979,7 +1979,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jMenuFileCertificates.add(jMenuItemCertificatesSignCrypt);
 
-        jMenuItemCertificatesSSL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemCertificatesSSL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemCertificatesSSL.setText(this.rb.getResourceString( "menu.file.certificate.ssl"));
         jMenuItemCertificatesSSL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1989,7 +1989,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jMenuFileCertificates.add(jMenuItemCertificatesSSL);
         jMenuFileCertificates.add(jSeparator10);
 
-        jMenuItemCEMManager.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemCEMManager.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemCEMManager.setText(this.rb.getResourceString( "menu.file.cem"));
         jMenuItemCEMManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1998,7 +1998,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jMenuFileCertificates.add(jMenuItemCEMManager);
 
-        jMenuItemCEMSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemCEMSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemCEMSend.setText(this.rb.getResourceString( "menu.file.cemsend"));
         jMenuItemCEMSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2010,7 +2010,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jMenuFile.add(jMenuFileCertificates);
         jMenuFile.add(jSeparator3);
 
-        jMenuItemHTTPServerInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemHTTPServerInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemHTTPServerInfo.setText(this.rb.getResourceString( "menu.file.serverinfo"));
         jMenuItemHTTPServerInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2019,7 +2019,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jMenuFile.add(jMenuItemHTTPServerInfo);
 
-        jMenuItemSystemEvents.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemSystemEvents.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemSystemEvents.setText(this.rb.getResourceString( "menu.file.systemevents"));
         jMenuItemSystemEvents.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2028,7 +2028,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         });
         jMenuFile.add(jMenuItemSystemEvents);
 
-        jMenuItemSearchInServerLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemSearchInServerLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemSearchInServerLog.setText(this.rb.getResourceString( "menu.file.searchinserverlog"));
         jMenuItemSearchInServerLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2038,7 +2038,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         jMenuFile.add(jMenuItemSearchInServerLog);
         jMenuFile.add(jSeparator8);
 
-        jMenuItemFileExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/client/missing_image16x16.gif"))); // NOI18N
+        jMenuItemFileExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/client/missing_image16x16.gif"))); // NOI18N
         jMenuItemFileExit.setText(this.rb.getResourceString( "menu.file.exit" ));
         jMenuItemFileExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

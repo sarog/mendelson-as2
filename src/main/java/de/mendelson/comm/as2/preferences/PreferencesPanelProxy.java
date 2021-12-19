@@ -33,7 +33,7 @@ public class PreferencesPanelProxy extends PreferencesPanel {
     private PreferencesClient preferences;
 
     private final MendelsonMultiResolutionImage ICON_PROXY
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/proxy.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/proxy.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
 
     /**

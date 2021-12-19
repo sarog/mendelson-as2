@@ -44,22 +44,22 @@ public class SystemEvent implements Serializable {
 
     public static final MendelsonMultiResolutionImage ICON_SEVERITY_ERROR_MULTIRESOLUTION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/util/systemevents/gui/state_stopped.svg", 11, 32);
+                    "/util/systemevents/gui/state_stopped.svg", 11, 32);
     public static final MendelsonMultiResolutionImage ICON_SEVERITY_WARNING_MULTIRESOLUTION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/util/systemevents/gui/state_pending.svg", 11, 32);
+                    "/util/systemevents/gui/state_pending.svg", 11, 32);
     public static final MendelsonMultiResolutionImage ICON_SEVERITY_INFO_MULTIRESOLUTION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/util/systemevents/gui/severity_info.svg", 11, 32);
+                    "/util/systemevents/gui/severity_info.svg", 11, 32);
     public static final MendelsonMultiResolutionImage ICON_ORIGIN_SYSTEM_MULTIRESOLUTION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/util/systemevents/gui/origin_system.svg", 11, 32);
+                    "/util/systemevents/gui/origin_system.svg", 11, 32);
     public static final MendelsonMultiResolutionImage ICON_ORIGIN_TRANSACTION_MULTIRESOLUTION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/util/systemevents/gui/messagedetails.svg", 11, 32);
+                    "/util/systemevents/gui/messagedetails.svg", 11, 32);
     public static final MendelsonMultiResolutionImage ICON_ORIGIN_USER_MULTIRESOLUTION
             = MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/util/systemevents/gui/origin_user.svg", 11, 32);
+                    "/util/systemevents/gui/origin_user.svg", 11, 32);
     /**
      * Its a system shutdown, restart etc
      */

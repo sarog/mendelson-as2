@@ -39,9 +39,9 @@ public class JDialogEditSubjectAlternativeNames extends JDialog implements ListS
     private List<GeneralName> namesList;
 
     private final static MendelsonMultiResolutionImage ICON_ADD
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/keygeneration/add.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/keygeneration/add.svg", 24, 48);
     private final static MendelsonMultiResolutionImage ICON_DELETE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/keygeneration/delete.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/keygeneration/delete.svg", 24, 48);
 
     public JDialogEditSubjectAlternativeNames(JFrame parent, List<GeneralName> namesList) {
         super(parent, true);
@@ -174,7 +174,7 @@ public class JDialogEditSubjectAlternativeNames extends JDialog implements ListS
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanelMain.add(jScrollPane, gridBagConstraints);
 
-        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/keygeneration/missing_image24x24.gif"))); // NOI18N
+        jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/keygeneration/missing_image24x24.gif"))); // NOI18N
         jButtonAdd.setText(this.rb.getResourceString( "label.add")
         );
         jButtonAdd.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -191,7 +191,7 @@ public class JDialogEditSubjectAlternativeNames extends JDialog implements ListS
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 10);
         jPanelMain.add(jButtonAdd, gridBagConstraints);
 
-        jButtonDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/keygeneration/missing_image24x24.gif"))); // NOI18N
+        jButtonDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/keygeneration/missing_image24x24.gif"))); // NOI18N
         jButtonDel.setText(this.rb.getResourceString( "label.del"));
         jButtonDel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

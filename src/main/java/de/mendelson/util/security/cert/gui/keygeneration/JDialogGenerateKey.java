@@ -64,9 +64,9 @@ public class JDialogGenerateKey extends JDialog {
     private static final String KEY_SIZE_4096 = "4096";
 
     private final static MendelsonMultiResolutionImage IMAGE_EDIT
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/gui/keygeneration/edit.svg", 16, 32);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/gui/keygeneration/edit.svg", 16, 32);
     private final static MendelsonMultiResolutionImage IMAGE_KEY
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/util/security/cert/key.svg", 32, 64);
+            = MendelsonMultiResolutionImage.fromSVG("/util/security/cert/key.svg", 32, 64);
 
     /**
      * ResourceBundle to localize the GUI
@@ -393,7 +393,7 @@ public class JDialogGenerateKey extends JDialog {
 
         jPanelEditInner.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/keygeneration/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/keygeneration/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 10);
@@ -749,7 +749,7 @@ public class JDialogGenerateKey extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelCountryCode1.add(jTextFieldSubjectAlternativeNames, gridBagConstraints);
 
-        jButtonSubjectAlternativeNames.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/keygeneration/missing_image16x16.gif"))); // NOI18N
+        jButtonSubjectAlternativeNames.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/keygeneration/missing_image16x16.gif"))); // NOI18N
         jButtonSubjectAlternativeNames.setMargin(new java.awt.Insets(2, 5, 2, 5));
         jButtonSubjectAlternativeNames.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

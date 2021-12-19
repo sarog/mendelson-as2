@@ -30,7 +30,7 @@ public class PreferencesPanelMDN extends PreferencesPanel {
     private MecResourceBundle rb = null;
 
     protected final static MendelsonMultiResolutionImage IMAGE_PREFS
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/preferences.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/preferences.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
     
     /**

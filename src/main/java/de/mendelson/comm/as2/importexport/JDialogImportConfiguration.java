@@ -153,7 +153,7 @@ public class JDialogImportConfiguration extends JDialog {
         jPanelEdit.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelEdit.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/importexport/import_32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/importexport/import_32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);
@@ -220,7 +220,7 @@ public class JDialogImportConfiguration extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelPartner.add(jScrollPanePartnerTable, gridBagConstraints);
 
-        jButtonNoPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/importexport/no_partner_16x16.gif"))); // NOI18N
+        jButtonNoPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/importexport/no_partner_16x16.gif"))); // NOI18N
         jButtonNoPartner.setText(this.rb.getResourceString( "partner.none"));
         jButtonNoPartner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNoPartner.setMargin(new java.awt.Insets(2, 5, 2, 5));
@@ -239,7 +239,7 @@ public class JDialogImportConfiguration extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelPartner.add(jButtonNoPartner, gridBagConstraints);
 
-        jButtonAllPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/importexport/all_partner_16x16.gif"))); // NOI18N
+        jButtonAllPartner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/importexport/all_partner_16x16.gif"))); // NOI18N
         jButtonAllPartner.setText(this.rb.getResourceString( "partner.all"));
         jButtonAllPartner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonAllPartner.setMargin(new java.awt.Insets(2, 5, 2, 5));

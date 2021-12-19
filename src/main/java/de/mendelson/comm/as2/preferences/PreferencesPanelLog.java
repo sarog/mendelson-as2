@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 public class PreferencesPanelLog extends PreferencesPanel {
 
     private final static MendelsonMultiResolutionImage ICON_LOG
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/log.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/log.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
     
     /**

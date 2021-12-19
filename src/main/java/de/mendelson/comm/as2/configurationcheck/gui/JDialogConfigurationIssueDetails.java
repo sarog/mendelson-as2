@@ -34,7 +34,7 @@ import javax.swing.JDialog;
 public class JDialogConfigurationIssueDetails extends JDialog {
 
     private final static MendelsonMultiResolutionImage IMAGE_WARNING_SIGN
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/configurationcheck/gui/warning_sign.svg", 38, 60);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/configurationcheck/gui/warning_sign.svg", 38, 60);
 
     private ModuleStarter moduleStarter;
     private List<ConfigurationIssue> issueList;
@@ -228,7 +228,7 @@ public class JDialogConfigurationIssueDetails extends JDialog {
         jPanelShortDescription.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jPanelShortDescription.setLayout(new java.awt.GridBagLayout());
 
-        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/comm/as2/configurationcheck/gui/missing_image32x32.gif"))); // NOI18N
+        jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/comm/as2/configurationcheck/gui/missing_image32x32.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);

@@ -52,9 +52,9 @@ import javax.swing.table.TableColumn;
 public class JDialogSystemEvents extends JDialog implements ListSelectionListener {
 
     private static final MendelsonMultiResolutionImage IMAGE_MAGNIFYING_GLASS
-            = MendelsonMultiResolutionImage.fromSVG( "/de/mendelson/util/systemevents/gui/magnifying_glass.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG( "/util/systemevents/gui/magnifying_glass.svg", 24, 48);
     private static final MendelsonMultiResolutionImage IMAGE_RESET_FILTER
-            = MendelsonMultiResolutionImage.fromSVG( "/de/mendelson/util/systemevents/gui/refresh.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG( "/util/systemevents/gui/refresh.svg", 24, 48);
     private BaseClient baseClient;
     private Date currentStartDate = new Date();
     private Date currentEndDate = new Date();
@@ -533,7 +533,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
 
         jPanelButtons.setLayout(new java.awt.GridBagLayout());
 
-        jButtonResetFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonResetFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image24x24.gif"))); // NOI18N
         jButtonResetFilter.setText(this.rb.getResourceString( "label.resetfilter"));
         jButtonResetFilter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonResetFilter.setMargin(new java.awt.Insets(5, 14, 2, 14));
@@ -551,7 +551,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 10);
         jPanelButtons.add(jButtonResetFilter, gridBagConstraints);
 
-        jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image24x24.gif"))); // NOI18N
         jButtonSearch.setText(this.rb.getResourceString( "label.search"));
         jButtonSearch.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSearch.setMargin(new java.awt.Insets(5, 14, 2, 14));
@@ -578,7 +578,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
 
         jPanelSeverity.setLayout(new java.awt.GridBagLayout());
 
-        jLabelSeverityError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
+        jLabelSeverityError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
         jLabelSeverityError.setText("Error");
         jLabelSeverityError.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -593,7 +593,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
         jPanelSeverity.add(jLabelSeverityError, gridBagConstraints);
 
-        jLabelSeverityWarning.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
+        jLabelSeverityWarning.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
         jLabelSeverityWarning.setText("Warning");
         jLabelSeverityWarning.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -608,7 +608,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 15);
         jPanelSeverity.add(jLabelSeverityWarning, gridBagConstraints);
 
-        jLabelSeverityInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
+        jLabelSeverityInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
         jLabelSeverityInfo.setText("Info");
         jLabelSeverityInfo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -669,7 +669,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
         jPanelOrigin.add(jCheckBoxOriginSystem, gridBagConstraints);
 
-        jLabelOriginSystem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
+        jLabelOriginSystem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
         jLabelOriginSystem.setText("System");
         jLabelOriginSystem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -693,7 +693,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanelOrigin.add(jCheckBoxOriginUser, gridBagConstraints);
 
-        jLabelOriginUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
+        jLabelOriginUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
         jLabelOriginUser.setText("User");
         jLabelOriginUser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -717,7 +717,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanelOrigin.add(jCheckBoxOriginTransaction, gridBagConstraints);
 
-        jLabelOriginTransaction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
+        jLabelOriginTransaction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/systemevents/gui/missing_image16x16.gif"))); // NOI18N
         jLabelOriginTransaction.setText("Transaction");
         jLabelOriginTransaction.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

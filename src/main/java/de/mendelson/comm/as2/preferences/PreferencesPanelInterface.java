@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
 public class PreferencesPanelInterface extends PreferencesPanel {
     
         private final static MendelsonMultiResolutionImage ICON_INTERFACE
-            = MendelsonMultiResolutionImage.fromSVG("/de/mendelson/comm/as2/preferences/interface.svg", 
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/interface.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
 
     

@@ -57,7 +57,7 @@ public class JDialogSearchLogfile extends JDialog {
     private Date currentEndDate = new Date();
     private DateFormat datetimeFormat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
     private final MendelsonMultiResolutionImage IMAGE_MAGNIFYING_GLASS
-            = MendelsonMultiResolutionImage.fromSVG( "/de/mendelson/util/clientserver/log/search/gui/magnifying_glass.svg", 24, 48); 
+            = MendelsonMultiResolutionImage.fromSVG( "/util/clientserver/log/search/gui/magnifying_glass.svg", 24, 48); 
 
     /**
      * Creates new form JDialogSearchLogfile
@@ -295,7 +295,7 @@ public class JDialogSearchLogfile extends JDialog {
         jPanelSearch.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelSearch.setLayout(new java.awt.GridBagLayout());
 
-        jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/clientserver/log/search/gui/missing_image24x24.gif"))); // NOI18N
+        jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/clientserver/log/search/gui/missing_image24x24.gif"))); // NOI18N
         jButtonSearch.setText(this.rb.getResourceString( "label.search"));
         jButtonSearch.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSearch.setMargin(new java.awt.Insets(5, 14, 2, 14));

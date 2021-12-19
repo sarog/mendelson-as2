@@ -24,10 +24,10 @@ public class TableCellRendererPartner extends DefaultTableCellRenderer implement
 
     private static final ImageIcon ICON_LOCAL
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/localstation.svg", 16, 32));
+                    "/comm/as2/message/loggui/localstation.svg", 16, 32));
     private static final ImageIcon ICON_REMOTE
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/singlepartner.svg", 16, 32));
+                    "/comm/as2/message/loggui/singlepartner.svg", 16, 32));
     private BaseClient baseClient;
 
     /**

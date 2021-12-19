@@ -192,11 +192,11 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
 
     /**
      * A svgURLStr defines the resource String of the SVG file to be loaded,
-     * e.g. "/de/mendelson/comm/as2/client/warning_sign.svg". This method
+     * e.g. "/comm/as2/client/warning_sign.svg". This method
      * extracts the real filename which would be "warning_sign.svg" in this case
      *
-     * @param svgURLStr
-     * @return
+     * @param svgURLStr URL string
+     * @return filename
      */
     private static String extractSVGFilenameFromSVGURLStr(String svgURLStr) {
         String[] parts = svgURLStr.split("/");
@@ -212,12 +212,12 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
      * bitmaps for the multi resolution image
      */
     public static MendelsonMultiResolutionImage fromSVG(String svgURLStr, int initialSize, int maxSize, SVGScalingOption scale) {
-        //check if an overlay is defined for this SVG resource
+        // check if an overlay is defined for this SVG resource
         String svgResourceFilename = extractSVGFilenameFromSVGURLStr(svgURLStr);
         MendelsonMultiResolutionImage overlayImage = null;
         synchronized (svgImageOverlaysMap) {
             if (svgImageOverlaysMap.containsKey(svgResourceFilename)) {
-                //load overlay image in all required resolutions
+                // load overlay image in all required resolutions
                 overlayImage = fromSVG(svgImageOverlaysMap.get(svgResourceFilename), initialSize, maxSize, scale);
             }
         }
@@ -227,11 +227,12 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
         }
         List<Image> svgResolutionVariants = new ArrayList<Image>(maxSize - initialSize + 1);
         URL url = MendelsonMultiResolutionImage.class.getResource(svgURLStr);
+
         try {
             if (url == null) {
                 throw new IllegalArgumentException("Resource missing: " + svgURLStr);
             }
-            //find out the initial size of the SVG to compute the scale factor
+            // find out the initial size of the SVG to compute the scale factor
             SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(
                     XMLResourceDescriptor.getXMLParserClassName());
             UserAgent agent = new UserAgentAdapter();

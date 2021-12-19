@@ -775,7 +775,7 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
         jLabelTrustAnchor = new javax.swing.JLabel();
         jLabelTrustAnchorValue = new javax.swing.JLabel();
 
-        jMenuItemPopupExportKey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupExportKey.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupExportKey.setText(this.rb.getResourceString("label.key.export.pkcs12"));
         jMenuItemPopupExportKey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -784,7 +784,7 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
         });
         jPopupMenu.add(jMenuItemPopupExportKey);
 
-        jMenuItemPopupExportCert.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupExportCert.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupExportCert.setText(this.rb.getResourceString("label.cert.export"));
         jMenuItemPopupExportCert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -793,7 +793,7 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
         });
         jPopupMenu.add(jMenuItemPopupExportCert);
 
-        jMenuItemPopupRenameAlias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupRenameAlias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupRenameAlias.setText(this.rb.getResourceString("button.edit"));
         jMenuItemPopupRenameAlias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -803,7 +803,7 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
         jPopupMenu.add(jMenuItemPopupRenameAlias);
         jPopupMenu.add(jSeparator1);
 
-        jMenuItemPopupDeleteEntry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/mendelson/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
+        jMenuItemPopupDeleteEntry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image16x16.gif"))); // NOI18N
         jMenuItemPopupDeleteEntry.setText(this.rb.getResourceString( "button.delete"));
         jMenuItemPopupDeleteEntry.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

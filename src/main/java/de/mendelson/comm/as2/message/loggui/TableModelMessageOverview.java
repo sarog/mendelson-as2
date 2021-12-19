@@ -42,22 +42,22 @@ public class TableModelMessageOverview extends AbstractTableModel {
     
     public static final ImageIcon ICON_IN
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/in.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
+                    "/comm/as2/message/loggui/in.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
     public static final ImageIcon ICON_OUT
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/out.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
+                    "/comm/as2/message/loggui/out.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
     public static final ImageIcon ICON_PENDING
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_pending.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
+                    "/comm/as2/message/loggui/state_pending.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
     public static final ImageIcon ICON_STOPPED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_stopped.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
+                    "/comm/as2/message/loggui/state_stopped.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
     public static final ImageIcon ICON_FINISHED
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/state_finished.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
+                    "/comm/as2/message/loggui/state_finished.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
     public static final ImageIcon ICON_RESEND_OVERLAY
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
-                    "/de/mendelson/comm/as2/message/loggui/resend_overlay.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
+                    "/comm/as2/message/loggui/resend_overlay.svg", IMAGE_HEIGHT, IMAGE_HEIGHT*3));
 
     /**
      * ResourceBundle to localize the headers

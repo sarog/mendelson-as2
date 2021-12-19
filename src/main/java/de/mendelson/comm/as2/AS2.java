@@ -42,16 +42,16 @@ public class AS2 {
         System.out.println("java " + AS2.class.getName() + " <options>");
         System.out.println("Start up a " + AS2ServerVersion.getProductNameShortcut() + " server ");
         System.out.println("Options are:");
-        System.out.println("-lang <String>: Language to use for the client/server, nonpersistent. Possible values are \"en\", \"fr\" and \"de\".");
-        System.out.println("-country <String>: Country/region to use for the client/server, nonpersistent. Possible values are \"DE\", \"US\", \"FR\", \"GB\"...");
-        System.out.println("-nohttpserver: Do not start the integrated HTTP server, only useful if you are integrating the product into an other web container");
+        System.out.println("-lang <String>: Language to use for the client/server, non-persistent. Possible values are \"en\", \"fr\" and \"de\".");
+        System.out.println("-country <String>: Country/region to use for the client/server, non-persistent. Possible values are \"DE\", \"US\", \"FR\", \"GB\"...");
+        System.out.println("-nohttpserver: Do not start the integrated HTTP server, only useful if you are integrating the product into another web container");
         System.out.println("-mode <String>: Sets up the LIGHT or DARK mode for the client - default is LIGHT");
     }
 
     /**
      * Method to start the server on from the command line
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         String language = null;
         String country = null;
         boolean startHTTP = true;
@@ -92,7 +92,7 @@ public class AS2 {
                 Locale.setDefault(new Locale(Locale.ENGLISH.getLanguage(), country));
             } else if (language.toLowerCase().equals("de")) {
                 Locale.setDefault(new Locale(Locale.GERMAN.getLanguage(), country));
-            }else if (language.toLowerCase().equals("fr")) {
+            } else if (language.toLowerCase().equals("fr")) {
                 Locale.setDefault(new Locale(Locale.FRENCH.getLanguage(), country));
             } else {
                 AS2.printUsage();
@@ -101,32 +101,32 @@ public class AS2 {
                 System.exit(1);
             }
         }
-        if( mode != null && mode.equalsIgnoreCase("dark")){
-            //darken all SVG generated images/icons by 10% (also the splash)
+        if (mode != null && mode.equalsIgnoreCase("dark")) {
+            // darken all SVG generated images/icons by 10% (also the splash)
             MendelsonMultiResolutionImage.addSVGImageOperation(new RescaleOp(0.9f, 0, null));
         }
-        //add colorblind overlays if required to the client icons
+        // add colorblind overlays if required to the client icons
         if (clientPreferences.getBoolean(PreferencesAS2.COLOR_BLINDNESS)) {
-            MendelsonMultiResolutionImage.addSVGOverlay("state_finished.svg", "/de/mendelson/util/colorblind/overlay_state_finished.svg");
-            MendelsonMultiResolutionImage.addSVGOverlay("cert_valid.svg", "/de/mendelson/util/colorblind/overlay_state_finished.svg");
-            MendelsonMultiResolutionImage.addSVGOverlay("state_stopped.svg", "/de/mendelson/util/colorblind/overlay_state_stopped.svg");
-            MendelsonMultiResolutionImage.addSVGOverlay("cert_invalid.svg", "/de/mendelson/util/colorblind/overlay_state_stopped.svg");
-            MendelsonMultiResolutionImage.addSVGOverlay("state_pending.svg", "/de/mendelson/util/colorblind/overlay_state_pending.svg");
-            MendelsonMultiResolutionImage.addSVGOverlay("state_allselected.svg", "/de/mendelson/util/colorblind/overlay_state_allselected.svg");
-            MendelsonMultiResolutionImage.addSVGOverlay("severity_info.svg", "/de/mendelson/util/colorblind/overlay_severity_info.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("state_finished.svg", "/util/colorblind/overlay_state_finished.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("cert_valid.svg", "/util/colorblind/overlay_state_finished.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("state_stopped.svg", "/util/colorblind/overlay_state_stopped.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("cert_invalid.svg", "/util/colorblind/overlay_state_stopped.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("state_pending.svg", "/util/colorblind/overlay_state_pending.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("state_allselected.svg", "/util/colorblind/overlay_state_allselected.svg");
+            MendelsonMultiResolutionImage.addSVGOverlay("severity_info.svg", "/util/colorblind/overlay_severity_info.svg");
         }
-        Splash splash = new Splash("/de/mendelson/comm/as2/client/splash_mendelson_opensource_as2.svg", 330);
+        Splash splash = new Splash("/comm/as2/client/splash_mendelson_opensource_as2.svg", 330);
         splash.setTextAntiAliasing(false);
-        //dark green
+        // dark green
         Color textColor = Color.decode("#A8A8A8");
         splash.addDisplayString(new Font("Verdana", Font.BOLD, 12),
                 12, 285, AS2ServerVersion.getFullProductName(),
                 textColor);
         splash.setVisible(true);
         splash.toFront();
-        //start server
+        // start server
         try {            
-            //initialize the security provider
+            // initialize the security provider
             BCCryptoHelper helper = new BCCryptoHelper();
             helper.initialize();
             AS2Server as2Server = new AS2Server(startHTTP, false, false);
@@ -137,7 +137,7 @@ public class AS2 {
                     SystemEvent.ORIGIN_SYSTEM, 
                     SystemEvent.TYPE_DATABASE_UPDATE, 
                     "Manual DB upgrade required", e.getMessage());
-            //an upgrade to HSQLDB 2.x is required, delete the lock file
+            // an upgrade to HSQLDB 2.x is required, delete the lock file
             Logger.getLogger(AS2Server.SERVER_LOGGER_NAME).warning(e.getMessage());
             JOptionPane.showMessageDialog(null, e.getClass().getName() + ": " + e.getMessage());
             AS2Server.deleteLockFile();
@@ -159,7 +159,7 @@ public class AS2 {
             }
             JOptionPane.showMessageDialog(null, message);
             System.exit(1);
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             SystemEventManagerImplAS2.newEvent(
                     SystemEvent.SEVERITY_ERROR, 
                     SystemEvent.ORIGIN_SYSTEM, 
@@ -178,7 +178,7 @@ public class AS2 {
             AS2Server.deleteLockFile();
             System.exit(1);
         }
-        //start client
+        // start client
         AS2Gui gui = new AS2Gui(splash, "localhost", "admin", "admin", mode);
         gui.setVisible(true);
         splash.destroy();
