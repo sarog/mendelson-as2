@@ -1,5 +1,5 @@
 # mendelson-as2
-This is an unofficial Mendelson AS2 Community Server mirror that tracks the official upstream SourceForge files.
+This is an unofficial Mendelson AS2 Community Server mirror that tracks the [official upstream SourceForge files](https://sourceforge.net/projects/mec-as2/files/).
 
 The project can be built using maven. A few formatting fixes and minor patches have been applied to the source, but overall the goal of this repo is to welcome additional improvements to the project.
 
