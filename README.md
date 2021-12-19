@@ -7,7 +7,9 @@ Project Roadmap:
 - Building of WAR artifacts
 - Jetty bundling / deployment scripts
 - Update dependencies to modern versions
-- Find and fix security issues
+- Find and fix security issues (there's a few severe ones!)
 - Applying best practices when it comes to Java programming
 - Formatting and typo fixes
 - Add some crucial documentation that's sorely missing in the community version
+- Create a Windows service wrapper
+- External database support (e.g. MariaDB)
