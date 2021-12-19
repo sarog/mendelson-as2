@@ -35,9 +35,9 @@ public class ResourceBundleRenameEntry_fr extends MecResourceBundle {
         {"button.cancel", "Annuler"},
         {"label.newalias", "Nouvel alias:"},
         {"label.keypairpass", "Mot de passe de la clef:"},
-        {"title", "Renommage du certificat dÈj‡ existant ({0})"},
-        {"alias.exists.title", "Le renommage d''alias a ÈchouÈ" },
-        {"alias.exists.message", "L''alias \"{0}\" existe dÈj‡ dans ce keystore." },
+        {"title", "Renommage du certificat d√©j√† existant ({0})"},
+        {"alias.exists.title", "Le renommage d''alias a √©chou√©" },
+        {"alias.exists.message", "L''alias \"{0}\" existe d√©j√† dans ce keystore." },
     };
 
 }

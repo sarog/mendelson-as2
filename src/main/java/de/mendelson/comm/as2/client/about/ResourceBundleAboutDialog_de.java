@@ -23,7 +23,7 @@ public class ResourceBundleAboutDialog_de extends MecResourceBundle{
   /**List of messages in the specific language*/
   static final Object[][] contents = {
         
-    {"title", "Über" },  
+    {"title", "Ãœber" },  
     {"builddate", "Versionsdatum: {0}" }, 
     {"button.ok", "Ok" },
     {"tab.about", "Version" },

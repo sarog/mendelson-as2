@@ -35,8 +35,8 @@ public class ResourceBundleLogConsole_fr extends MecResourceBundle {
         {"label.clear", "Nettoyer"},
         {"label.toclipboard", "Copier le log vers le presse-papier"},
         {"label.tofile", "Sauver le log vers un fichier"},
-        {"filechooser.logfile", "Merci de sélectionner un fichier pour l''enregistrement du log."},
-        {"write.success", "Log enregistré avec succès dans \"{0}\"."},
-        {"write.failure", "Erreur d''écriture du log vers le fichier: {0}."},};
+        {"filechooser.logfile", "Merci de sÃ©lectionner un fichier pour l''enregistrement du log."},
+        {"write.success", "Log enregistrÃ© avec succÃ¨s dans \"{0}\"."},
+        {"write.failure", "Erreur d''Ã©criture du log vers le fichier: {0}."},};
 
 }

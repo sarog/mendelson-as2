@@ -32,14 +32,14 @@ public class ResourceBundleNotification_fr extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         //dialog
-        {"test.message.send", "Un e-mail de test a été envoyé à {0}."},
-        {"test.message.debug", "\nEnvoyer un processus envoi a échoué, voici quelques informations de débogage qui pourraient vous aider à:\n"},
-        {"transaction.message.send", "{0}: Un e-mail de notification d''erreur de transaction a été envoyé à {1}."},
-        {"transaction.message.send.error", "{0}: Envoyer d''une information sur une erreur de transaction à {1} a manqué: {2}"},
-        {"misc.message.send", "Un e-mail de notification a été envoyé à {0}."},
-        {"cert.message.send", "Un e-mail de notification d''expiration de certificat a été envoyé à {0} [{1}]."},
-        {"quota.send.message.send", "Un e-mail de notification de dépassement de quota sur émission a été envoyé à {0}."},
-        {"quota.receive.message.send", "Un e-mail de notification de dépassement de quota sur réception a été envoyé à {0}."},
-        {"quota.sendreceive.message.send", "Un e-mail de notification de dépassement de quota sur émission+réception a été envoyé à {0}."},};
+        {"test.message.send", "Un e-mail de test a Ã©tÃ© envoyÃ© Ã  {0}."},
+        {"test.message.debug", "\nEnvoyer un processus envoi a Ã©chouÃ©, voici quelques informations de dÃ©bogage qui pourraient vous aider Ã :\n"},
+        {"transaction.message.send", "{0}: Un e-mail de notification d''erreur de transaction a Ã©tÃ© envoyÃ© Ã  {1}."},
+        {"transaction.message.send.error", "{0}: Envoyer d''une information sur une erreur de transaction Ã  {1} a manquÃ©: {2}"},
+        {"misc.message.send", "Un e-mail de notification a Ã©tÃ© envoyÃ© Ã  {0}."},
+        {"cert.message.send", "Un e-mail de notification d''expiration de certificat a Ã©tÃ© envoyÃ© Ã  {0} [{1}]."},
+        {"quota.send.message.send", "Un e-mail de notification de dÃ©passement de quota sur Ã©mission a Ã©tÃ© envoyÃ© Ã  {0}."},
+        {"quota.receive.message.send", "Un e-mail de notification de dÃ©passement de quota sur rÃ©ception a Ã©tÃ© envoyÃ© Ã  {0}."},
+        {"quota.sendreceive.message.send", "Un e-mail de notification de dÃ©passement de quota sur Ã©mission+rÃ©ception a Ã©tÃ© envoyÃ© Ã  {0}."},};
 
 }

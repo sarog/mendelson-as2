@@ -47,7 +47,7 @@ public class ResourceBundleAS2Message_de extends MecResourceBundle{
         {"signature." + AS2Message.SIGNATURE_SHA3_384_RSASSA_PSS, "SHA3-384 (RSASSA-PSS)" },
         {"signature." + AS2Message.SIGNATURE_SHA3_512_RSASSA_PSS, "SHA3-512 (RSASSA-PSS)" },
         {"encryption." + AS2Message.ENCRYPTION_UNKNOWN, "Unbekannt" },        
-        {"encryption." + AS2Message.ENCRYPTION_NONE, "Keine Verschlüsselung" },        
+        {"encryption." + AS2Message.ENCRYPTION_NONE, "Keine VerschlÃ¼sselung" },        
         {"encryption." + AS2Message.ENCRYPTION_3DES, "3DES" },        
         {"encryption." + AS2Message.ENCRYPTION_RC2_40, "RC2-40" },        
         {"encryption." + AS2Message.ENCRYPTION_RC2_64, "RC2-64" },

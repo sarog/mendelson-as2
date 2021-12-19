@@ -25,13 +25,13 @@ public class ResourceBundleProcessingEvent_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"event.enqueued", "L''événement de post-traitement défini a été demandé ({0}) et sera exécuté en quelques secondes." },
-        {"processtype." + ProcessingEvent.PROCESS_EXECUTE_SHELL, "Exécuter une commande shell" },
-        {"processtype." + ProcessingEvent.PROCESS_MOVE_TO_DIR, "Déplacer le message vers le répertoire" },
+        {"event.enqueued", "L''Ã©vÃ©nement de post-traitement dÃ©fini a Ã©tÃ© demandÃ© ({0}) et sera exÃ©cutÃ© en quelques secondes." },
+        {"processtype." + ProcessingEvent.PROCESS_EXECUTE_SHELL, "ExÃ©cuter une commande shell" },
+        {"processtype." + ProcessingEvent.PROCESS_MOVE_TO_DIR, "DÃ©placer le message vers le rÃ©pertoire" },
         {"processtype." + ProcessingEvent.PROCESS_MOVE_TO_PARTNER, "Transmettre le message au partenaire" },
-        {"eventtype." + ProcessingEvent.TYPE_RECEIPT_SUCCESS, "Réception" },
-        {"eventtype." + ProcessingEvent.TYPE_SEND_FAILURE, "Expédition (incorrect)" },
-        {"eventtype." + ProcessingEvent.TYPE_SEND_SUCCESS, "Expédition (tout droit)" },
+        {"eventtype." + ProcessingEvent.TYPE_RECEIPT_SUCCESS, "RÃ©ception" },
+        {"eventtype." + ProcessingEvent.TYPE_SEND_FAILURE, "ExpÃ©dition (incorrect)" },
+        {"eventtype." + ProcessingEvent.TYPE_SEND_SUCCESS, "ExpÃ©dition (tout droit)" },
     };
     
 }

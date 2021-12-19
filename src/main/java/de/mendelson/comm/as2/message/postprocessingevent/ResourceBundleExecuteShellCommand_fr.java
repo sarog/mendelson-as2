@@ -26,11 +26,11 @@ public class ResourceBundleExecuteShellCommand_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"executing.receipt", "[Post-traitement] ({0} --> {1}) ExÈcution d''un ÈvÈnement de post-traitement aprËs rÈception de la charge utile." },
-        {"executing.send", "[Post-traitement] ({0} --> {1}) ExÈcution d''un ÈvÈnement de post-traitement aprËs l''envoi de la charge utile." },
-        {"executing.command", "[Post-traitement] Commande systËme: \"{0}\"." },
-        {"executed.command", "[Post-traitement] Commande systËme a exportÈ, returncode={0}." },
-        {"messageid.nolonger.exist", "[Post-traitement] Impossible d''exÈcuter un ÈvÈnement de post-traitement pour le message \"{0}\" - ce message n''existe plus. Sauter.." },
+        {"executing.receipt", "[Post-traitement] ({0} --> {1}) Ex√©cution d''un √©v√©nement de post-traitement apr√®s r√©ception de la charge utile." },
+        {"executing.send", "[Post-traitement] ({0} --> {1}) Ex√©cution d''un √©v√©nement de post-traitement apr√®s l''envoi de la charge utile." },
+        {"executing.command", "[Post-traitement] Commande syst√®me: \"{0}\"." },
+        {"executed.command", "[Post-traitement] Commande syst√®me a export√©, returncode={0}." },
+        {"messageid.nolonger.exist", "[Post-traitement] Impossible d''ex√©cuter un √©v√©nement de post-traitement pour le message \"{0}\" - ce message n''existe plus. Sauter.." },
     };
     
 }

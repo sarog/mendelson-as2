@@ -32,20 +32,20 @@ public class ResourceBundleDirPollManager_fr extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         {"none", "Aucun"},
-        {"manager.status.modified", "La surveillance des rÈpertoires a changÈ, {0} les rÈpertoires sont surveillÈs."},
-        {"poll.stopped", "[Gestionnaire de scrutation des rÈpertoires] Scrutation pour les relations \"{0}/{1}\" stoppÈ."},
-        {"poll.started", "[Gestionnaire de scrutation des rÈpertoires] Scrutation pour les relations \"{0}/{1}\" dÈmarrÈ. Fichiers ignorÈs: \"{2}\". Intervalle de scrutation: {3}s"},
-        {"poll.modified", "[Gestionnaire de scrutation des rÈpertoires] ParamËtres de partenaire pour la relation \"{0}/{1}\" ont ÈtÈ modifiÈs."},
-        {"warning.noread", "[Gestionnaire de scrutation des rÈpertoires] Pas d''accËs en lecture pour le fichier outbox {0}, ignorer."},
-        {"warning.ro", "[Gestionnaire de scrutation des rÈpertoires] Le fichier {0} dans la boÓte de dÈpart est en lecture seule, ignorÈ."},
-        {"warning.notcomplete", "[Gestionnaire de scrutation des rÈpertoires] {0}: Le dossier d'outbox n'est pas complet jusqu'ici et sera ignorÈ."},
-        {"messagefile.deleted", "Le fichier \"{0}\" a ÈtÈ dÈplacÈ dans la queue de messages ‡ traiter par le serveur."},
+        {"manager.status.modified", "La surveillance des r√©pertoires a chang√©, {0} les r√©pertoires sont surveill√©s."},
+        {"poll.stopped", "[Gestionnaire de scrutation des r√©pertoires] Scrutation pour les relations \"{0}/{1}\" stopp√©."},
+        {"poll.started", "[Gestionnaire de scrutation des r√©pertoires] Scrutation pour les relations \"{0}/{1}\" d√©marr√©. Fichiers ignor√©s: \"{2}\". Intervalle de scrutation: {3}s"},
+        {"poll.modified", "[Gestionnaire de scrutation des r√©pertoires] Param√®tres de partenaire pour la relation \"{0}/{1}\" ont √©t√© modifi√©s."},
+        {"warning.noread", "[Gestionnaire de scrutation des r√©pertoires] Pas d''acc√®s en lecture pour le fichier outbox {0}, ignorer."},
+        {"warning.ro", "[Gestionnaire de scrutation des r√©pertoires] Le fichier {0} dans la bo√Æte de d√©part est en lecture seule, ignor√©."},
+        {"warning.notcomplete", "[Gestionnaire de scrutation des r√©pertoires] {0}: Le dossier d'outbox n'est pas complet jusqu'ici et sera ignor√©."},
+        {"messagefile.deleted", "Le fichier \"{0}\" a √©t√© d√©plac√© dans la queue de messages √† traiter par le serveur."},
         {"processing.file", "Traitement du fichier \"{0}\" pour les relations \"{1}/{2}\"."},
         {"processing.file.error", "Erreur de traitement du fichier \"{0}\" pour les relations \"{1}/{2}\": \"{3}\"."},
-        {"poll.log.wait", "[RÈpertoire sondage] {0}->{1}: Suivant processus de sondage sortant dans {2}s ({3})"},
-        {"poll.log.polling", "[RÈpertoire sondage] {0}->{1}: RÈpertoire de vote \"{2}\""},
-        {"title.list.polls.running", "RÈsumÈ des annuaires surveillÈs:"},
-        {"title.list.polls.stopped", "Les opÈrations de surveillance suivantes ont pris fin"},
-        {"title.list.polls.started", "Le suivi suivant a ÈtÈ entamÈ"},};
+        {"poll.log.wait", "[R√©pertoire sondage] {0}->{1}: Suivant processus de sondage sortant dans {2}s ({3})"},
+        {"poll.log.polling", "[R√©pertoire sondage] {0}->{1}: R√©pertoire de vote \"{2}\""},
+        {"title.list.polls.running", "R√©sum√© des annuaires surveill√©s:"},
+        {"title.list.polls.stopped", "Les op√©rations de surveillance suivantes ont pris fin"},
+        {"title.list.polls.started", "Le suivi suivant a √©t√© entam√©"},};
 
 }

@@ -25,14 +25,14 @@ public class ResourceBundleMessageDeleteController_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"autodelete", "{0}: Diese Nachricht ist älter als {1} {2} und wurde automatisch vom Systempflegeprozess gelöscht." },    
-        {"transaction.deleted.user", "Transaktionen gelöscht durch Benutzerinteraktion" },
-        {"transaction.deleted.system", "Transaktionen gelöscht durch Systempflegeprozess" },
+        {"autodelete", "{0}: Diese Nachricht ist Ã¤lter als {1} {2} und wurde automatisch vom Systempflegeprozess gelÃ¶scht." },    
+        {"transaction.deleted.user", "Transaktionen gelÃ¶scht durch Benutzerinteraktion" },
+        {"transaction.deleted.system", "Transaktionen gelÃ¶scht durch Systempflegeprozess" },
         {"transaction.deleted.transactiondate", "Transaktionsdatum: {0}" },
-        {"transaction.delete.setting.olderthan", "Der Prozess ist konfiguriert, Transaktionen mit grünem Status zu löschen, die älter sind als {0}." },
-        {"delete.ok", "LÖSCHEN ERFOLGREICH" },
-        {"delete.failed", "LÖSCHEN FEHLGESCHLAGEN" }, 
-        {"delete.skipped", "LÖSCHEN ÜBERSPRUNGEN" },  
+        {"transaction.delete.setting.olderthan", "Der Prozess ist konfiguriert, Transaktionen mit grÃ¼nem Status zu lÃ¶schen, die Ã¤lter sind als {0}." },
+        {"delete.ok", "LÃ–SCHEN ERFOLGREICH" },
+        {"delete.failed", "LÃ–SCHEN FEHLGESCHLAGEN" }, 
+        {"delete.skipped", "LÃ–SCHEN ÃœBERSPRUNGEN" },  
     };
     
 }

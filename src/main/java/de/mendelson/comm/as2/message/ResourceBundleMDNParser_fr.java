@@ -26,8 +26,8 @@ public class ResourceBundleMDNParser_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"invalid.mdn.nocontenttype", "Un MDN entrant est invalide: Aucun type de contenu trouvé" },
-        {"structure.failure.mdn", "Un MDN entrant a été analysé et il y a un échec de structure dans le MDN (\"{0}\"). Le MDN est inadmissible et ne pourrait pas être traité, le statut du message AS2/de transaction référencés ne sera pas changé." },
+        {"invalid.mdn.nocontenttype", "Un MDN entrant est invalide: Aucun type de contenu trouvÃ©" },
+        {"structure.failure.mdn", "Un MDN entrant a Ã©tÃ© analysÃ© et il y a un Ã©chec de structure dans le MDN (\"{0}\"). Le MDN est inadmissible et ne pourrait pas Ãªtre traitÃ©, le statut du message AS2/de transaction rÃ©fÃ©rencÃ©s ne sera pas changÃ©." },
     };
     
 }

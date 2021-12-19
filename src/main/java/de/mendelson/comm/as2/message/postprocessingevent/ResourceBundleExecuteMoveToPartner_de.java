@@ -25,13 +25,13 @@ public class ResourceBundleExecuteMoveToPartner_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"executing.receipt", "[Nachbearbeitung] ({0} --> {1}) Führe Ereignis nach Empfang aus." },
-        {"executing.send", "[Nachbearbeitung] ({0} --> {1}) Führe Ereignis nach Versand aus." },
-        {"targetpartner.does.not.exist", "[Nachbearbeitung] Der Zielpartner mit der AS2 Identifikation \"{0}\" exisitert nicht im System..überspringe Ereignisausführung" },
+        {"executing.receipt", "[Nachbearbeitung] ({0} --> {1}) FÃ¼hre Ereignis nach Empfang aus." },
+        {"executing.send", "[Nachbearbeitung] ({0} --> {1}) FÃ¼hre Ereignis nach Versand aus." },
+        {"targetpartner.does.not.exist", "[Nachbearbeitung] Der Zielpartner mit der AS2 Identifikation \"{0}\" exisitert nicht im System..Ã¼berspringe EreignisausfÃ¼hrung" },
         {"executing.targetpartner", "[Nachbearbeitung] Zielpartner: \"{0}\"." },
         {"executing.movetopartner", "[Nachbearbeitung] Leite Nachricht aus Datei \"{0}\" an den Zielpartner \"{1}\" weiter." },
         {"executing.movetopartner.success", "[Nachbearbeitung] Der Versandauftrag wurde erfolgreich erstellt (\"{0}\")." },
-        {"messageid.nolonger.exist", "[Nachbearbeitung] Das Nachbearbeitungsereignis konnte nicht ausgeführt werden - die Nachricht \"{0}\" exisitert nicht mehr im System..überspringe Ereignisausführung" },
+        {"messageid.nolonger.exist", "[Nachbearbeitung] Das Nachbearbeitungsereignis konnte nicht ausgefÃ¼hrt werden - die Nachricht \"{0}\" exisitert nicht mehr im System..Ã¼berspringe EreignisausfÃ¼hrung" },
     };
     
 }

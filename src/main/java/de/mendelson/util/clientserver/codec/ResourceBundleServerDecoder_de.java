@@ -30,5 +30,5 @@ public class ResourceBundleServerDecoder_de extends MecResourceBundle {
     static final Object[][] CONTENTS = {
         {"client.incompatible", "Eine Client-Server Verbindung konnte nicht hergestellt werden. "
             + "Der Server ist nicht in der Lage, eingehende Daten des Client zu deserialisieren. "
-            + "Die haupts‰chliche Ursache sind unterschiedliche Versionsst‰nde von Client und Server."},};
+            + "Die haupts√§chliche Ursache sind unterschiedliche Versionsst√§nde von Client und Server."},};
 }

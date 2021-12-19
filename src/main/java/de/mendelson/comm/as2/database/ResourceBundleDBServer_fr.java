@@ -28,31 +28,31 @@ public class ResourceBundleDBServer_fr extends MecResourceBundle {
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
         {"database." + IDBDriverManager.DB_CONFIG, "base de configuration" },
-        {"database." + IDBDriverManager.DB_RUNTIME, "base de maturité" },
-        {"dbserver.startup", "Démarrer le serveur de base de données.." },
-        {"dbserver.running.embedded", "Le serveur DB intégré {0} est disponible"},
+        {"database." + IDBDriverManager.DB_RUNTIME, "base de maturitÃ©" },
+        {"dbserver.startup", "DÃ©marrer le serveur de base de donnÃ©es.." },
+        {"dbserver.running.embedded", "Le serveur DB intÃ©grÃ© {0} est disponible"},
         {"dbserver.running.external", "Le serveur DB externe {0} est disponible"},
-        {"update.versioninfo", "Mise à jour automatique de BD: la version de BD trouvé est {0}"
+        {"update.versioninfo", "Mise Ã  jour automatique de BD: la version de BD trouvÃ© est {0}"
             + ", la version de BD requise est {1}."},
-        {"update.progress", "Mise à jour incrementale de base de données ..."},
-        {"update.progress.version.start", "(Commencement) La {1} a été mise à jour vers la version {0}."},
-        {"update.progress.version.end", "(Fin) La {1} a été mise à jour vers la version {0}."},
-        {"update.error.hsqldb", "FATAL: Impossible de mettre à jour la base de données "
+        {"update.progress", "Mise Ã  jour incrementale de base de donnÃ©es ..."},
+        {"update.progress.version.start", "(Commencement) La {1} a Ã©tÃ© mise Ã  jour vers la version {0}."},
+        {"update.progress.version.end", "(Fin) La {1} a Ã©tÃ© mise Ã  jour vers la version {0}."},
+        {"update.error.hsqldb", "FATAL: Impossible de mettre Ã  jour la base de donnÃ©es "
             + " de la version {0} vers la version {1}.\n"
-            + "Merci de supprimer entièrement la base de donnée par la suppression"
-            + " de tous les fichiers  AS2_DB_*.* dans le répertoire d''installation.\n"
-            + "Toute vos données personnelles seront détruite à l''issue de cette opération."},
-        {"update.error.postgres", "FATAL: Impossible de mettre à jour la base de données "
+            + "Merci de supprimer entiÃ¨rement la base de donnÃ©e par la suppression"
+            + " de tous les fichiers  AS2_DB_*.* dans le rÃ©pertoire d''installation.\n"
+            + "Toute vos donnÃ©es personnelles seront dÃ©truite Ã  l''issue de cette opÃ©ration."},
+        {"update.error.postgres", "FATAL: Impossible de mettre Ã  jour la base de donnÃ©es "
             + " de la version {0} vers la version {1}.\n"
-            + "Veuillez lancer pgAdmin et supprimer la base de données correspondante."},
-        {"update.successfully", "La mise à jour de la BD vers la version requise a été réalisée avec succès."},
-        {"update.notfound", "Pour la mise à jour, the fichier update{0}to{1}.sql et/ou "
-            + "Update{0}to{1}.class doivent être présents dans le répertoire sqlscript."},
-        {"upgrade.required", "Une mise à jour est nécessaire.\nS''il vous plaît exécuter as2upgrade.bat ou as2upgrade.sh avant de démarrer le serveur."},
-        {"dbserver.shutdown", "Le serveur de la base de données a été fermé" },
+            + "Veuillez lancer pgAdmin et supprimer la base de donnÃ©es correspondante."},
+        {"update.successfully", "La mise Ã  jour de la BD vers la version requise a Ã©tÃ© rÃ©alisÃ©e avec succÃ¨s."},
+        {"update.notfound", "Pour la mise Ã  jour, the fichier update{0}to{1}.sql et/ou "
+            + "Update{0}to{1}.class doivent Ãªtre prÃ©sents dans le rÃ©pertoire sqlscript."},
+        {"upgrade.required", "Une mise Ã  jour est nÃ©cessaire.\nS''il vous plaÃ®t exÃ©cuter as2upgrade.bat ou as2upgrade.sh avant de dÃ©marrer le serveur."},
+        {"dbserver.shutdown", "Le serveur de la base de donnÃ©es a Ã©tÃ© fermÃ©" },
         {"info.serveridentification", "Identification du serveur: {0}"},
         {"info.jdbc", "JDBC: {0}"},
-        {"info.host", "Hôte: {0}"},
+        {"info.host", "HÃ´te: {0}"},
         {"info.clientdriver", "Client Driver: {0}"},
         {"info.user", "Utilisateur: {0}"},
     };

@@ -25,7 +25,7 @@ public class ResourceBundleHttpSendManager_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"queue.started", "Warteschlange für Sendeaufträge (Http/Https) gestartet." }, 
+        {"queue.started", "Warteschlange fÃ¼r SendeauftrÃ¤ge (Http/Https) gestartet." }, 
     };
     
 }

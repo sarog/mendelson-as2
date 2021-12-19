@@ -28,7 +28,7 @@ public class ResourceBundleNotification_de extends MecResourceBundle {
     static final Object[][] CONTENTS = {
         //dialog
         {"test.message.send", "Eine Testnachricht wurde geschickt an {0}."},
-        {"test.message.debug", "\nDer Mailversandprozess schlug fehlt, die folgenden Zusatzinformationen könnten Ihnen helfen, das Problem einzugrenzen:\n" },        
+        {"test.message.debug", "\nDer Mailversandprozess schlug fehlt, die folgenden Zusatzinformationen kÃ¶nnten Ihnen helfen, das Problem einzugrenzen:\n" },        
         {"misc.message.send", "Eine Benachrichtigungsmail wurde an {0} geschickt ({1}-{2})."},
         {"misc.message.send.failed", "Das Senden einer Benachrichtigungsmail an {0} schlug fehl"},
         {"notification.about.event", "Diese Benachrichtigung bezieht sich auf das Systemereignis von {0}.\nDringlichkeit: {1}\nQuelle: {2}\nTyp: {3}\nId: {4}" },

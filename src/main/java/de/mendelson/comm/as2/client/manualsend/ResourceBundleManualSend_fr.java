@@ -30,12 +30,12 @@ public class ResourceBundleManualSend_fr extends MecResourceBundle {
         {"button.cancel", "Annuler"},
         {"button.browse", "Rechercher"},
         {"label.filename", "Envoyer le fichier"},
-        {"label.testdata", "Envoyer les données de test"},
+        {"label.testdata", "Envoyer les donnÃ©es de test"},
         {"label.partner", "Destinataire:"},
-        {"label.localstation", "Expéditeur:"},
-        {"label.selectfile", "Merci de sélectionner le fichier à envoyer"},
-        {"title", "Envoyer un fichier à un partenaire"},
-        {"send.success", "Le fichier a été mis en queue d''envoi avec succès."},
-        {"send.failed", "Le fichier n''a pas été placé dans le processus d''envoi en raison d''une erreur."},
+        {"label.localstation", "ExpÃ©diteur:"},
+        {"label.selectfile", "Merci de sÃ©lectionner le fichier Ã  envoyer"},
+        {"title", "Envoyer un fichier Ã  un partenaire"},
+        {"send.success", "Le fichier a Ã©tÃ© mis en queue d''envoi avec succÃ¨s."},
+        {"send.failed", "Le fichier n''a pas Ã©tÃ© placÃ© dans le processus d''envoi en raison d''une erreur."},
     };
 }

@@ -26,8 +26,8 @@ public class ResourceBundleTableModelCertificates_de extends MecResourceBundle{
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {        
         {"header.alias", "Alias" },
-        {"header.expire", "Gültig bis" },
-        {"header.length", "Länge" },
+        {"header.expire", "GÃ¼ltig bis" },
+        {"header.length", "LÃ¤nge" },
         {"header.organization", "Organisation" },
         {"header.ca", "CA" },
     };

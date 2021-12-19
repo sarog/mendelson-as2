@@ -26,10 +26,10 @@ public class ResourceBundleMessageStoreHandler_de extends MecResourceBundle{
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
         {"message.error.stored", "Eingebettete Nachricht wurde unter \"{0}\" gespeichert." },
-        {"message.error.raw.stored", "Die Übertragungsdaten wurden unter \"{0}\" gespeichert." },        
+        {"message.error.raw.stored", "Die Ãœbertragungsdaten wurden unter \"{0}\" gespeichert." },        
         {"dir.createerror", "Das Verzeichnis \"{0}\" konnte nicht erstellt werden." },        
         {"comm.success", "Die AS2 Kommunikation war erfolgreich, die Nutzdaten {0} wurden nach \"{1}\" verschoben." },
-        {"outboundstatus.written", "Die Statusdatei für Ausgangstransaktion wurde geschrieben nach \"{0}\"."},
+        {"outboundstatus.written", "Die Statusdatei fÃ¼r Ausgangstransaktion wurde geschrieben nach \"{0}\"."},
     };
     
 }

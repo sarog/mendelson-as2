@@ -30,7 +30,7 @@ public class ResourceBundleCertificateUsedByPartnerChecker_de extends MecResourc
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"used.crypt", "Verwendet vom Partner {0} (Verschlüsselung)."},
+        {"used.crypt", "Verwendet vom Partner {0} (VerschlÃ¼sselung)."},
         {"used.sign", "Verwendet vom Partner {0} (Digitale Signatur)."},};
 
 }

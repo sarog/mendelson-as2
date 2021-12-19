@@ -36,7 +36,7 @@ public class ResourceBundleInfoOnExternalCertificate_fr extends MecResourceBundl
         {"title.single", "Info sur le certificat externe"},
         {"title.multiple", "Info sur les certificats externe"},
         {"certinfo.certfile", "Dossier de certificat: {0}"},
-        {"certificate.exists", "Le certificat existe dÈj‡ dans le keystore, l''alias \"{0}\""},
+        {"certificate.exists", "Le certificat existe d√©j√† dans le keystore, l''alias \"{0}\""},
         {"certificate.doesnot.exist", "Le certificat n''existe pas dans le keystore"},
         {"no.certificate", "Impossible d'identifier le certificat" },
     };

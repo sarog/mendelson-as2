@@ -32,8 +32,8 @@ public class ResourceBundleInfoOnExternalCertificate_de extends MecResourceBundl
     static final Object[][] CONTENTS = {
         {"button.ok", "Importieren >>"},
         {"button.cancel", "Schliessen"},
-        {"title.single", "Information über ein externes Zertifikat"},
-        {"title.multiple", "Information über externe Zertifikate"},
+        {"title.single", "Information Ã¼ber ein externes Zertifikat"},
+        {"title.multiple", "Information Ã¼ber externe Zertifikate"},
         {"certinfo.certfile", "Zertifikatdatei: {0}"},
         {"certinfo.index", "Zertifikat {0} von {1}"},
         {"certificate.exists", "Dieses Zertifikat existiert bereits im Keystore, der Alias ist \"{0}\""},

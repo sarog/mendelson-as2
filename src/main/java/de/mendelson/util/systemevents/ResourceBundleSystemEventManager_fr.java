@@ -31,13 +31,13 @@ public class ResourceBundleSystemEventManager_fr extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         {"label.body.clientip", "Adresse IP: {0}"},
-        {"label.body.processid", "Numéro de processus: {0}"},
-        {"label.body.clientos", "Système d''exploitation: {0}"},
+        {"label.body.processid", "NumÃ©ro de processus: {0}"},
+        {"label.body.clientos", "SystÃ¨me d''exploitation: {0}"},
         {"label.body.clientversion", "Version du client: {0}"},
-        {"label.body.details", "Détails: {0}"},
-        {"label.subject.login.success", "Connexion de l''utilisateur réussie [{0}]"},
-        {"label.subject.login.failed", "Échec de la connexion de l''utilisateur [{0}]"},
-        {"label.subject.logoff", "Déconnexion de l''utilisateur [{0}]"},
+        {"label.body.details", "DÃ©tails: {0}"},
+        {"label.subject.login.success", "Connexion de l''utilisateur rÃ©ussie [{0}]"},
+        {"label.subject.login.failed", "Ã‰chec de la connexion de l''utilisateur [{0}]"},
+        {"label.subject.logoff", "DÃ©connexion de l''utilisateur [{0}]"},
         {"label.body.tlsprotocol", "Protocole TLS: {0}" },
         {"label.body.tlsciphersuite", "Chiffre TLS: {0}" },        
     };

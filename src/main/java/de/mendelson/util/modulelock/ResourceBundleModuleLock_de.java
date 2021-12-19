@@ -25,12 +25,12 @@ public class ResourceBundleModuleLock_de extends MecResourceBundle {
     }
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {ModuleLock.MODULE_ENCSIGN_KEYSTORE, "Zertifikatverwaltung (Verschlüsselungs-/Signatur)" },
+        {ModuleLock.MODULE_ENCSIGN_KEYSTORE, "Zertifikatverwaltung (VerschlÃ¼sselungs-/Signatur)" },
         {ModuleLock.MODULE_PARTNER, "Partnerverwaltung" },
         {ModuleLock.MODULE_SERVER_SETTINGS, "Servereinstellungen" },
         {ModuleLock.MODULE_SSL_KEYSTORE, "Zertifikatverwaltung (SSL)" },
-        {"modifications.notallowed.message", "Änderungen sind im Moment nicht möglich" },
-        {"configuration.changed.otherclient", "Ein anderer Client könnte Änderungen im Modul {0} vorgenommen haben.\nBitte öffnen Sie diese Konfigurationsoberfläche erneut, um die aktuelle Konfiguration neu zu laden." },
-        {"configuration.locked.otherclient", "Das Modul {0} ist exklusiv von einem anderen Client geöffnet,\nSie können aktuell keine Änderungen vornehmen.\nDetails des anderen Clients:\nIP: {1}\nBenutzer: {2}\nProzess id: {3}" },                
+        {"modifications.notallowed.message", "Ã„nderungen sind im Moment nicht mÃ¶glich" },
+        {"configuration.changed.otherclient", "Ein anderer Client kÃ¶nnte Ã„nderungen im Modul {0} vorgenommen haben.\nBitte Ã¶ffnen Sie diese KonfigurationsoberflÃ¤che erneut, um die aktuelle Konfiguration neu zu laden." },
+        {"configuration.locked.otherclient", "Das Modul {0} ist exklusiv von einem anderen Client geÃ¶ffnet,\nSie kÃ¶nnen aktuell keine Ã„nderungen vornehmen.\nDetails des anderen Clients:\nIP: {1}\nBenutzer: {2}\nProzess id: {3}" },                
     };
 }

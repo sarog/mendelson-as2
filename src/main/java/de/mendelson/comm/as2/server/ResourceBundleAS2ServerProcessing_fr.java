@@ -28,13 +28,13 @@ public class ResourceBundleAS2ServerProcessing_fr extends MecResourceBundle {
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"send.failed", "Send a échoué"},
+        {"send.failed", "Send a Ã©chouÃ©"},
         {"unable.to.process", "Impossible de traiter sur serveur : {0}"},
-        {"server.shutdown", "L''utilisateur {0} demande l''arrêt du serveur."},
-        {"sync.mdn.sent", "MDN synchrone envoyé comme réponse au message {0}." },
-        {"info.mdn.inboundfiles", "Pour le MDN a reçu il n'a pas été possible de déterminer le message AS2 référencé.\n[Commentaires reçus MDN: {0}]\n[Commentaires reçus MDN (Header): {1}]"},
-        {"message.resend.oldtransaction", "Cette transaction a été envoyée à nouveau manuellement avec le nouveau numéro de transaction [{0}]." },
+        {"server.shutdown", "L''utilisateur {0} demande l''arrÃªt du serveur."},
+        {"sync.mdn.sent", "MDN synchrone envoyÃ© comme rÃ©ponse au message {0}." },
+        {"info.mdn.inboundfiles", "Pour le MDN a reÃ§u il n'a pas Ã©tÃ© possible de dÃ©terminer le message AS2 rÃ©fÃ©rencÃ©.\n[Commentaires reÃ§us MDN: {0}]\n[Commentaires reÃ§us MDN (Header): {1}]"},
+        {"message.resend.oldtransaction", "Cette transaction a Ã©tÃ© envoyÃ©e Ã  nouveau manuellement avec le nouveau numÃ©ro de transaction [{0}]." },
         {"message.resend.newtransaction", "Cette transaction est un renvoi de la transaction [{0}]." },    
-        {"message.resend.title", "Envoi manuel des données dans la nouvelle transaction" },    
+        {"message.resend.title", "Envoi manuel des donnÃ©es dans la nouvelle transaction" },    
     };
 }

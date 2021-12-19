@@ -26,7 +26,7 @@ public class ResourceBundleHttpSendManager_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"queue.started", "La queue d'envoi Http a démarrée." },
+        {"queue.started", "La queue d'envoi Http a dÃ©marrÃ©e." },
     };
     
 }

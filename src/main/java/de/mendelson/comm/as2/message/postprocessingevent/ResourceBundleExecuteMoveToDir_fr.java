@@ -25,12 +25,12 @@ public class ResourceBundleExecuteMoveToDir_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"executing.receipt", "[Post-traitement] ({0} --> {1}) ExÈcution d''un ÈvÈnement de post-traitement aprËs rÈception." },
-        {"executing.send", "[Post-traitement] ({0} --> {1}) ExÈcution d''un ÈvÈnement de post-traitement aprËs l''envoi." },
-        {"executing.targetdir", "[Post-traitement] RÈpertoire cible: \"{0}\"." },
-        {"executing.movetodir", "[Post-traitement] DÈplacement de \"{0}\" ‡ \"{1}\"." },
-        {"executing.movetodir.success", "[Post-traitement] Fichier dÈplacÈ avec succËs." },
-        {"messageid.nolonger.exist", "[Post-traitement] Impossible d'exÈcuter un ÈvÈnement de post-traitement pour le message \"{0}\" - ce message n'existe plus. Sauter.." },
+        {"executing.receipt", "[Post-traitement] ({0} --> {1}) Ex√©cution d''un √©v√©nement de post-traitement apr√®s r√©ception." },
+        {"executing.send", "[Post-traitement] ({0} --> {1}) Ex√©cution d''un √©v√©nement de post-traitement apr√®s l''envoi." },
+        {"executing.targetdir", "[Post-traitement] R√©pertoire cible: \"{0}\"." },
+        {"executing.movetodir", "[Post-traitement] D√©placement de \"{0}\" √† \"{1}\"." },
+        {"executing.movetodir.success", "[Post-traitement] Fichier d√©plac√© avec succ√®s." },
+        {"messageid.nolonger.exist", "[Post-traitement] Impossible d'ex√©cuter un √©v√©nement de post-traitement pour le message \"{0}\" - ce message n'existe plus. Sauter.." },
     };
     
 }

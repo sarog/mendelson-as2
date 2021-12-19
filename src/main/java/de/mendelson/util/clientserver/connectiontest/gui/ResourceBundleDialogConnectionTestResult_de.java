@@ -32,24 +32,24 @@ public class ResourceBundleDialogConnectionTestResult_de extends MecResourceBund
     static final Object[][] CONTENTS = {
         {"title", "Ergebnis des Verbindungstests"},
         {"description." + JDialogConnectionTestResult.CONNECTION_TEST_OFTP2, 
-            "Das System hat einen Verbindungstest zur Addresse {0}, Port {1} durchgeführt. "
+            "Das System hat einen Verbindungstest zur Addresse {0}, Port {1} durchgefÃ¼hrt. "
             + "Das folgende Ergebnis zeigt, ob der Verbindungsaufbau erfolgreich war und ob an dieser "
-            + "Addresse ein OFTP2 Server läuft. Wenn eine TLS Verbindung verwendet werden sollte und dies "
-            + "erfolgreich möglich war, können Sie die Zertifikate Ihres Partners herunterladen und in Ihren "
+            + "Addresse ein OFTP2 Server lÃ¤uft. Wenn eine TLS Verbindung verwendet werden sollte und dies "
+            + "erfolgreich mÃ¶glich war, kÃ¶nnen Sie die Zertifikate Ihres Partners herunterladen und in Ihren "
             + "Keystore importieren."},
         {"description." + JDialogConnectionTestResult.CONNECTION_TEST_AS2, 
-            "Das System hat einen Verbindungstest zur Addresse {0}, Port {1} durchgeführt. "
+            "Das System hat einen Verbindungstest zur Addresse {0}, Port {1} durchgefÃ¼hrt. "
             + "Das folgende Ergebnis zeigt, ob der Verbindungsaufbau erfolgreich war und ob an dieser "
-            + "Addresse ein HTTP Server läuft. Auch wenn der Test erfolgreich ist, ist nicht sichergestellt, "
+            + "Addresse ein HTTP Server lÃ¤uft. Auch wenn der Test erfolgreich ist, ist nicht sichergestellt, "
             + "ob dies ein normaler HTTP Server oder ein AS2 Server ist. Wenn eine TLS Verbindung verwendet "
-            + "werden sollte (HTTPS) und dies erfolgreich möglich war, können Sie die Zertifikate Ihres "
+            + "werden sollte (HTTPS) und dies erfolgreich mÃ¶glich war, kÃ¶nnen Sie die Zertifikate Ihres "
             + "Partners herunterladen und in Ihren Keystore importieren."},
         {"description." + JDialogConnectionTestResult.CONNECTION_TEST_AS4, 
-            "Das System hat einen Verbindungstest zur Addresse {0}, Port {1} durchgeführt. "
+            "Das System hat einen Verbindungstest zur Addresse {0}, Port {1} durchgefÃ¼hrt. "
             + "Das folgende Ergebnis zeigt, ob der Verbindungsaufbau erfolgreich war und ob an dieser "
-            + "Addresse ein HTTP Server läuft. Auch wenn der Test erfolgreich ist, ist nicht sichergestellt, "
+            + "Addresse ein HTTP Server lÃ¤uft. Auch wenn der Test erfolgreich ist, ist nicht sichergestellt, "
             + "ob dies ein normaler HTTP Server oder ein AS4 Server ist. Wenn eine TLS Verbindung verwendet "
-            + "werden sollte (HTTPS) und dies erfolgreich möglich war, können Sie die Zertifikate Ihres "
+            + "werden sollte (HTTPS) und dies erfolgreich mÃ¶glich war, kÃ¶nnen Sie die Zertifikate Ihres "
             + "Partners herunterladen und in Ihren Keystore importieren."},
         {"OK", "[ERFOLGREICH]"},
         {"FAILED", "[FEHLER]"},
@@ -57,13 +57,13 @@ public class ResourceBundleDialogConnectionTestResult_de extends MecResourceBund
         {"NOT_AVAILABLE", "[NICHT VORHANDEN]"},
         {"header.ssl", "{0} [TLS Verbindung]"},
         {"header.plain", "{0} [Ungesicherte Verbindung]"},
-        {"no.certificate.plain", "Nicht verfügbar (Ungesicherte Verbindung)"},
+        {"no.certificate.plain", "Nicht verfÃ¼gbar (Ungesicherte Verbindung)"},
         {"button.viewcert", "<HTML><div style=\"text-align:center\">Zertifikat(e) importieren</div></HTML>"},
         {"button.close", "Schliessen"},
         {"label.connection.established", "Die einfache IP Verbindung wurde hergestellt"},
-        {"label.certificates.available.local", "Die Partnerzertifikate (TLS) sind in Ihrem System verfügbar"},
+        {"label.certificates.available.local", "Die Partnerzertifikate (TLS) sind in Ihrem System verfÃ¼gbar"},
         {"label.running.oftpservice", "Es wurde ein laufender OFTP Service gefunden"},
-        {"used.cipher", "Für den Test wurde der folgende Verschlüsselungsalgorithmus verwendet: \"{0}\"" },          
+        {"used.cipher", "FÃ¼r den Test wurde der folgende VerschlÃ¼sselungsalgorithmus verwendet: \"{0}\"" },          
     };
 
 }

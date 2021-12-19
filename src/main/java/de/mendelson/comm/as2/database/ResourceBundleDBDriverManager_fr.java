@@ -29,12 +29,12 @@ public class ResourceBundleDBDriverManager_fr extends MecResourceBundle {
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"creating.database." + IDBDriverManager.DB_RUNTIME, "Créer une base de données d'exécution"},
-        {"creating.database." + IDBDriverManager.DB_CONFIG, "Créer une base de données de configuration"},
-        {"database.creation.success." + IDBDriverManager.DB_RUNTIME, "La base de données d'exécution a été créée avec succès" },
-        {"database.creation.success." + IDBDriverManager.DB_CONFIG, "La base de données de configuration a été créée avec succès" },
-        {"database.creation.failed." + IDBDriverManager.DB_RUNTIME, "Une erreur est survenue lors de la création de la base de données d''exécution" },
-        {"database.creation.failed." + IDBDriverManager.DB_CONFIG, "Une erreur est survenue lors de la création de la base de données de configuration." },
+        {"creating.database." + IDBDriverManager.DB_RUNTIME, "CrÃ©er une base de donnÃ©es d'exÃ©cution"},
+        {"creating.database." + IDBDriverManager.DB_CONFIG, "CrÃ©er une base de donnÃ©es de configuration"},
+        {"database.creation.success." + IDBDriverManager.DB_RUNTIME, "La base de donnÃ©es d'exÃ©cution a Ã©tÃ© crÃ©Ã©e avec succÃ¨s" },
+        {"database.creation.success." + IDBDriverManager.DB_CONFIG, "La base de donnÃ©es de configuration a Ã©tÃ© crÃ©Ã©e avec succÃ¨s" },
+        {"database.creation.failed." + IDBDriverManager.DB_RUNTIME, "Une erreur est survenue lors de la crÃ©ation de la base de donnÃ©es d''exÃ©cution" },
+        {"database.creation.failed." + IDBDriverManager.DB_CONFIG, "Une erreur est survenue lors de la crÃ©ation de la base de donnÃ©es de configuration." },
     };
 
 }

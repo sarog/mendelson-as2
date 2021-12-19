@@ -33,16 +33,16 @@ public class ResourceBundleExportKeyPKCS12_de extends MecResourceBundle {
         {"button.ok", "Ok"},
         {"button.cancel", "Abbrechen"},
         {"button.browse", "Durchsuchen"},
-        {"keystore.contains.nokeys", "Dieser Keystore beihaltet keine privaten Schlüssel."},
+        {"keystore.contains.nokeys", "Dieser Keystore beihaltet keine privaten SchlÃ¼ssel."},
         {"label.exportkey", "Export Keystore (PKCS#12):"},
         {"label.keypass", "Passwort:"},
-        {"title", "Schlüssel in Keystore exportieren (PKCS#12 format)"},
-        {"filechooser.key.export", "Bitte wählen Sie den PKCS#12 Keystore für den Export"},
-        {"key.export.success.message", "Der Schlüssel wurde erfolgreich exportiert."},
+        {"title", "SchlÃ¼ssel in Keystore exportieren (PKCS#12 format)"},
+        {"filechooser.key.export", "Bitte wÃ¤hlen Sie den PKCS#12 Keystore fÃ¼r den Export"},
+        {"key.export.success.message", "Der SchlÃ¼ssel wurde erfolgreich exportiert."},
         {"key.export.success.title", "Erfolg"},
         {"key.export.error.message", "Es gab einen Fehler beim Export.\n{0}"},
         {"key.export.error.title", "Fehler"},
-        {"label.alias", "Zu exportierender Schlüssel:"},
-        {"key.exported.to.file", "Der Schlüssel \"{0}\" wurde in den Keystore \"{1}\" exportiert."},};
+        {"label.alias", "Zu exportierender SchlÃ¼ssel:"},
+        {"key.exported.to.file", "Der SchlÃ¼ssel \"{0}\" wurde in den Keystore \"{1}\" exportiert."},};
 
 }

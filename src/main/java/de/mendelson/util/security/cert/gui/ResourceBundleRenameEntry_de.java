@@ -33,7 +33,7 @@ public class ResourceBundleRenameEntry_de extends MecResourceBundle {
         {"button.ok", "Ok"},
         {"button.cancel", "Abbrechen"},
         {"label.newalias", "Neuer Alias:"},
-        {"label.keypairpass", "Schlüssel Password:"},
+        {"label.keypairpass", "SchlÃ¼ssel Password:"},
         {"title", "Bestehenden Eintrag ({0}) umbenennen"},
         {"alias.exists.title", "Umbennen des Alias schlug fehl" },
         {"alias.exists.message", "Der Alias \"{0}\" exisitert bereits im unterliegenden Keystore." },

@@ -29,14 +29,14 @@ public class ResourceBundleMessageOverview_de extends MecResourceBundle{
         {"header.localstation", "Lokale Station" },
         {"header.partner", "Partner" },                    
         {"header.messageid", "Referenznummer" },                            
-        {"header.encryption", "Verschlüsselung" },
+        {"header.encryption", "VerschlÃ¼sselung" },
         {"header.signature", "Digitale Signatur" },
         {"header.mdn", "MDN" },   
         {"header.userdefinedid", "Id" },  
         {"header.payload", "Nutzdaten" },   
         {"header.subject", "Subject" },
         {"header.compression", "Komprimierung" },
-        {"number.of.attachments", "* {0} Dateianhänge *" },
+        {"number.of.attachments", "* {0} DateianhÃ¤nge *" },
     };
     
 }

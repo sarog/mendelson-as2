@@ -43,12 +43,12 @@ public class ResourceBundleDialogSystemEvent_de extends MecResourceBundle {
         {"user.server.process", "Serverprozess" },
         {"label.startdate", "Start: " },
         {"label.enddate", "Ende: " },
-        {"no.data", "Es gibt kein Systemereignis, das mit der aktuellen Datums-/Typenauswahl übereinstimmt." }, 
+        {"no.data", "Es gibt kein Systemereignis, das mit der aktuellen Datums-/Typenauswahl Ã¼bereinstimmt." }, 
         {"label.freetext", "Suchtext: " },
-        {"label.freetext.hint", "Vollständige Ereignisnummer oder Textsuche im Textanteil der Ereignisse" },
+        {"label.freetext.hint", "VollstÃ¤ndige Ereignisnummer oder Textsuche im Textanteil der Ereignisse" },
         {"category.all", "-- Alle --" },
         {"label.close", "Schliessen" },
         {"label.search", "Ereignissuche" },
-        {"label.resetfilter", "Filter zurücksetzen" },
+        {"label.resetfilter", "Filter zurÃ¼cksetzen" },
     };
 }

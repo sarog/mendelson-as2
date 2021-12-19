@@ -29,6 +29,6 @@ public class ResourceBundleMecFileChooser_de extends MecResourceBundle {
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"button.select", "Ausw‰hlen"},};
+        {"button.select", "Ausw√§hlen"},};
 
 }

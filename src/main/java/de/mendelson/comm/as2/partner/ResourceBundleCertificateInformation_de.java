@@ -25,9 +25,9 @@ public class ResourceBundleCertificateInformation_de extends MecResourceBundle {
     }
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"localstation.decrypt", "Eingehende Nachrichten für die lokale Station \"{0}\" werden mit Hilfe des Zertifikats \"{1}\" entschlüsselt."},
-        {"localstation.sign", "Ausgehende Nachrichten der lokalen Station \"{0}\" werden über das Zertifikat \"{1}\" digital signiert."},
-        {"partner.encrypt", "Ausgehende Nachrichten an den Partner \"{0}\" werden mit Hilfe des Zertifikats \"{1}\" verschlüsselt."},
-        {"partner.sign.prio", "Die digitale Signatur eingehender Nachrichten des Partners \"{0}\" werden mit Hilfe des Zertifikats \"{1}\" überprüft."},
+        {"localstation.decrypt", "Eingehende Nachrichten fÃ¼r die lokale Station \"{0}\" werden mit Hilfe des Zertifikats \"{1}\" entschlÃ¼sselt."},
+        {"localstation.sign", "Ausgehende Nachrichten der lokalen Station \"{0}\" werden Ã¼ber das Zertifikat \"{1}\" digital signiert."},
+        {"partner.encrypt", "Ausgehende Nachrichten an den Partner \"{0}\" werden mit Hilfe des Zertifikats \"{1}\" verschlÃ¼sselt."},
+        {"partner.sign.prio", "Die digitale Signatur eingehender Nachrichten des Partners \"{0}\" werden mit Hilfe des Zertifikats \"{1}\" Ã¼berprÃ¼ft."},
     };
 }

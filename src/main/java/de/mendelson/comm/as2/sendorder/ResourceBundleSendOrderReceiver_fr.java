@@ -26,14 +26,14 @@ public class ResourceBundleSendOrderReceiver_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"async.mdn.wait", "Attente du MDN asynchrone jusqu''à {0}." },
-        {"max.retry.reached", "Le maximum a été atteint réessayer ({0}), la transmission annulée." },
-        {"retry", "Va réessayer d''envoyer transmission après {0}s, réessayez {1}/{2}." },
-        {"as2.send.disabled", "** Le système ne sera pas envoyer de message AS2/MDN parce que le nombre de connexions sortantes parallèles est mis à 0. S''il vous plaît modifier ces paramètres dans la boîte de dialogue de configuration du serveur pour permettre l''envoi de nouveau **" },        
-        {"outbound.connection.prepare.mdn", "Préparer la connexion MDN sortante vers \"{0}\", connexions actives: {1}/{2}." },
-        {"outbound.connection.prepare.message", "Préparer la connexion AS2 message sortante vers \"{0}\", Connexions actives: {1}/{2}." },
-        {"send.connectionsstillopen", "Vous avez réduit le nombre de connexions sortantes à {0}, mais actuellement, il y a encore {1} connexions sortantes." },
-        {"warning.nomore.outbound.connections.available", "Le nombre maximum de connexions sortantes ({0}) a été atteint. Il n''est plus possible de créer des connexions sortantes supplémentaires. Veuillez modifier cette valeur dans la configuration de serveur si vous le souhaitez toujours." },
+        {"async.mdn.wait", "Attente du MDN asynchrone jusqu''Ã  {0}." },
+        {"max.retry.reached", "Le maximum a Ã©tÃ© atteint rÃ©essayer ({0}), la transmission annulÃ©e." },
+        {"retry", "Va rÃ©essayer d''envoyer transmission aprÃ¨s {0}s, rÃ©essayez {1}/{2}." },
+        {"as2.send.disabled", "** Le systÃ¨me ne sera pas envoyer de message AS2/MDN parce que le nombre de connexions sortantes parallÃ¨les est mis Ã  0. S''il vous plaÃ®t modifier ces paramÃ¨tres dans la boÃ®te de dialogue de configuration du serveur pour permettre l''envoi de nouveau **" },        
+        {"outbound.connection.prepare.mdn", "PrÃ©parer la connexion MDN sortante vers \"{0}\", connexions actives: {1}/{2}." },
+        {"outbound.connection.prepare.message", "PrÃ©parer la connexion AS2 message sortante vers \"{0}\", Connexions actives: {1}/{2}." },
+        {"send.connectionsstillopen", "Vous avez rÃ©duit le nombre de connexions sortantes Ã  {0}, mais actuellement, il y a encore {1} connexions sortantes." },
+        {"warning.nomore.outbound.connections.available", "Le nombre maximum de connexions sortantes ({0}) a Ã©tÃ© atteint. Il n''est plus possible de crÃ©er des connexions sortantes supplÃ©mentaires. Veuillez modifier cette valeur dans la configuration de serveur si vous le souhaitez toujours." },
     };
     
 }

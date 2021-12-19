@@ -31,18 +31,18 @@ public class ResourceBundleDialogSearchLogfile_fr extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         {"title", "Parcourir les fichiers journaux sur le serveur"},
-        {"no.data.messageid", "**Il n''y a pas de données de journal pour le numéro de message AS2 \"{0}\" dans la période sélectionnée. Veuillez utiliser le numéro complet du message comme chaîne de recherche." },        
-        {"no.data.mdnid", "**Il n''y a pas de données de journal pour le numéro MDN \"{0}\" dans la période sélectionnée. Veuillez utiliser le numéro MDN complet comme chaîne de recherche, que vous pouvez trouver dans le journal d''une transmission." },        
-        {"no.data.uid", "**Il n'y a pas de données de journal pour le numéro MDN \"{0}\" dans la période sélectionnée. Veuillez utiliser le numéro MDN complet comme chaîne de recherche, que vous pouvez trouver dans le journal d''une transmission." },        
-        {"label.startdate", "Début: " },
+        {"no.data.messageid", "**Il n''y a pas de donnÃ©es de journal pour le numÃ©ro de message AS2 \"{0}\" dans la pÃ©riode sÃ©lectionnÃ©e. Veuillez utiliser le numÃ©ro complet du message comme chaÃ®ne de recherche." },        
+        {"no.data.mdnid", "**Il n''y a pas de donnÃ©es de journal pour le numÃ©ro MDN \"{0}\" dans la pÃ©riode sÃ©lectionnÃ©e. Veuillez utiliser le numÃ©ro MDN complet comme chaÃ®ne de recherche, que vous pouvez trouver dans le journal d''une transmission." },        
+        {"no.data.uid", "**Il n'y a pas de donnÃ©es de journal pour le numÃ©ro MDN \"{0}\" dans la pÃ©riode sÃ©lectionnÃ©e. Veuillez utiliser le numÃ©ro MDN complet comme chaÃ®ne de recherche, que vous pouvez trouver dans le journal d''une transmission." },        
+        {"label.startdate", "DÃ©but: " },
         {"label.enddate", "Fin: " },
         {"button.close", "Fermer" },
         {"label.search", "Journal de recherche" },
-        {"label.info", "<html>Veuillez définir une période de temps, entrez un numéro de message AS2 complet ou le numéro complet d''un MDN pour trouver toutes les entrées du journal sur le serveur - puis appuyez sur le bouton \"Rechercher le journal\". Vous pouvez définir le numéro défini par l'utilisateur pour chaque transaction lorsque vous envoyez les données au serveur en cours d''exécution depuis la ligne de commande.</html>" },
+        {"label.info", "<html>Veuillez dÃ©finir une pÃ©riode de temps, entrez un numÃ©ro de message AS2 complet ou le numÃ©ro complet d''un MDN pour trouver toutes les entrÃ©es du journal sur le serveur - puis appuyez sur le bouton \"Rechercher le journal\". Vous pouvez dÃ©finir le numÃ©ro dÃ©fini par l'utilisateur pour chaque transaction lorsque vous envoyez les donnÃ©es au serveur en cours d''exÃ©cution depuis la ligne de commande.</html>" },
         {"textfield.preset", "mendelsonAS2@partnerAS2" },
-        {"label.messageid", "Numéro de message" },
-        {"label.mdnid", "Numéro MDN" },
-        {"label.uid", "Nombre défini par l''utilisateur" },
-        {"problem.serverside", "Il y avait un problème côté serveur lors de la navigation dans les fichiers journaux: [{0}] {1}" },
+        {"label.messageid", "NumÃ©ro de message" },
+        {"label.mdnid", "NumÃ©ro MDN" },
+        {"label.uid", "Nombre dÃ©fini par l''utilisateur" },
+        {"problem.serverside", "Il y avait un problÃ¨me cÃ´tÃ© serveur lors de la navigation dans les fichiers journaux: [{0}] {1}" },
     };
 }

@@ -26,11 +26,11 @@ public class ResourceBundleMessageDeleteController_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"autodelete", "{0}: Ce message est plus vieux que {1} {2} et a été supprimé par le processus de maintenance du système." },    
-        {"transaction.deleted.user", "Transactions supprimées par l''interaction de l''utilisateur" },
-        {"transaction.deleted.system", "Transactions supprimées par le processus de gestion du système" },
+        {"autodelete", "{0}: Ce message est plus vieux que {1} {2} et a Ã©tÃ© supprimÃ© par le processus de maintenance du systÃ¨me." },    
+        {"transaction.deleted.user", "Transactions supprimÃ©es par l''interaction de l''utilisateur" },
+        {"transaction.deleted.system", "Transactions supprimÃ©es par le processus de gestion du systÃ¨me" },
         {"transaction.deleted.transactiondate", "Date de la transaction: {0}" },
-        {"transaction.delete.setting.olderthan", "Le processus est configuré pour supprimer les transactions de statut vert plus anciennes que {0}." },
+        {"transaction.delete.setting.olderthan", "Le processus est configurÃ© pour supprimer les transactions de statut vert plus anciennes que {0}." },
         {"delete.ok", "SUPPRIMER AVEC SUCCES" },
         {"delete.failed", "SUPPRIMER ECHOUE" }, 
         {"delete.skipped", "SUPPRIMER SAUTE" },  

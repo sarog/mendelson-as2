@@ -32,20 +32,20 @@ public class ResourceBundleNotification_fr extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         //dialog
-        {"test.message.send", "Un e-mail de test a été envoyé à {0}."},
-        {"test.message.debug", "\nEnvoyer un processus envoi a échoué, voici quelques informations de débogage qui pourraient vous aider à:\n"},
-        {"misc.message.send", "Un e-mail de notification a été envoyé à {0} ({1}-{2})."},
-        {"misc.message.send.failed", "L''envoi d'un message de notification à {0} a échoué"},
-        {"notification.about.event", "Cette notification se réfère à l'événement système de {0}.\nUrgence: {1}\nEnfin: {2}\nTyp: {3}\nId: {4}"},
-        {"notification.summary", "Résumé des {0} événements système"},
+        {"test.message.send", "Un e-mail de test a Ã©tÃ© envoyÃ© Ã  {0}."},
+        {"test.message.debug", "\nEnvoyer un processus envoi a Ã©chouÃ©, voici quelques informations de dÃ©bogage qui pourraient vous aider Ã :\n"},
+        {"misc.message.send", "Un e-mail de notification a Ã©tÃ© envoyÃ© Ã  {0} ({1}-{2})."},
+        {"misc.message.send.failed", "L''envoi d'un message de notification Ã  {0} a Ã©chouÃ©"},
+        {"notification.about.event", "Cette notification se rÃ©fÃ¨re Ã  l'Ã©vÃ©nement systÃ¨me de {0}.\nUrgence: {1}\nEnfin: {2}\nTyp: {3}\nId: {4}"},
+        {"notification.summary", "RÃ©sumÃ© des {0} Ã©vÃ©nements systÃ¨me"},
         {"notification.summary.info", 
-            "Ce message récapitulatif s''affiche parce que vous avez défini un nombre limité\n"
-            + "d''avis par unité de temps. Pour obtenir les détails de chaque événement,\n"
-            + "veuillez démarrer le client et naviguer vers\n"
-            + "\"Fichier-Événements système\".\n"
-            + "Entrez le numéro unique de l''événement dans le masque de recherche."},
-        {"misc.message.summary.send", "Un courriel de notification sommaire a été envoyé à {0}"},
-        {"misc.message.summary.failed", "L'envoi d'un message de notification sommaire à {0} a échoué"},
-        {"do.not.reply", "Veuillez ne pas répondre à ce mail."},};
+            "Ce message rÃ©capitulatif s''affiche parce que vous avez dÃ©fini un nombre limitÃ©\n"
+            + "d''avis par unitÃ© de temps. Pour obtenir les dÃ©tails de chaque Ã©vÃ©nement,\n"
+            + "veuillez dÃ©marrer le client et naviguer vers\n"
+            + "\"Fichier-Ã‰vÃ©nements systÃ¨me\".\n"
+            + "Entrez le numÃ©ro unique de l''Ã©vÃ©nement dans le masque de recherche."},
+        {"misc.message.summary.send", "Un courriel de notification sommaire a Ã©tÃ© envoyÃ© Ã  {0}"},
+        {"misc.message.summary.failed", "L'envoi d'un message de notification sommaire Ã  {0} a Ã©chouÃ©"},
+        {"do.not.reply", "Veuillez ne pas rÃ©pondre Ã  ce mail."},};
 
 }

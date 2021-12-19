@@ -29,6 +29,6 @@ public class ResourceBundleAS2ServerResourceCheck_de extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         {"port.in.use", "Der Port {0} wird von einem anderen Prozess belegt."},
-        {"warning.few.cpucores", "Das System hat nur {0} Prozessorkern(e) erkannt, die dem mendelson AS2 Serverprozess zugeordnet sind. Mit dieser geringen Anzahl von Prozessorkernen kann die Ausführungsgeschwindigkeit sehr gering sein und einige Funktionen könnten nur eingeschränkt funktinoieren. Bitte weisen Sie dem mendelson AS2 Serverprozess mindestens 4 Prozessorkerne zu."},
-        {"warning.low.maxheap", "Das System hat nur ungefähr {0} verfügbaren Heap Speicher gefunden, der dem mendelson AS2 Serverprozess zugeordnet wurde. (Keine Sorge, das sind ca 10% weniger als Sie im Startscript angegeben haben). Bitte weisen Sie dem mendelson AS2 Serverprozess mindestens 1GB Heap Speicher zu."},};
+        {"warning.few.cpucores", "Das System hat nur {0} Prozessorkern(e) erkannt, die dem mendelson AS2 Serverprozess zugeordnet sind. Mit dieser geringen Anzahl von Prozessorkernen kann die AusfÃ¼hrungsgeschwindigkeit sehr gering sein und einige Funktionen kÃ¶nnten nur eingeschrÃ¤nkt funktinoieren. Bitte weisen Sie dem mendelson AS2 Serverprozess mindestens 4 Prozessorkerne zu."},
+        {"warning.low.maxheap", "Das System hat nur ungefÃ¤hr {0} verfÃ¼gbaren Heap Speicher gefunden, der dem mendelson AS2 Serverprozess zugeordnet wurde. (Keine Sorge, das sind ca 10% weniger als Sie im Startscript angegeben haben). Bitte weisen Sie dem mendelson AS2 Serverprozess mindestens 1GB Heap Speicher zu."},};
 }

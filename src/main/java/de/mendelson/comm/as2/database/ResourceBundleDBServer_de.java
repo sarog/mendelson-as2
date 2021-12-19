@@ -34,25 +34,25 @@ public class ResourceBundleDBServer_de extends MecResourceBundle {
         {"database." + IDBDriverManager.DB_CONFIG, "Konfigurationsdatenbank" },
         {"database." + IDBDriverManager.DB_RUNTIME, "Laufzeitdatenbank" },
         {"dbserver.startup", "Starte integrierten DB Server.." },
-        {"dbserver.running.embedded", "Integrierter DB Server {0} läuft"},
-        {"dbserver.running.external", "Externer DB Server {0} ist verfügbar"},
+        {"dbserver.running.embedded", "Integrierter DB Server {0} lÃ¤uft"},
+        {"dbserver.running.external", "Externer DB Server {0} ist verfÃ¼gbar"},
         {"update.versioninfo", "Automatisches Datenbankupdate: Die gefundene Datenbankversion"
             + " ist {0}, die benoetigte ist {1}."},
         {"update.progress", "Inkrementelles Datenbankupdate gestartet..."},
         {"update.progress.version.start", "Beginne Update der {1} auf Version {0}..."},
         {"update.progress.version.end", "Update der {1} auf Version {0} fertig."},
-        {"update.error.hsqldb", "FATAL: Es ist nicht möglich, die Datenbank von der Version {0} "
+        {"update.error.hsqldb", "FATAL: Es ist nicht mÃ¶glich, die Datenbank von der Version {0} "
             + " zur Version {1} zu modifizieren.\n"
-            + "Bitte löschen Sie alle entsprechenden AS2_DB_*.* Dateien im Installationsverzeichnis.\n"
+            + "Bitte lÃ¶schen Sie alle entsprechenden AS2_DB_*.* Dateien im Installationsverzeichnis.\n"
             + "Dadurch gehen alle benutzerdefinierten Daten verloren."},
-        {"update.error.postgres", "FATAL: Es ist nicht möglich, die Datenbank von der Version {0} "
+        {"update.error.postgres", "FATAL: Es ist nicht mÃ¶glich, die Datenbank von der Version {0} "
             + " zur Version {1} zu modifizieren.\n"
-            + "Bitte starten Sie pgAdmin und löschen die zugehörige Datenbank."},
+            + "Bitte starten Sie pgAdmin und lÃ¶schen die zugehÃ¶rige Datenbank."},
         {"update.successfully",
             "{0}: Die Datenbank wurde erfolgreich fuer die notwendige Version modifiziert."},
         {"update.notfound", "Fuer das Update muss die Datei update{0}to{1}.sql und/oder"
             + " die Datei Update{0}to{1}.class im (Resource)Verzeichnis {2} existieren."},
-        {"upgrade.required", "Ein Upgrade muss durchgeführt werden.\nBitte führen Sie die Datei as2upgrade.bat oder as2upgrade.sh aus, bevor Sie den Server starten."},
+        {"upgrade.required", "Ein Upgrade muss durchgefÃ¼hrt werden.\nBitte fÃ¼hren Sie die Datei as2upgrade.bat oder as2upgrade.sh aus, bevor Sie den Server starten."},
         {"dbserver.shutdown", "Datenbankserver wurde heruntergefahren" },
         {"info.serveridentification", "Server Identifikation: {0}"},
         {"info.jdbc", "JDBC: {0}"},

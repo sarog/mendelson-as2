@@ -31,110 +31,110 @@ public class ResourceBundleConfigurationIssue_de extends MecResourceBundle {
         //preferences localized
         {String.valueOf(ConfigurationIssue.CERTIFICATE_EXPIRED_ENC_SIGN), "Zertifikat ist abgelaufen (enc/sign)"},
         {"hint." + String.valueOf(ConfigurationIssue.CERTIFICATE_EXPIRED_ENC_SIGN),
-            "<HTML>Zertifikate haben nur eine begrenzte Laufzeit. In der Regel sind das ein, drei oder fünf Jahre.<br>"
-            + "Ein Zertifikat, was Sie in Ihrem System für einen Partner zum Verschlüsseln/Entschlüsseln von Daten, zum digitalen Signieren oder zum Prüfen einer digitalen Signatur verwenden, ist nicht mehr gültig.<br>"
-            + "Es ist nicht möglich, mit einem abgelaufenen Zertifikat kryptographischer Operationen auszuführen - "
-            + "daher sollten Sie sich bitte darum kümmern, das Zertifikat zu erneuern oder ein neues Zertifikat erstellen "
+            "<HTML>Zertifikate haben nur eine begrenzte Laufzeit. In der Regel sind das ein, drei oder fÃ¼nf Jahre.<br>"
+            + "Ein Zertifikat, was Sie in Ihrem System fÃ¼r einen Partner zum VerschlÃ¼sseln/EntschlÃ¼sseln von Daten, zum digitalen Signieren oder zum PrÃ¼fen einer digitalen Signatur verwenden, ist nicht mehr gÃ¼ltig.<br>"
+            + "Es ist nicht mÃ¶glich, mit einem abgelaufenen Zertifikat kryptographischer Operationen auszufÃ¼hren - "
+            + "daher sollten Sie sich bitte darum kÃ¼mmern, das Zertifikat zu erneuern oder ein neues Zertifikat erstellen "
             + "bzw beglaubigen lassen.<br><br>"
             + "<strong>Zusatzinformationen zum Zertifikat:</strong><br><br>"
             + "Alias: {0}<br>"
             + "Issuer: {1}<br>"
             + "Fingerprint (SHA-1): {2}<br>"
-            + "Gültig von: {3}<br>"
-            + "Gültig bis: {4}<br>"
+            + "GÃ¼ltig von: {3}<br>"
+            + "GÃ¼ltig bis: {4}<br>"
             + "<br></HTML>"},
         {String.valueOf(ConfigurationIssue.CERTIFICATE_EXPIRED_SSL), "Zertifikat ist abgelaufen (SSL)"},
         {"hint." + String.valueOf(ConfigurationIssue.CERTIFICATE_EXPIRED_SSL),
-            "<HTML>Zertifikate haben nur eine begrenzte Laufzeit. In der Regel sind das ein, drei oder fünf Jahre.<br>"
-            + "Ein Zertifikat, was Sie in Ihrem System für die SSL/TLS Leitungssicherung verwenden, ist nicht mehr gültig.<br>"
-            + "Es ist nicht möglich, mit einem abgelaufenen Zertifikat kryptographischer Operationen auszuführen - "
-            + "daher sollten Sie sich bitte darum kümmern, das Zertifikat zu erneuern oder ein neues Zertifikat erstellen "
+            "<HTML>Zertifikate haben nur eine begrenzte Laufzeit. In der Regel sind das ein, drei oder fÃ¼nf Jahre.<br>"
+            + "Ein Zertifikat, was Sie in Ihrem System fÃ¼r die SSL/TLS Leitungssicherung verwenden, ist nicht mehr gÃ¼ltig.<br>"
+            + "Es ist nicht mÃ¶glich, mit einem abgelaufenen Zertifikat kryptographischer Operationen auszufÃ¼hren - "
+            + "daher sollten Sie sich bitte darum kÃ¼mmern, das Zertifikat zu erneuern oder ein neues Zertifikat erstellen "
             + "bzw beglaubigen lassen.<br><br>"
             + "<strong>Zusatzinformationen zum Zertifikat:</strong><br><br>"
             + "Alias: {0}<br>"
             + "Issuer: {1}<br>"
             + "Fingerprint (SHA-1): {2}<br>"
-            + "Gültig von: {3}<br>"
-            + "Gültig bis: {4}<br>"
+            + "GÃ¼ltig von: {3}<br>"
+            + "GÃ¼ltig bis: {4}<br>"
             + "<br></HTML>"},
-        {String.valueOf(ConfigurationIssue.MULTIPLE_KEYS_IN_SSL_KEYSTORE), "Mehrere Schlüssel im SSL Keystore gefunden - darf nur einer sein"},
+        {String.valueOf(ConfigurationIssue.MULTIPLE_KEYS_IN_SSL_KEYSTORE), "Mehrere SchlÃ¼ssel im SSL Keystore gefunden - darf nur einer sein"},
         {"hint." + String.valueOf(ConfigurationIssue.MULTIPLE_KEYS_IN_SSL_KEYSTORE),
-            "<HTML>In dem SSL/TLS Keystore Ihres Systems befinden sich mehrere Schlüssel. Es darf sich allerdings nur einer darin befinden - dieser wird beim Start des Servers als SSL/TLS Schlüssel verwendet.<br>"
-            + "Bitte löschen Sie so lange Schüssel aus dem SSL/TLS Keystore, bis nur noch ein Schlüssel darin vorhanden ist.<br>"
-            + "Sie erkennen die Schlüssel in der Zertifikatverwaltung am Schlüsselsymbol in der ersten Spalte.<br>"
-            + "Nach dieser Änderung ist es notwendig, den Server neu zu starten.</HTML>"},
-        {String.valueOf(ConfigurationIssue.NO_KEY_IN_SSL_KEYSTORE), "Kein Schlüssel im SSL Keystore gefunden"},
+            "<HTML>In dem SSL/TLS Keystore Ihres Systems befinden sich mehrere SchlÃ¼ssel. Es darf sich allerdings nur einer darin befinden - dieser wird beim Start des Servers als SSL/TLS SchlÃ¼ssel verwendet.<br>"
+            + "Bitte lÃ¶schen Sie so lange SchÃ¼ssel aus dem SSL/TLS Keystore, bis nur noch ein SchlÃ¼ssel darin vorhanden ist.<br>"
+            + "Sie erkennen die SchlÃ¼ssel in der Zertifikatverwaltung am SchlÃ¼sselsymbol in der ersten Spalte.<br>"
+            + "Nach dieser Ã„nderung ist es notwendig, den Server neu zu starten.</HTML>"},
+        {String.valueOf(ConfigurationIssue.NO_KEY_IN_SSL_KEYSTORE), "Kein SchlÃ¼ssel im SSL Keystore gefunden"},
         {"hint." + String.valueOf(ConfigurationIssue.NO_KEY_IN_SSL_KEYSTORE),
-            "<HTML>Es wurde kein Schlüssel im SSL/TLS Keystore Ihres Systems gefunden.<br>"
-            + "Sie erkennen Schlüssel am vorangestellten Schlüsselsymbol, wenn Sie die Zertifikatverwaltung öffnen.<br>"
-            + "Es wird genau ein Schlüssel im SSL/TLS Keystore benötigt, um den Handshakeprozess der Leitungssicherung durchzuführen.<br>"
-            + "Ohne diesen Schlüssel kommen Sie also weder ein- noch ausgehend zu gesicherten Verbindungen.</HTML>"},
-        {String.valueOf(ConfigurationIssue.HUGE_AMOUNT_OF_TRANSACTIONS_NO_AUTO_DELETE), "Aktivieren Sie automatisches Löschen - Im System ist eine grosse Menge von Transaktionen"},
+            "<HTML>Es wurde kein SchlÃ¼ssel im SSL/TLS Keystore Ihres Systems gefunden.<br>"
+            + "Sie erkennen SchlÃ¼ssel am vorangestellten SchlÃ¼sselsymbol, wenn Sie die Zertifikatverwaltung Ã¶ffnen.<br>"
+            + "Es wird genau ein SchlÃ¼ssel im SSL/TLS Keystore benÃ¶tigt, um den Handshakeprozess der Leitungssicherung durchzufÃ¼hren.<br>"
+            + "Ohne diesen SchlÃ¼ssel kommen Sie also weder ein- noch ausgehend zu gesicherten Verbindungen.</HTML>"},
+        {String.valueOf(ConfigurationIssue.HUGE_AMOUNT_OF_TRANSACTIONS_NO_AUTO_DELETE), "Aktivieren Sie automatisches LÃ¶schen - Im System ist eine grosse Menge von Transaktionen"},
         {"hint." + String.valueOf(ConfigurationIssue.HUGE_AMOUNT_OF_TRANSACTIONS_NO_AUTO_DELETE),
-            "<HTML>In den Einstellungen können Sie definieren, wie lange Transaktionen im System verbleiben sollen.<br>"
-            + "Je mehr Transaktionen im System verbleiben, desto mehr Resourcen werden für die Verwaltung benötigt.<br>"
-            + "Daher sollten Sie mit Hilfe der Einstellungen dafür sorgen, dass Sie nie mehr als maximal 30000 Transaktionen im System haben.<br>"
+            "<HTML>In den Einstellungen kÃ¶nnen Sie definieren, wie lange Transaktionen im System verbleiben sollen.<br>"
+            + "Je mehr Transaktionen im System verbleiben, desto mehr Resourcen werden fÃ¼r die Verwaltung benÃ¶tigt.<br>"
+            + "Daher sollten Sie mit Hilfe der Einstellungen dafÃ¼r sorgen, dass Sie nie mehr als maximal 30000 Transaktionen im System haben.<br>"
             + "Bitte beachten Sie, dass dies kein Archivsystem ist, sondern ein Kommunikationsadapter.<br>"
-            + "Sie haben über die integrierte Suchfunktion des Serverlogs Zugriff auf alle Transaktionslogs der Vergangenheit.</HTML>"},
+            + "Sie haben Ã¼ber die integrierte Suchfunktion des Serverlogs Zugriff auf alle Transaktionslogs der Vergangenheit.</HTML>"},
         {String.valueOf(ConfigurationIssue.FEW_CPU_CORES), "Weisen Sie dem System mindestens 4 Prozessorkerne zu"},
         {"hint." + String.valueOf(ConfigurationIssue.FEW_CPU_CORES),
-            "<HTML>Für besseren Durchsatz ist es notwendig, dass unterschiedliche Aufgaben im System parallel durchgeführt werden.<br>"
-            + "Daher ist es notwendig, eine entsprechende Anzahl von CPU Kernen für den Prozess zu reservieren.</HTML>"},
-        {String.valueOf(ConfigurationIssue.LOW_MAX_HEAP_MEMORY), "Reservieren Sie mindestens 4GB Hauptspeicher für den Serverprozess"},
+            "<HTML>FÃ¼r besseren Durchsatz ist es notwendig, dass unterschiedliche Aufgaben im System parallel durchgefÃ¼hrt werden.<br>"
+            + "Daher ist es notwendig, eine entsprechende Anzahl von CPU Kernen fÃ¼r den Prozess zu reservieren.</HTML>"},
+        {String.valueOf(ConfigurationIssue.LOW_MAX_HEAP_MEMORY), "Reservieren Sie mindestens 4GB Hauptspeicher fÃ¼r den Serverprozess"},
         {"hint." + String.valueOf(ConfigurationIssue.LOW_MAX_HEAP_MEMORY),
             "<HTML>Dieses Programm ist in Java geschrieben.<br>"
-            + "Unabhängig von der physikalischen Ausstattung Ihres Rechners müssen Sie dem Serverprozess eine entsprechende Menge an Speicher reservieren. In Ihrem Fall haben Sie zu wenig Speicher reserviert.<br>"
-            + "Bitte schauen Sie in die Hilfe (Abschnitt Installation) - dort steht, wie Sie für welche Startmethode den entsprechenden Speicher reservieren.</HTML>"},
+            + "UnabhÃ¤ngig von der physikalischen Ausstattung Ihres Rechners mÃ¼ssen Sie dem Serverprozess eine entsprechende Menge an Speicher reservieren. In Ihrem Fall haben Sie zu wenig Speicher reserviert.<br>"
+            + "Bitte schauen Sie in die Hilfe (Abschnitt Installation) - dort steht, wie Sie fÃ¼r welche Startmethode den entsprechenden Speicher reservieren.</HTML>"},
         {String.valueOf(ConfigurationIssue.NO_OUTBOUND_CONNECTIONS_ALLOWED), "Menge ausgehender Verbindungen ist auf 0 gesetzt - das System wird NICHT senden"},
         {"hint." + String.valueOf(ConfigurationIssue.NO_OUTBOUND_CONNECTIONS_ALLOWED),
-            "<HTML>Sie haben Konfigurationsänderungen vorgenommen, sodass aktuell keine ausgehenden Verbindungen möglich sind.<br>"
-            + "Wenn Sie ausgehende Verbindungen zu Partnern aufnehmen möchten, müsste die Anzahl der möglichen Verbindungen mindestens auf den Wert 1 gesetzt werden.</HTML>"},
-        {String.valueOf(ConfigurationIssue.CERTIFICATE_MISSING_ENC_REMOTE_PARTNER), "Fehlendes Verschlüsselungszertifikat eines entfernten Partners"},
+            "<HTML>Sie haben KonfigurationsÃ¤nderungen vorgenommen, sodass aktuell keine ausgehenden Verbindungen mÃ¶glich sind.<br>"
+            + "Wenn Sie ausgehende Verbindungen zu Partnern aufnehmen mÃ¶chten, mÃ¼sste die Anzahl der mÃ¶glichen Verbindungen mindestens auf den Wert 1 gesetzt werden.</HTML>"},
+        {String.valueOf(ConfigurationIssue.CERTIFICATE_MISSING_ENC_REMOTE_PARTNER), "Fehlendes VerschlÃ¼sselungszertifikat eines entfernten Partners"},
         {"hint." + String.valueOf(ConfigurationIssue.CERTIFICATE_MISSING_ENC_REMOTE_PARTNER),
-            "<HTML>Ein Verbindungpartner hat in Ihrer Konfiguration kein Verschlüsselungszertifikat zugewiesen.<br>"
-            + "Sie können in diesem Fall keine Nachrichten an ihn verschlüsseln. Bitte öffnen Sie die Partnerverwaltung und weisen Sie dem Partner ein Verschlüsselungszertifikat zu.</HTML>"},
+            "<HTML>Ein Verbindungpartner hat in Ihrer Konfiguration kein VerschlÃ¼sselungszertifikat zugewiesen.<br>"
+            + "Sie kÃ¶nnen in diesem Fall keine Nachrichten an ihn verschlÃ¼sseln. Bitte Ã¶ffnen Sie die Partnerverwaltung und weisen Sie dem Partner ein VerschlÃ¼sselungszertifikat zu.</HTML>"},
         {String.valueOf(ConfigurationIssue.CERTIFICATE_MISSING_SIGN_REMOTE_PARTNER), "Fehlendes Signaturzertifikat eines entfernten Partners"},
         {"hint." + String.valueOf(ConfigurationIssue.CERTIFICATE_MISSING_SIGN_REMOTE_PARTNER),
             "<HTML>Ein Verbindungpartner hat in Ihrer Konfiguration kein Signaturzertifikat zugewiesen.<br>"
-            + "Sie können in diesem Fall keine digitalen Signaturen Ihres Partners verifizieren. Bitte öffnen Sie die Partnerverwaltung und weisen Sie dem Partner ein Signaturzertifikat zu.</HTML>"},
-        {String.valueOf(ConfigurationIssue.KEY_MISSING_ENC_LOCAL_STATION), "Fehlender Verschlüsselungsschlüssel einer lokalen Station"},
+            + "Sie kÃ¶nnen in diesem Fall keine digitalen Signaturen Ihres Partners verifizieren. Bitte Ã¶ffnen Sie die Partnerverwaltung und weisen Sie dem Partner ein Signaturzertifikat zu.</HTML>"},
+        {String.valueOf(ConfigurationIssue.KEY_MISSING_ENC_LOCAL_STATION), "Fehlender VerschlÃ¼sselungsschlÃ¼ssel einer lokalen Station"},
         {"hint." + String.valueOf(ConfigurationIssue.KEY_MISSING_ENC_LOCAL_STATION),
-            "<HTML>Ihre lokale Station hat keinen Verschlüsselungsschlüssel zugewiesen.<br>"
-            + "Sie können in dieser Konfiguration keine eingehenden Nachrichten entschlüsseln - egal von welchem Partner.<br>"
-            + "Bitte öffnen Sie die Partnerverwaltung und weisen Sie der lokalen Station einen privaten Schlüssel zu.</HTML>"},
-        {String.valueOf(ConfigurationIssue.KEY_MISSING_SIGN_LOCAL_STATION), "Fehlender Signaturschlüssel einer lokalen Station"},
+            "<HTML>Ihre lokale Station hat keinen VerschlÃ¼sselungsschlÃ¼ssel zugewiesen.<br>"
+            + "Sie kÃ¶nnen in dieser Konfiguration keine eingehenden Nachrichten entschlÃ¼sseln - egal von welchem Partner.<br>"
+            + "Bitte Ã¶ffnen Sie die Partnerverwaltung und weisen Sie der lokalen Station einen privaten SchlÃ¼ssel zu.</HTML>"},
+        {String.valueOf(ConfigurationIssue.KEY_MISSING_SIGN_LOCAL_STATION), "Fehlender SignaturschlÃ¼ssel einer lokalen Station"},
         {"hint." + String.valueOf(ConfigurationIssue.KEY_MISSING_SIGN_LOCAL_STATION),
-            "<HTML>Ihre lokale Station hat keinen Signaturschlüssel zugewiesen.<br>"
-            + "Sie können in dieser Konfiguration keine ausgehenden Nachrichten digital signieren - egal für welchem Partner.<br>"
-            + "Bitte öffnen Sie die Partnerverwaltung und weisen Sie der lokalen Station einen privaten Schlüssel zu.</HTML>"},
-        {String.valueOf(ConfigurationIssue.USE_OF_TEST_KEYS_IN_SSL), "Verwendung eines öffentlich verfügbaren Testschlüssels als SSL Schlüssel"},
+            "<HTML>Ihre lokale Station hat keinen SignaturschlÃ¼ssel zugewiesen.<br>"
+            + "Sie kÃ¶nnen in dieser Konfiguration keine ausgehenden Nachrichten digital signieren - egal fÃ¼r welchem Partner.<br>"
+            + "Bitte Ã¶ffnen Sie die Partnerverwaltung und weisen Sie der lokalen Station einen privaten SchlÃ¼ssel zu.</HTML>"},
+        {String.valueOf(ConfigurationIssue.USE_OF_TEST_KEYS_IN_SSL), "Verwendung eines Ã¶ffentlich verfÃ¼gbaren TestschlÃ¼ssels als SSL SchlÃ¼ssel"},
         {"hint." + String.valueOf(ConfigurationIssue.USE_OF_TEST_KEYS_IN_SSL),
-            "<HTML>In der Auslieferung stellt mendelson einige Testschlüssel zur Verfügung.<br>"
-            + "Diese sind auf der mendelson Webseite öffentlich verfügbar.<br>"
-            + "Wenn Sie diese Schlüssel für kryptographische Aufgaben innerhalb Ihres Datentransfers produktiv verwenden, bieten sie daher <strong>KEINE</strong> Sicherheit.<br>"
-            + "Hier können Sie dann auch gleich ungesichert und unverschlüsselt senden.<br>"
-            + "Wenn Sie einen beglaubigten Schlüssel benötigen, wenden Sie sich bitte an den mendelson Support.</HTML>"},
-        {String.valueOf(ConfigurationIssue.JVM_32_BIT), "Die Verwendung einer 32 Bit Java VM wird nicht für den produktiven Einsatz empfohlen, da dann der maximale Heap-Speicher auf 1,3GB begrenzt ist."},
+            "<HTML>In der Auslieferung stellt mendelson einige TestschlÃ¼ssel zur VerfÃ¼gung.<br>"
+            + "Diese sind auf der mendelson Webseite Ã¶ffentlich verfÃ¼gbar.<br>"
+            + "Wenn Sie diese SchlÃ¼ssel fÃ¼r kryptographische Aufgaben innerhalb Ihres Datentransfers produktiv verwenden, bieten sie daher <strong>KEINE</strong> Sicherheit.<br>"
+            + "Hier kÃ¶nnen Sie dann auch gleich ungesichert und unverschlÃ¼sselt senden.<br>"
+            + "Wenn Sie einen beglaubigten SchlÃ¼ssel benÃ¶tigen, wenden Sie sich bitte an den mendelson Support.</HTML>"},
+        {String.valueOf(ConfigurationIssue.JVM_32_BIT), "Die Verwendung einer 32 Bit Java VM wird nicht fÃ¼r den produktiven Einsatz empfohlen, da dann der maximale Heap-Speicher auf 1,3GB begrenzt ist."},
         {"hint." + String.valueOf(ConfigurationIssue.JVM_32_BIT),
-            "<HTML>Java 32bit Prozesse können nicht genug Speicher reservieren, um das System im Produktivbetrieb stabil zu halten. Bitte verwenden Sie eine 64bit JVM.</HTML>"},
+            "<HTML>Java 32bit Prozesse kÃ¶nnen nicht genug Speicher reservieren, um das System im Produktivbetrieb stabil zu halten. Bitte verwenden Sie eine 64bit JVM.</HTML>"},
         {String.valueOf(ConfigurationIssue.DIFFERENT_KEYSTORES_TLS), "TLS Sende- und Empfangskeystore sind unterschiedlich"},
         {"hint." + String.valueOf(ConfigurationIssue.DIFFERENT_KEYSTORES_TLS),
-            "<HTML>Im unterliegenden HTTP Server haben Sie den Keystore \"<strong>{0}</strong>\" für TLS definiert (in der Konfigurationsdatei \"<strong>{1}</strong>\").<br><br>"
-            + "Für HTTPS Sendezwecke haben Sie den Keystore \"<strong>{2}</strong>\" in den Systemeinstellungen definiert.<br><br>"
-            + "Das funktioniert gut. Sie können jedoch nicht beide Keystores über die Benutzeroberfläche verwalten, da die TLS Zertifikatverwaltung nur einen Keystore bearbeiten kann.</HTML>"},
+            "<HTML>Im unterliegenden HTTP Server haben Sie den Keystore \"<strong>{0}</strong>\" fÃ¼r TLS definiert (in der Konfigurationsdatei \"<strong>{1}</strong>\").<br><br>"
+            + "FÃ¼r HTTPS Sendezwecke haben Sie den Keystore \"<strong>{2}</strong>\" in den Systemeinstellungen definiert.<br><br>"
+            + "Das funktioniert gut. Sie kÃ¶nnen jedoch nicht beide Keystores Ã¼ber die BenutzeroberflÃ¤che verwalten, da die TLS Zertifikatverwaltung nur einen Keystore bearbeiten kann.</HTML>"},
         {String.valueOf(ConfigurationIssue.WINDOWS_SERVICE_LOCAL_SYSTEM_ACCOUNT), "Windows Service mit lokalem Systemkonto gestartet"},
         {"hint." + String.valueOf(ConfigurationIssue.WINDOWS_SERVICE_LOCAL_SYSTEM_ACCOUNT),
-            "<HTML>Sie haben den mendelson AS2 Server als Windows Service eingerichtet und starten ihn über ein lokales Systemkonto (\"{0}\").<br>"
-            + "Leider ist es möglich, dass dieser Benutzer nach einem Windows Update die Rechte an seinen vormals geschriebenen Dateien verliert, "
-            + "das kann zu vielfältigen Systemproblemen führen.<br><br>"
-            + "Bitte richten Sie einen eigenen Benutzer für den Service ein und starten den Service mit diesem Benutzer.</HTML>"},
-        {String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS), "Große Menge von Verzeichnisüberwachungen pro Zeiteinheit"},
+            "<HTML>Sie haben den mendelson AS2 Server als Windows Service eingerichtet und starten ihn Ã¼ber ein lokales Systemkonto (\"{0}\").<br>"
+            + "Leider ist es mÃ¶glich, dass dieser Benutzer nach einem Windows Update die Rechte an seinen vormals geschriebenen Dateien verliert, "
+            + "das kann zu vielfÃ¤ltigen Systemproblemen fÃ¼hren.<br><br>"
+            + "Bitte richten Sie einen eigenen Benutzer fÃ¼r den Service ein und starten den Service mit diesem Benutzer.</HTML>"},
+        {String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS), "GroÃŸe Menge von VerzeichnisÃ¼berwachungen pro Zeiteinheit"},
         {"hint." + String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS),
-            "<HTML>Sie haben in Ihrem System eine große Menge von Partnerbeziehnungen definiert und überwachen die entsprechenden "
-            + "Ausgangsverzeichnisse in zu kurzen Zeitintervallen.<br>Aktuell werden pro Minute {0} Verzeichnisüberwachungen aktiviert.<br>"
-            + "Bitte reduzieren Sie diesen Wert, indem Sie die Überwachungsintervalle der jeweiligen Partnerverzeichnisse vergrößern und"
-            + " auch Überwachungen für Partner deaktivieren, wo dies nicht benötigt wird."
-            + "Bei einer großen Anzahl von Partnern wird empfohlen, alle Verzeichnisüberwachungen deaktivieren und die Sendeaufträge von "
+            "<HTML>Sie haben in Ihrem System eine groÃŸe Menge von Partnerbeziehnungen definiert und Ã¼berwachen die entsprechenden "
+            + "Ausgangsverzeichnisse in zu kurzen Zeitintervallen.<br>Aktuell werden pro Minute {0} VerzeichnisÃ¼berwachungen aktiviert.<br>"
+            + "Bitte reduzieren Sie diesen Wert, indem Sie die Ãœberwachungsintervalle der jeweiligen Partnerverzeichnisse vergrÃ¶ÃŸern und"
+            + " auch Ãœberwachungen fÃ¼r Partner deaktivieren, wo dies nicht benÃ¶tigt wird."
+            + "Bei einer groÃŸen Anzahl von Partnern wird empfohlen, alle VerzeichnisÃ¼berwachungen deaktivieren und die SendeauftrÃ¤ge von "
             + "Ihrem Backend aus mit den Befehlen <i>AS2Send.exe</i> oder <i>as2send.sh</i> nach Bedarf zu erstellen.</HTML>"}
     };
 }

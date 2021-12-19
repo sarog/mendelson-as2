@@ -35,15 +35,15 @@ public class ResourceBundleExportCertificate_fr extends MecResourceBundle{
     {"label.exportfile", "Fichier d'export:" },
     {"label.alias", "Alias:" },        
     {"label.encoding", "Encodage:" },
-    {"filechooser.certificate.export", "Merci de sélectionner le fichier d'export du certificat." },
-    {"certificate.export.error.title", "L'export du certificat a échoué" },
-    {"certificate.export.error.message", "L'export du certificat suivant a échoué:\n{0}" },
-    {"certificate.export.success.title", "Succès" },
-    {"certificate.export.success.message", "Le certificat a été exporté avec succès a\n\"{0}\"" }, 
+    {"filechooser.certificate.export", "Merci de sÃ©lectionner le fichier d'export du certificat." },
+    {"certificate.export.error.title", "L'export du certificat a Ã©chouÃ©" },
+    {"certificate.export.error.message", "L'export du certificat suivant a Ã©chouÃ©:\n{0}" },
+    {"certificate.export.success.title", "SuccÃ¨s" },
+    {"certificate.export.success.message", "Le certificat a Ã©tÃ© exportÃ© avec succÃ¨s a\n\"{0}\"" }, 
     {JDialogExportCertificate.PEM, "Format texte (PEM. *.cer)" },
     {JDialogExportCertificate.DER, "Format binaire (DER, *.cer)" },
-    {JDialogExportCertificate.PKCS7, "Avec chaîne de confiance (PKCS#7, *.p7b)" },  
-    {JDialogExportCertificate.SSH2, "Format SSH2 (clé publique, *.pub)"},
+    {JDialogExportCertificate.PKCS7, "Avec chaÃ®ne de confiance (PKCS#7, *.p7b)" },  
+    {JDialogExportCertificate.SSH2, "Format SSH2 (clÃ© publique, *.pub)"},
   };		
   
 }

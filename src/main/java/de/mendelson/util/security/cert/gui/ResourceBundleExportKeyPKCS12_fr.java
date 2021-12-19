@@ -34,16 +34,16 @@ public class ResourceBundleExportKeyPKCS12_fr extends MecResourceBundle {
         {"button.ok", "Valider"},
         {"button.cancel", "Annuler"},
         {"button.browse", "Parcourir..."},
-        {"keystore.contains.nokeys", "Ce porte-clef ne contient aucune clef privée."},
+        {"keystore.contains.nokeys", "Ce porte-clef ne contient aucune clef privÃ©e."},
         {"label.exportkey", "Exporter le porte-clef (PKCS#12):"},
         {"label.keypass", "Mot de passe d'export du porte-clef:"},
         {"title", "Export de la clef vers le porte-clef (PKCS#12 format)"},
-        {"filechooser.key.export", "Merci de sélectionner le fichier porte-clef PKCS#12 pour l'export"},
-        {"key.export.success.message", "La clef a été exportée avec succès."},
-        {"key.export.success.title", "Succès"},
+        {"filechooser.key.export", "Merci de sÃ©lectionner le fichier porte-clef PKCS#12 pour l'export"},
+        {"key.export.success.message", "La clef a Ã©tÃ© exportÃ©e avec succÃ¨s."},
+        {"key.export.success.title", "SuccÃ¨s"},
         {"key.export.error.message", "Une erreur a eu lieu lors du processus d'export.\n{0}"},
         {"key.export.error.title", "Erreur"},
-        {"label.alias", "Clef à exporter:"},
-        {"key.exported.to.file", "La clef \"{0}\" a été insérée dans le porte-clef \"{1}\"."},};
+        {"label.alias", "Clef Ã  exporter:"},
+        {"key.exported.to.file", "La clef \"{0}\" a Ã©tÃ© insÃ©rÃ©e dans le porte-clef \"{1}\"."},};
 
 }

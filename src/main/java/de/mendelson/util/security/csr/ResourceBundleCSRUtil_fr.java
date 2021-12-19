@@ -25,12 +25,12 @@ public class ResourceBundleCSRUtil_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {                
-        {"verification.failed", "L''opération a échoué - Vérification de la CSR created a échoué" },
-        {"no.certificates.in.reply", "L''opération a échoué - Aucun certificat de la réponse de la CSR, incapable de patcher la clé" },
-        {"missing.cert.in.trustchain", "L''opération a échoué - Le système n''a pas établi de la chaîne de confiance de la réponse.\nVeuillez importer le certificat avec le \nissuer\n {0} keystore du premier." },
-        {"response.chain.incomplete", "L''opération a échoué - La chaîne de certificats de la réponse est incomplète" },
-        {"response.verification.failed", "L''opération a échoué - Problème de vérification de la chaîne de certificats de la réponse: {0}" },
-        {"response.public.key.does.not.match", "L''opération a échoué - Ce n''est pas la solution CA de cette clé." },
+        {"verification.failed", "L''opÃ©ration a Ã©chouÃ© - VÃ©rification de la CSR created a Ã©chouÃ©" },
+        {"no.certificates.in.reply", "L''opÃ©ration a Ã©chouÃ© - Aucun certificat de la rÃ©ponse de la CSR, incapable de patcher la clÃ©" },
+        {"missing.cert.in.trustchain", "L''opÃ©ration a Ã©chouÃ© - Le systÃ¨me n''a pas Ã©tabli de la chaÃ®ne de confiance de la rÃ©ponse.\nVeuillez importer le certificat avec le \nissuer\n {0} keystore du premier." },
+        {"response.chain.incomplete", "L''opÃ©ration a Ã©chouÃ© - La chaÃ®ne de certificats de la rÃ©ponse est incomplÃ¨te" },
+        {"response.verification.failed", "L''opÃ©ration a Ã©chouÃ© - ProblÃ¨me de vÃ©rification de la chaÃ®ne de certificats de la rÃ©ponse: {0}" },
+        {"response.public.key.does.not.match", "L''opÃ©ration a Ã©chouÃ© - Ce n''est pas la solution CA de cette clÃ©." },
     };
 
 }

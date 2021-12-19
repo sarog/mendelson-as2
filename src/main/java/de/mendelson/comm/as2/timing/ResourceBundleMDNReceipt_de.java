@@ -25,7 +25,7 @@ public class ResourceBundleMDNReceipt_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"expired", "Wartezeit auf MDN wurde überschritten." },
+        {"expired", "Wartezeit auf MDN wurde Ã¼berschritten." },
     };
     
 }

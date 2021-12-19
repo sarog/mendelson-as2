@@ -110,7 +110,7 @@ public class AS2ServerVersion {
      * Gets the company address
      */
     public static String getStreet() {
-        return ("Kurfürstendamm 30");
+        return ("KurfÃ¼rstendamm 30");
     }
 
     /**

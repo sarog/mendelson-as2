@@ -25,7 +25,7 @@ public class ResourceBundleListCellRendererCertificates_fr extends MecResourceBu
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {                
-        {"certificate.not.assigned", "Aucun/Non trouvé/Non attribué" },
+        {"certificate.not.assigned", "Aucun/Non trouvÃ©/Non attribuÃ©" },
     };
     
 }

@@ -25,7 +25,7 @@ public class ResourceBundleClientServerSessionHandlerLocalhost_de extends MecRes
     }
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"only.localhost.clients", "Der entfernte Server darf nur Verbindungen von localhost entgegennehmen. Um dieses Verhalten zu ändern, starten Sie ihn bitte mit der Option \"-allowallclients\"."},
+        {"only.localhost.clients", "Der entfernte Server darf nur Verbindungen von localhost entgegennehmen. Um dieses Verhalten zu Ã¤ndern, starten Sie ihn bitte mit der Option \"-allowallclients\"."},
         {"allowallclients.true", "**Der AS22 Server akzeptiert AS2 Client Anfragen von anderen Hosts**"},
         {"allowallclients.false", "**Der AS2 Server akzeptiert nur lokale Client Anfragen**"},
     };

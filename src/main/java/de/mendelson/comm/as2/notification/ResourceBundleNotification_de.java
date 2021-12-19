@@ -28,12 +28,12 @@ public class ResourceBundleNotification_de extends MecResourceBundle {
     static final Object[][] CONTENTS = {
         //dialog
         {"test.message.send", "Eine Testnachricht wurde geschickt an {0}."},
-        {"test.message.debug", "\nDer Mailversandprozess schlug fehlt, die folgenden Zusatzinformationen könnten Ihnen helfen, das Problem einzugrenzen:\n" },
-        {"transaction.message.send", "{0}: {1} wurde über den Fehler in der Transaktion per eMail benachrichtigt."},
-        {"transaction.message.send.error", "{0}: Das Senden einer Benachrichtigungsmail über einen Transaktionfehler an {1} schlug fehl: {2}."},
+        {"test.message.debug", "\nDer Mailversandprozess schlug fehlt, die folgenden Zusatzinformationen kÃ¶nnten Ihnen helfen, das Problem einzugrenzen:\n" },
+        {"transaction.message.send", "{0}: {1} wurde Ã¼ber den Fehler in der Transaktion per eMail benachrichtigt."},
+        {"transaction.message.send.error", "{0}: Das Senden einer Benachrichtigungsmail Ã¼ber einen Transaktionfehler an {1} schlug fehl: {2}."},
         {"misc.message.send", "Eine Benachrichtigungsmail wurde an {0} geschickt."},
-        {"cert.message.send", "{0} wurde über ein ablaufendes oder abgelaufenes Zertifikat per eMail informiert [{1}]."},
-        {"quota.send.message.send", "{0} wurde über ein überschrittenes Sendekontingent per eMail informiert."},
-        {"quota.receive.message.send", "{0} wurde über ein überschrittenes Empfangskontingent per eMail informiert."},
-        {"quota.sendreceive.message.send", "{0} wurde über ein überschrittenes Sende- und Empfangskontingent per eMail informiert."},};
+        {"cert.message.send", "{0} wurde Ã¼ber ein ablaufendes oder abgelaufenes Zertifikat per eMail informiert [{1}]."},
+        {"quota.send.message.send", "{0} wurde Ã¼ber ein Ã¼berschrittenes Sendekontingent per eMail informiert."},
+        {"quota.receive.message.send", "{0} wurde Ã¼ber ein Ã¼berschrittenes Empfangskontingent per eMail informiert."},
+        {"quota.sendreceive.message.send", "{0} wurde Ã¼ber ein Ã¼berschrittenes Sende- und Empfangskontingent per eMail informiert."},};
 }

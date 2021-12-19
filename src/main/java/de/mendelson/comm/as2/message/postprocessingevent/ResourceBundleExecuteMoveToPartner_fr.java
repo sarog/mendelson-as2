@@ -25,13 +25,13 @@ public class ResourceBundleExecuteMoveToPartner_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"executing.receipt", "[Post-traitement] ({0} --> {1}) Exécuter l''événement après la réception." },
-        {"executing.send", "[Post-traitement] ({0} --> {1}) Exécution de l'événement après l'envoi." },
-        {"targetpartner.does.not.exist", "[Post-traitement] Le partenaire cible avec l'identification AS2 \"{0}\" n''existe pas dans le système..sauter l''exécution d''un événement" },
+        {"executing.receipt", "[Post-traitement] ({0} --> {1}) ExÃ©cuter l''Ã©vÃ©nement aprÃ¨s la rÃ©ception." },
+        {"executing.send", "[Post-traitement] ({0} --> {1}) ExÃ©cution de l'Ã©vÃ©nement aprÃ¨s l'envoi." },
+        {"targetpartner.does.not.exist", "[Post-traitement] Le partenaire cible avec l'identification AS2 \"{0}\" n''existe pas dans le systÃ¨me..sauter l''exÃ©cution d''un Ã©vÃ©nement" },
         {"executing.targetpartner", "[Post-traitement] Partenaires cibles: \"{0}\"." },
-        {"executing.movetopartner", "[Post-traitement] Transférer le message du fichier \"{0}\" au partenaire de destination \"{1}\"." },
-        {"executing.movetopartner.success", "[Post-traitement] L''ordre d''expédition a été créé avec succès (\"{0}\")." },
-        {"messageid.nolonger.exist", "[Post-traitement] L'événement de post-traitement n'a pas pu être exécuté - le message \"{0}\" n'existe plus dans le système..sauter l''exécution d''un événement" },
+        {"executing.movetopartner", "[Post-traitement] TransfÃ©rer le message du fichier \"{0}\" au partenaire de destination \"{1}\"." },
+        {"executing.movetopartner.success", "[Post-traitement] L''ordre d''expÃ©dition a Ã©tÃ© crÃ©Ã© avec succÃ¨s (\"{0}\")." },
+        {"messageid.nolonger.exist", "[Post-traitement] L'Ã©vÃ©nement de post-traitement n'a pas pu Ãªtre exÃ©cutÃ© - le message \"{0}\" n'existe plus dans le systÃ¨me..sauter l''exÃ©cution d''un Ã©vÃ©nement" },
     };
     
 }

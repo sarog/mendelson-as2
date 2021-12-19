@@ -25,8 +25,8 @@ public class ResourceBundleProcessingEvent_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"event.enqueued", "Das definierte Nachbearbeitungsereignis ({0}) wurde in die Warteschlange gestellt und wird in einigen Sekunden ausgeführt." },
-        {"processtype." + ProcessingEvent.PROCESS_EXECUTE_SHELL, "Kommando auf der Systemshell ausführen" },
+        {"event.enqueued", "Das definierte Nachbearbeitungsereignis ({0}) wurde in die Warteschlange gestellt und wird in einigen Sekunden ausgefÃ¼hrt." },
+        {"processtype." + ProcessingEvent.PROCESS_EXECUTE_SHELL, "Kommando auf der Systemshell ausfÃ¼hren" },
         {"processtype." + ProcessingEvent.PROCESS_MOVE_TO_DIR, "Nachricht in Verzeichnis verschieben" },
         {"processtype." + ProcessingEvent.PROCESS_MOVE_TO_PARTNER, "Nachricht an Partner weiterleiten" },
         {"eventtype." + ProcessingEvent.TYPE_RECEIPT_SUCCESS, "Empfang" },

@@ -31,11 +31,11 @@ public class ResourceBundleKeyStoreUtil_de extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         {"alias.exist", "Ein Eintrag mit dem Alias \"{0}\" ist bereits in dem unterliegenden Keystore vorhanden."},
-        {"readerror.invalidcert", "Die ist kein gültiges Zertifikat oder es verwendet ein nicht unterstütztes Encoding."},
-        {"readerror.zipcert", "Dies ist kein gültiges Zertifikat, sondern ein zip Archiv."},
-        {"privatekey.notfound", "Der Keystore beinhaltet keinen privaten Schlüssel mit dem Alias \"{0}\"."},
+        {"readerror.invalidcert", "Die ist kein gÃ¼ltiges Zertifikat oder es verwendet ein nicht unterstÃ¼tztes Encoding."},
+        {"readerror.zipcert", "Dies ist kein gÃ¼ltiges Zertifikat, sondern ein zip Archiv."},
+        {"privatekey.notfound", "Der Keystore beinhaltet keinen privaten SchlÃ¼ssel mit dem Alias \"{0}\"."},
         {"alias.rename.new.equals.old", "Umbenennen eines Keystore Eintrags: Neuer und alter Alias sind identisch."},
-        {"ssh2.algorithmn.not.supported", "SSH2 Kodierung ist nicht unterstützt für Schlüssel des Algorithmus \"{0}\". Unterstützte Algorithmen sind: DSA, RSA" },
+        {"ssh2.algorithmn.not.supported", "SSH2 Kodierung ist nicht unterstÃ¼tzt fÃ¼r SchlÃ¼ssel des Algorithmus \"{0}\". UnterstÃ¼tzte Algorithmen sind: DSA, RSA" },
     };
 
 }

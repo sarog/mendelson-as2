@@ -29,22 +29,22 @@ public class ResourceBundleHTTPServerConfigProcessor_fr extends MecResourceBundl
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"http.server.config.listener", "Port {0} ({1}), Relié à l''adaptateur réseau {2}"},
+        {"http.server.config.listener", "Port {0} ({1}), ReliÃ© Ã  l''adaptateur rÃ©seau {2}"},
         {"http.server.config.keystorepath", "SSL/TLS keystore: \"{0}\""},
         {"http.server.config.clientauthentication", "Le serveur requiert une authentification client: {0}"},
         {"external.ip", "IP externe: {0} / {1}"},
-        {"external.ip.error", "IP externe: -Ne peut pas être détecté-"},
-        {"http.receipturls", "URL de réception complète qui sont possibles dans la configuration actuelle:"},
-        {"http.serverstateurl", "Affichage de l''état du serveur:"},
-        {"http.deployedwars", "Fichiers war actuellement déployés dans le serveur HTTP (fonctionnalité Servlet):"},
-        {"webapp.as2.war", "mendelson AS2 Servlet de récepteur"},
-        {"webapp.as4.war", "mendelson AS4 Servlet de récepteur"},
+        {"external.ip.error", "IP externe: -Ne peut pas Ãªtre dÃ©tectÃ©-"},
+        {"http.receipturls", "URL de rÃ©ception complÃ¨te qui sont possibles dans la configuration actuelle:"},
+        {"http.serverstateurl", "Affichage de l''Ã©tat du serveur:"},
+        {"http.deployedwars", "Fichiers war actuellement dÃ©ployÃ©s dans le serveur HTTP (fonctionnalitÃ© Servlet):"},
+        {"webapp.as2.war", "mendelson AS2 Servlet de rÃ©cepteur"},
+        {"webapp.as4.war", "mendelson AS4 Servlet de rÃ©cepteur"},
         {"webapp.webas2.war", "mendelson AS2 Server Web Monitoring"},
         {"webapp.as2-sample.war", "Exemples d''API AS2 mendelson"},
         {"webapp.as4-sample.war", "Exemples d''API AS4 mendelson"},
-        {"info.cipher", "Les codes suivants sont pris en charge par le serveur HTTP sous-jacent.\nLes modèles supportés dépendent de votre Java VM ({1}).\nVous pouvez désactiver les différents chiffres dans le fichier de configuration\n(\"{0}\")."},
-        {"info.cipher.howtochange", "Pour désactiver certains chiffres pour les connexions entrantes, veuillez modifier le fichier de configuration de votre serveur HTTP intégré ({0}) avec un éditeur de texte. Veuillez rechercher la chaîne <Set name=\"ExcludeCipherSuites\">, ajouter le chiffre à exclure et redémarrer le programme."},
-        {"info.protocols", "Les protocoles suivants sont pris en charge par le serveur HTTP sous-jacent.\nLes protocoles pris en charge dépendent de votre VM Java utilisé ({1}).\nVous pouvez désactiver les protocoles individuels dans le fichier de configuration\n(\"{0}\")."},
-        {"info.protocols.howtochange", "Pour désactiver certains protocoles en entrée, veuillez modifier le fichier de configuration de votre serveur HTTP intégré ({0}) avec un éditeur de texte. Veuillez rechercher la chaîne <Set name=\"ExcludeProtocols\">, ajouter le protocole à exclure et redémarrer le programme."},
+        {"info.cipher", "Les codes suivants sont pris en charge par le serveur HTTP sous-jacent.\nLes modÃ¨les supportÃ©s dÃ©pendent de votre Java VM ({1}).\nVous pouvez dÃ©sactiver les diffÃ©rents chiffres dans le fichier de configuration\n(\"{0}\")."},
+        {"info.cipher.howtochange", "Pour dÃ©sactiver certains chiffres pour les connexions entrantes, veuillez modifier le fichier de configuration de votre serveur HTTP intÃ©grÃ© ({0}) avec un Ã©diteur de texte. Veuillez rechercher la chaÃ®ne <Set name=\"ExcludeCipherSuites\">, ajouter le chiffre Ã  exclure et redÃ©marrer le programme."},
+        {"info.protocols", "Les protocoles suivants sont pris en charge par le serveur HTTP sous-jacent.\nLes protocoles pris en charge dÃ©pendent de votre VM Java utilisÃ© ({1}).\nVous pouvez dÃ©sactiver les protocoles individuels dans le fichier de configuration\n(\"{0}\")."},
+        {"info.protocols.howtochange", "Pour dÃ©sactiver certains protocoles en entrÃ©e, veuillez modifier le fichier de configuration de votre serveur HTTP intÃ©grÃ© ({0}) avec un Ã©diteur de texte. Veuillez rechercher la chaÃ®ne <Set name=\"ExcludeProtocols\">, ajouter le protocole Ã  exclure et redÃ©marrer le programme."},
     };
 }

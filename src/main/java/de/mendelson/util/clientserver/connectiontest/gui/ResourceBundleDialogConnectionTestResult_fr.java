@@ -30,42 +30,42 @@ public class ResourceBundleDialogConnectionTestResult_fr extends MecResourceBund
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"title", "Résultat du test de connexion"},
+        {"title", "RÃ©sultat du test de connexion"},
         {"description." + JDialogConnectionTestResult.CONNECTION_TEST_OFTP2, 
-            "Le système a effectué un test de connexion à l'adresse {0}, port {1}. "
-            + "Le résultat suivant indique si la connexion a réussi et si un serveur OFTP2 "
-            + "fonctionne à cette adresse. Si une connexion TLS doit être utilisée et que cela "
-            + "était possible, vous pouvez télécharger les certificats de votre partenaire et les "
+            "Le systÃ¨me a effectuÃ© un test de connexion Ã  l'adresse {0}, port {1}. "
+            + "Le rÃ©sultat suivant indique si la connexion a rÃ©ussi et si un serveur OFTP2 "
+            + "fonctionne Ã  cette adresse. Si une connexion TLS doit Ãªtre utilisÃ©e et que cela "
+            + "Ã©tait possible, vous pouvez tÃ©lÃ©charger les certificats de votre partenaire et les "
             + "importer dans votre keystore."},
         {"description." + JDialogConnectionTestResult.CONNECTION_TEST_AS2, 
-            "Le système a effectué un test de connexion à l''adresse {0}, port {1}. "
-            + "Le résultat suivant indique si la connexion a réussi et si un serveur "
-            + "HTTP fonctionne à cette adresse. Même si le test est réussi, il n''est "
+            "Le systÃ¨me a effectuÃ© un test de connexion Ã  l''adresse {0}, port {1}. "
+            + "Le rÃ©sultat suivant indique si la connexion a rÃ©ussi et si un serveur "
+            + "HTTP fonctionne Ã  cette adresse. MÃªme si le test est rÃ©ussi, il n''est "
             + "pas certain qu''il s'agisse d''un serveur HTTP normal ou d''un serveur "
-            + "AS2. Si une connexion TLS doit être utilisée (HTTPS) et que cela a été "
-            + "possible avec succès, vous pouvez télécharger les certificats de votre "
+            + "AS2. Si une connexion TLS doit Ãªtre utilisÃ©e (HTTPS) et que cela a Ã©tÃ© "
+            + "possible avec succÃ¨s, vous pouvez tÃ©lÃ©charger les certificats de votre "
             + "partenaire et les importer dans votre keystore."},
         {"description." + JDialogConnectionTestResult.CONNECTION_TEST_AS4, 
-            "Le système a effectué un test de connexion à l''adresse {0}, port {1}. "
-            + "Le résultat suivant indique si la connexion a réussi et si un serveur "
-            + "HTTP fonctionne à cette adresse. Même si le test est réussi, il n''est "
+            "Le systÃ¨me a effectuÃ© un test de connexion Ã  l''adresse {0}, port {1}. "
+            + "Le rÃ©sultat suivant indique si la connexion a rÃ©ussi et si un serveur "
+            + "HTTP fonctionne Ã  cette adresse. MÃªme si le test est rÃ©ussi, il n''est "
             + "pas certain qu''il s'agisse d''un serveur HTTP normal ou d''un serveur "
-            + "AS4. Si une connexion TLS doit être utilisée (HTTPS) et que cela a été "
-            + "possible avec succès, vous pouvez télécharger les certificats de votre "
+            + "AS4. Si une connexion TLS doit Ãªtre utilisÃ©e (HTTPS) et que cela a Ã©tÃ© "
+            + "possible avec succÃ¨s, vous pouvez tÃ©lÃ©charger les certificats de votre "
             + "partenaire et les importer dans votre keystore."},
-        {"OK", "[RÉUSSIEUX]"},
+        {"OK", "[RÃ‰USSIEUX]"},
         {"FAILED", "[ERREUR]"},
         {"AVAILABLE", "[AVANT-PROPOS]"},
         {"NOT_AVAILABLE", "[NON-EXISTANT]"},
         {"header.ssl", "{0} [Raccordement TLS]"},
-        {"header.plain", "{0} [Connexion non sécurisée]"},
-        {"no.certificate.plain", "Non disponible (connexion non sécurisée)"},
+        {"header.plain", "{0} [Connexion non sÃ©curisÃ©e]"},
+        {"no.certificate.plain", "Non disponible (connexion non sÃ©curisÃ©e)"},
         {"button.viewcert", "<HTML><div style=\"text-align:center\">Certificat(s) d''importation</div></HTML>"},
         {"button.close", "Fermer"},
-        {"label.connection.established", "La simple connexion IP a été établie"},
-        {"label.certificates.available.local", "Les certificats partenaires (TLS) sont disponibles dans votre système."},
-        {"label.running.oftpservice", "Un service OFTP en cours d''exécution a été trouvé."},
-        {"used.cipher", "L''algorithme de cryptage suivant a été utilisé pour le test: \"{0}\"" },          
+        {"label.connection.established", "La simple connexion IP a Ã©tÃ© Ã©tablie"},
+        {"label.certificates.available.local", "Les certificats partenaires (TLS) sont disponibles dans votre systÃ¨me."},
+        {"label.running.oftpservice", "Un service OFTP en cours d''exÃ©cution a Ã©tÃ© trouvÃ©."},
+        {"used.cipher", "L''algorithme de cryptage suivant a Ã©tÃ© utilisÃ© pour le test: \"{0}\"" },          
     };
 
 }

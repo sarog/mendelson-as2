@@ -27,7 +27,7 @@ public class ResourceBundleUINotification_fr extends MecResourceBundle {
     static final Object[][] CONTENTS = {
         {"title.warning", "Attention"},
         {"title.error", "Erreur"},
-        {"title.ok", "Succès"},
+        {"title.ok", "SuccÃ¨s"},
         {"title.information", "Information"},
     };
 }

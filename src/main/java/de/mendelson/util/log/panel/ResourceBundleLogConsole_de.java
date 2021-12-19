@@ -31,10 +31,10 @@ public class ResourceBundleLogConsole_de extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         {"title", "Ausgaben"},
-        {"label.clear", "Löschen"},
+        {"label.clear", "LÃ¶schen"},
         {"label.toclipboard", "Log in die Zwischenablage kopieren"},
         {"label.tofile", "Log in Datei schreiben"},
-        {"filechooser.logfile", "Bitte wählen Sie die Datei, in die das Log geschrieben werden soll."},
+        {"filechooser.logfile", "Bitte wÃ¤hlen Sie die Datei, in die das Log geschrieben werden soll."},
         {"write.success", "Das Log wurde erfolgreich in der Datei \"{0}\" gespeichert."},
         {"write.failure", "Fehler beim Schreiben des Logs: {0}."},};
 

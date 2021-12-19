@@ -25,8 +25,8 @@ public class ResourceBundleMDNParser_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"invalid.mdn.nocontenttype", "Eingehende MDN ist ungültig: Kein content-type definiert." },
-        {"structure.failure.mdn", "Eine eingehende MDN wurde erkannt. Leider ist die Struktur der MDN fehlerhaft (\"{0}\"), sodass sie nicht verarbeitet werden konnte. Die zugehörige Transaktion hat Ihren Status nicht verändert." },
+        {"invalid.mdn.nocontenttype", "Eingehende MDN ist ungÃ¼ltig: Kein content-type definiert." },
+        {"structure.failure.mdn", "Eine eingehende MDN wurde erkannt. Leider ist die Struktur der MDN fehlerhaft (\"{0}\"), sodass sie nicht verarbeitet werden konnte. Die zugehÃ¶rige Transaktion hat Ihren Status nicht verÃ¤ndert." },
     };
     
 }

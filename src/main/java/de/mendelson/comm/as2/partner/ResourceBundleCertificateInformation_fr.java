@@ -25,9 +25,9 @@ public class ResourceBundleCertificateInformation_fr extends MecResourceBundle {
     }
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"localstation.decrypt", "Les messages entrants pour la station locale \"{0}\" vont être déchiffrées en utilisant le certificat \"{1}\"."},
-        {"localstation.sign", "Messages sortants de la station locale \"{0}\" seront signés à l'aide du certificat \"{1}\"."},
-        {"partner.encrypt", "Les messages sortants au partenaire \"{0}\" seront chiffrées à l'aide du certificat \"{1}\"."},
-        {"partner.sign", "Signatures de message entrant provenant du partenaire \"{0}\" seront vérifiées à l'aide du certificat \"{1}\"."},        
+        {"localstation.decrypt", "Les messages entrants pour la station locale \"{0}\" vont Ãªtre dÃ©chiffrÃ©es en utilisant le certificat \"{1}\"."},
+        {"localstation.sign", "Messages sortants de la station locale \"{0}\" seront signÃ©s Ã  l'aide du certificat \"{1}\"."},
+        {"partner.encrypt", "Les messages sortants au partenaire \"{0}\" seront chiffrÃ©es Ã  l'aide du certificat \"{1}\"."},
+        {"partner.sign", "Signatures de message entrant provenant du partenaire \"{0}\" seront vÃ©rifiÃ©es Ã  l'aide du certificat \"{1}\"."},        
     };
 }

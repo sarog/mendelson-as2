@@ -26,11 +26,11 @@ public class ResourceBundleMessageStoreHandler_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"message.error.stored", "Contenu du message stocké vers \"{0}\"." },
-        {"message.error.raw.stored", "Message sortant brut stocké vers \"{0}\"." },
-        {"dir.createerror", "Création impossible du répertoire \"{0}\"." },
-        {"comm.success", "Succès de la communication AS2, le contenu {0} a été déplacé vers \"{1}\"." },
-        {"outboundstatus.written", "Fichier d''état sortant écrit \"{0}\"."},
+        {"message.error.stored", "Contenu du message stockÃ© vers \"{0}\"." },
+        {"message.error.raw.stored", "Message sortant brut stockÃ© vers \"{0}\"." },
+        {"dir.createerror", "CrÃ©ation impossible du rÃ©pertoire \"{0}\"." },
+        {"comm.success", "SuccÃ¨s de la communication AS2, le contenu {0} a Ã©tÃ© dÃ©placÃ© vers \"{1}\"." },
+        {"outboundstatus.written", "Fichier d''Ã©tat sortant Ã©crit \"{0}\"."},
     };
     
 }

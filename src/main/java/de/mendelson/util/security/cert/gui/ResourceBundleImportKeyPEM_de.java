@@ -33,16 +33,16 @@ public class ResourceBundleImportKeyPEM_de extends MecResourceBundle {
         {"button.ok", "Ok"},
         {"button.cancel", "Abbrechen"},
         {"button.browse", "Durchsuchen"},
-        {"label.importkey", "Schlüsseldatei (PEM):"},
+        {"label.importkey", "SchlÃ¼sseldatei (PEM):"},
         {"label.importcert", "Zertifikatdatei:"},
         {"label.alias", "Zu benutzener Alias:"},
-        {"label.keypass", "Schlüsselpasswort:"},
-        {"title", "Schlüssel importieren (PEM Format)"},
-        {"filechooser.cert.import", "Bitte wählen Sie das zu importierende Zertifikat"},
-        {"filechooser.key.import", "Bitte wählen Sie die zu importierende Schlüsseldatei (PEM Format)"},
-        {"key.import.success.message", "Der Schlüssel wurde erfolgreich importiert."},
+        {"label.keypass", "SchlÃ¼sselpasswort:"},
+        {"title", "SchlÃ¼ssel importieren (PEM Format)"},
+        {"filechooser.cert.import", "Bitte wÃ¤hlen Sie das zu importierende Zertifikat"},
+        {"filechooser.key.import", "Bitte wÃ¤hlen Sie die zu importierende SchlÃ¼sseldatei (PEM Format)"},
+        {"key.import.success.message", "Der SchlÃ¼ssel wurde erfolgreich importiert."},
         {"key.import.success.title", "Erfolg"},
-        {"key.import.error.message", "Es gab einen Fehler beim Import des Schlüssels.\n{0}"},
+        {"key.import.error.message", "Es gab einen Fehler beim Import des SchlÃ¼ssels.\n{0}"},
         {"key.import.error.title", "Fehler"},};
 
 }

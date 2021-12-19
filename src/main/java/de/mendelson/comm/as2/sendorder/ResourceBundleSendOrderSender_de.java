@@ -25,8 +25,8 @@ public class ResourceBundleSendOrderSender_de extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"message.packed", "Ausgehende AS2 Nachricht aus \"{0}\" für den Empfänger \"{1}\" erstellt in {3}, Rohdatengrösse: {2}, benutzerdefinierte id: \"{4}\"" },
-        {"sendoder.sendfailed", "Es trat ein Problem beim Verarbeiten eines Sendeauftrags auf: [{0}] \"{1}\" - die Daten wurden nicht an den Partner übermittelt." },
+        {"message.packed", "Ausgehende AS2 Nachricht aus \"{0}\" fÃ¼r den EmpfÃ¤nger \"{1}\" erstellt in {3}, RohdatengrÃ¶sse: {2}, benutzerdefinierte id: \"{4}\"" },
+        {"sendoder.sendfailed", "Es trat ein Problem beim Verarbeiten eines Sendeauftrags auf: [{0}] \"{1}\" - die Daten wurden nicht an den Partner Ã¼bermittelt." },
     };
     
 }

@@ -33,17 +33,17 @@ public class ResourceBundleImportKeyJKS_de extends MecResourceBundle {
         {"button.ok", "Ok"},
         {"button.cancel", "Abbruch"},
         {"button.browse", "Durchsuchen"},
-        {"keystore.contains.nokeys", "Diese Keystore beinhaltet keine privaten Schlüssel."},
+        {"keystore.contains.nokeys", "Diese Keystore beinhaltet keine privaten SchlÃ¼ssel."},
         {"label.importkey", "Import Keystore Datei (JKS):"},
         {"label.keypass", "Passwort des Keystores:"},
-        {"title", "Schlüssel aus Keystore importieren (JKS Format)"},
-        {"filechooser.key.import", "Bitte wählen Sie eine JKS Keystore Datei für den Import"},
-        {"multiple.keys.message", "Bitte wählen Sie den zu importierenden Schlüssel"},
-        {"multiple.keys.title", "Mehrere Schlüssel enthalten"},
-        {"key.import.success.message", "Der Schlüssel wurde erfolgreich importiert."},
+        {"title", "SchlÃ¼ssel aus Keystore importieren (JKS Format)"},
+        {"filechooser.key.import", "Bitte wÃ¤hlen Sie eine JKS Keystore Datei fÃ¼r den Import"},
+        {"multiple.keys.message", "Bitte wÃ¤hlen Sie den zu importierenden SchlÃ¼ssel"},
+        {"multiple.keys.title", "Mehrere SchlÃ¼ssel enthalten"},
+        {"key.import.success.message", "Der SchlÃ¼ssel wurde erfolgreich importiert."},
         {"key.import.success.title", "Erfolg"},
-        {"key.import.error.message", "Es trat ein Fehler während des Importprozesses auf.\n{0}"},
+        {"key.import.error.message", "Es trat ein Fehler wÃ¤hrend des Importprozesses auf.\n{0}"},
         {"key.import.error.title", "Fehler"},
-        {"enter.keypassword", "Geben Sie das Schlüsselpasswort für \"{0}\" ein"},};
+        {"enter.keypassword", "Geben Sie das SchlÃ¼sselpasswort fÃ¼r \"{0}\" ein"},};
 
 }

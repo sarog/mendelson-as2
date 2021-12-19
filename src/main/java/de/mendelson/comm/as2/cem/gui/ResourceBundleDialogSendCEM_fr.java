@@ -25,23 +25,23 @@ public class ResourceBundleDialogSendCEM_fr extends MecResourceBundle{
     
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
-        {"title", "Certificat d'échange avec les partenaires via CEM" },
+        {"title", "Certificat d'Ã©change avec les partenaires via CEM" },
         {"button.ok", "Ok" },
         {"button.cancel", "Annuler" },
         {"label.initiator", "Station locale:" },
-        {"label.receiver", "Récepteur:" },
+        {"label.receiver", "RÃ©cepteur:" },
         {"label.certificate", "Certificat:"},
         {"label.activationdate", "Date d''activation:"},
-        {"cem.request.failed", "L''échec de la demande CEM:\n{0}" },
-        {"cem.request.success", "La demande CEM a été envoyée avec succès." },
-        {"cem.request.title", "Échange de certificat via CEM" },
-        {"cem.informed", "Le système a tenté d''informer les partenaires suivants via CEM, s''il vous plaît jeter un oeil à la gestion CEM pour voir si cela a été un succès: {0}" },
-        {"cem.not.informed", "Les partenaires suivants n'ont pas été informés via CEM, veuillez envoyer le certificat en utilisant un autre canal, par exemple email: {0}" },
+        {"cem.request.failed", "L''Ã©chec de la demande CEM:\n{0}" },
+        {"cem.request.success", "La demande CEM a Ã©tÃ© envoyÃ©e avec succÃ¨s." },
+        {"cem.request.title", "Ã‰change de certificat via CEM" },
+        {"cem.informed", "Le systÃ¨me a tentÃ© d''informer les partenaires suivants via CEM, s''il vous plaÃ®t jeter un oeil Ã  la gestion CEM pour voir si cela a Ã©tÃ© un succÃ¨s: {0}" },
+        {"cem.not.informed", "Les partenaires suivants n'ont pas Ã©tÃ© informÃ©s via CEM, veuillez envoyer le certificat en utilisant un autre canal, par exemple email: {0}" },
         {"partner.all", "--Tous les partenaires--" },
-        {"partner.cem.hint", "Les systèmes partenaires doivent supporter CEM pour être listés ici" },
+        {"partner.cem.hint", "Les systÃ¨mes partenaires doivent supporter CEM pour Ãªtre listÃ©s ici" },
         {"purpose.ssl", "SSL/TLS" },
         {"purpose.encryption", "Codification" },
-        {"purpose.signature", "Signature numérique" },
+        {"purpose.signature", "Signature numÃ©rique" },
     };
     
 }

@@ -36,7 +36,7 @@ public class ResourceBundleMessageOverview_fr extends MecResourceBundle{
         {"header.userdefinedid", "Id" },  
         {"header.payload", "Contenu" },
         {"header.subject", "Subject" },
-        {"number.of.attachments", "* {0} Pièces attachées *" },
+        {"number.of.attachments", "* {0} PiÃ¨ces attachÃ©es *" },
     };
     
 }

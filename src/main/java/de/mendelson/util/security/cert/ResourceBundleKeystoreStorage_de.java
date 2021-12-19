@@ -26,14 +26,14 @@ public class ResourceBundleKeystoreStorage_de extends MecResourceBundle{
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {                
         {"error.save.notloaded", "Keystore kann nicht gespeichert werden, er wurde noch nicht geladen." },
-        {"error.delete.notloaded", "Der Eintrag konnte nicht gelöscht werden, der unterliegende Keystore wurde noch nicht geladen." },
-        {"error.readaccess", "Der Keystore konnte nicht gelesen werden: Kein Lesezugriff möglich auf \"{0}\"." },
+        {"error.delete.notloaded", "Der Eintrag konnte nicht gelÃ¶scht werden, der unterliegende Keystore wurde noch nicht geladen." },
+        {"error.readaccess", "Der Keystore konnte nicht gelesen werden: Kein Lesezugriff mÃ¶glich auf \"{0}\"." },
         {"error.filexists", "Der Keystore konnte nicht gelesen werden: Die Keystore Datei \"{0}\" existiert nicht." },
         {"error.notafile", "Der Keystore konnte nicht gelesen werden: Die Keystore Datei \"{0}\" ist keine Datei." },
-        {"error.nodata", "Der Keystore konnte nicht gelesen werden: Keine Daten verfügbar" },
-        {"error.empty", "Der Keystore konnte nicht gelesen werden: Die Keystore Daten müssen länger als 0 sein." },
+        {"error.nodata", "Der Keystore konnte nicht gelesen werden: Keine Daten verfÃ¼gbar" },
+        {"error.empty", "Der Keystore konnte nicht gelesen werden: Die Keystore Daten mÃ¼ssen lÃ¤nger als 0 sein." },
         {"error.save", "Die Daten des Keystores konnte nicht gespeichert werden." },
-        {"keystore.read.failure", "Das System konnte die unterliegenden Zertifikate nicht lesen. Fehlermeldung: \"{0}\". Bitte prüfen Sie, ob Sie das richtige Passwort für den Keystore verwenden."},
+        {"keystore.read.failure", "Das System konnte die unterliegenden Zertifikate nicht lesen. Fehlermeldung: \"{0}\". Bitte prÃ¼fen Sie, ob Sie das richtige Passwort fÃ¼r den Keystore verwenden."},
     };
     
 }

@@ -26,11 +26,11 @@ public class ResourceBundleCSR_de extends MecResourceBundle {
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
         
-        {"label.selectcsrfile", "Bitte wählen Sie die Datei zum Speichern des CSR"},
+        {"label.selectcsrfile", "Bitte wÃ¤hlen Sie die Datei zum Speichern des CSR"},
         {"csr.title", "Zertifikat beglaubigen: Certificate Sign Request (CSR)" },
         {"csr.title.renew", "Zertifikat erneuern: Certificate Sign Request (CSR)" },
-        {"csr.message.storequestion", "Möchten Sie den Schlüssel bei der mendelson CA beglaubigen lassen\noder die Anfrage in einer Datei speichern?" },
-        {"csr.message.storequestion.renew", "Möchten Sie den Schlüssel bei der mendelson CA erneuern lassen\noder die Anfrage in einer Datei speichern?" },
+        {"csr.message.storequestion", "MÃ¶chten Sie den SchlÃ¼ssel bei der mendelson CA beglaubigen lassen\noder die Anfrage in einer Datei speichern?" },
+        {"csr.message.storequestion.renew", "MÃ¶chten Sie den SchlÃ¼ssel bei der mendelson CA erneuern lassen\noder die Anfrage in einer Datei speichern?" },
         {"csr.option.1", "Beglaubigen bei mendelson CA" },
         {"csr.option.1.renew", "Erneuern bei mendelson CA" },
         {"csr.option.2", "In Datei speichern" },
@@ -38,12 +38,12 @@ public class ResourceBundleCSR_de extends MecResourceBundle {
         {"csr.generation.success.title", "CSR wurde erfolgreich erstellt"},
         {"csr.generation.failure.title", "Fehler bei der CSR Erstellung"},
         {"csr.generation.failure.message", "{0}"},
-        {"label.selectcsrrepsonsefile", "Bitte wählen Sie die Antwortsdatei der CA"},
-        {"csrresponse.import.success.message", "Der Schlüssel wurde erfolgreich mit der Antwort der CA gepatched."},
+        {"label.selectcsrrepsonsefile", "Bitte wÃ¤hlen Sie die Antwortsdatei der CA"},
+        {"csrresponse.import.success.message", "Der SchlÃ¼ssel wurde erfolgreich mit der Antwort der CA gepatched."},
         {"csrresponse.import.success.title", "Erfolg"},
         {"csrresponse.import.failure.message", "{0}"},
-        {"csrresponse.import.failure.title", "Problem beim Patchen des Schlüssels"}, 
+        {"csrresponse.import.failure.title", "Problem beim Patchen des SchlÃ¼ssels"}, 
         {"cancel", "Abbrechen" },
-        {"ca.connection.problem", "HTTP {0}: Die mendelson CA ist momentan nicht erreichbar. Bitte versuchen Sie es später erneut." },
+        {"ca.connection.problem", "HTTP {0}: Die mendelson CA ist momentan nicht erreichbar. Bitte versuchen Sie es spÃ¤ter erneut." },
     };
 }

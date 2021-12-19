@@ -26,9 +26,9 @@ public class ResourceBundleFileDisplay_de extends MecResourceBundle{
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {
         
-        {"no.file", "** KEINE DATEN VERFÜGBAR **" },
-        {"file.notfound", "** DATEI {0} IST NICHT LÄNGER VERFÜGBAR **" },
-        {"file.tolarge", "** {0}: DATEN DIESER GRÖSSE SIND NICHT ANZEIGBAR **" },
+        {"no.file", "** KEINE DATEN VERFÃœGBAR **" },
+        {"file.notfound", "** DATEI {0} IST NICHT LÃ„NGER VERFÃœGBAR **" },
+        {"file.tolarge", "** {0}: DATEN DIESER GRÃ–SSE SIND NICHT ANZEIGBAR **" },
     };
     
 }

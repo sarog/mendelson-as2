@@ -31,7 +31,7 @@ public class ResourceBundleConfigurationIssueDetails_de extends MecResourceBundl
         //preferences localized
         {"title", "Konfigurationsproblem (Details) - Problem {0}/{1}"},
         {"button.close", "Schliessen" },
-        {"button.next", "Nächstes Problem >>" },
+        {"button.next", "NÃ¤chstes Problem >>" },
         {"button.jumpto.generic", "Zum Problem" },
         {"button.jumpto.partner", "Zur Partnerverwaltung" },
         {"button.jumpto.keystore", "Zur Zertfiikatsverwaltung" },        

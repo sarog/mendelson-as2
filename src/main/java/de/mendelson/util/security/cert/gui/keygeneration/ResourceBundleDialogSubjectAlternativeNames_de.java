@@ -27,11 +27,11 @@ public class ResourceBundleDialogSubjectAlternativeNames_de extends MecResourceB
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {    
         {"title", "Alternative Antragstellernamen verwalten" },
-        {"info", "Mit Hilfe dieses Dialogs können Sie die alternativen Antragstellernamen für die Generierungsprozess des Schlüssels verwalten (subject alternative name). Diese Werte sind eine Erweiterung des x.509 Zertifikats. Wenn Ihr Partner das unterstützt, können Sie hier zum Beispiel zusätzliche Domains für Ihren Schlüssel eintragen. Im OFTP2 kann es ja nach Partner notwendig sein, einige Felder mit Kenndaten zu füllen, zum Beispiel die Odette Id Ihres Systems als URL im Format \"oftp://OdetteId\" und erneut Ihre Domain im Feld DNS-Name." },
+        {"info", "Mit Hilfe dieses Dialogs kÃ¶nnen Sie die alternativen Antragstellernamen fÃ¼r die Generierungsprozess des SchlÃ¼ssels verwalten (subject alternative name). Diese Werte sind eine Erweiterung des x.509 Zertifikats. Wenn Ihr Partner das unterstÃ¼tzt, kÃ¶nnen Sie hier zum Beispiel zusÃ¤tzliche Domains fÃ¼r Ihren SchlÃ¼ssel eintragen. Im OFTP2 kann es ja nach Partner notwendig sein, einige Felder mit Kenndaten zu fÃ¼llen, zum Beispiel die Odette Id Ihres Systems als URL im Format \"oftp://OdetteId\" und erneut Ihre Domain im Feld DNS-Name." },
         {"button.ok", "Ok" },
         {"button.cancel", "Abbruch" },
-        {"label.add", "Hinzufügen" },
-        {"label.del", "Löschen" },
+        {"label.add", "HinzufÃ¼gen" },
+        {"label.del", "LÃ¶schen" },
         {"header.name", "Typ" },
         {"header.value", "Wert" },
     };

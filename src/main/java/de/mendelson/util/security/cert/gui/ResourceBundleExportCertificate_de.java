@@ -37,15 +37,15 @@ public class ResourceBundleExportCertificate_de extends MecResourceBundle {
         {"label.exportfile", "Exportdatei:"},
         {"label.alias", "Alias:"},
         {"label.encoding", "Format:"},
-        {"filechooser.certificate.export", "Bitte wählen Sie den Dateinamen für den Export."},
+        {"filechooser.certificate.export", "Bitte wÃ¤hlen Sie den Dateinamen fÃ¼r den Export."},
         {"certificate.export.error.title", "Fehler beim Export"},
         {"certificate.export.error.message", "Der Export des Zertifikates schlug fehl:\n{0}"},
         {"certificate.export.success.title", "Erfolg"},
         {"certificate.export.success.message", "Das Zertifikat konnte erfolgreich exportiert werden nach\n\"{0}\""},
         {JDialogExportCertificate.PEM, "Textformat (PEM, *.cer)"},
-        {JDialogExportCertificate.DER, "Binärformat (DER, *.cer)"},
+        {JDialogExportCertificate.DER, "BinÃ¤rformat (DER, *.cer)"},
         {JDialogExportCertificate.PKCS7, "Mit Zertifizierungskette (PKCS#7, *.p7b)"},
-        {JDialogExportCertificate.SSH2, "SSH2 Format (öffentlicher Schlüssel, *.pub)"},
+        {JDialogExportCertificate.SSH2, "SSH2 Format (Ã¶ffentlicher SchlÃ¼ssel, *.pub)"},
     };
 
 }

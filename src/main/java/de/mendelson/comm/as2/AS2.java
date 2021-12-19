@@ -78,7 +78,7 @@ public class AS2 {
             }
         }
         PreferencesAS2 clientPreferences = new PreferencesAS2();
-        //load country from preferences
+        // load country from preferences
         if (country == null || language == null) {            
             if (language == null) {
                 language = clientPreferences.get(PreferencesAS2.LANGUAGE);

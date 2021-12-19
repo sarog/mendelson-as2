@@ -30,15 +30,15 @@ public class ResourceBundleDialogSearchLogfile_de extends MecResourceBundle {
      * List of messages in the specific language
      */
     static final Object[][] CONTENTS = {
-        {"title", "Protokolleinträge des Servers durchsuchen"},
-        {"no.data.messageid", "**Es gibt keine Protokolldaten für die AS2 Nachrichtennummer \"{0}\" in dem gewählten Zeitraum. Bitte verwenden Sie als Suchzeichenkette die vollständige Nachrichtennummer." },        
-        {"no.data.mdnid", "**Es gibt keine Protokolldaten für die MDN Nummer \"{0}\" in dem gewählten Zeitraum. Bitte verwenden Sie als Suchzeichenkette die vollständige MDN Nummer, die Sie dem Log einer Übertragung entnehmen können." },        
-        {"no.data.uid", "**Es gibt keine Protokolldaten für die benutzerdefinierte Nummer \"{0}\" in dem gewählten Zeitraum. Bitte wählen Sie als Suchzeichenkette die vollständige benutzerdefinierte Nummer, die Sie der Übertragung mitgegeben haben." },        
+        {"title", "ProtokolleintrÃ¤ge des Servers durchsuchen"},
+        {"no.data.messageid", "**Es gibt keine Protokolldaten fÃ¼r die AS2 Nachrichtennummer \"{0}\" in dem gewÃ¤hlten Zeitraum. Bitte verwenden Sie als Suchzeichenkette die vollstÃ¤ndige Nachrichtennummer." },        
+        {"no.data.mdnid", "**Es gibt keine Protokolldaten fÃ¼r die MDN Nummer \"{0}\" in dem gewÃ¤hlten Zeitraum. Bitte verwenden Sie als Suchzeichenkette die vollstÃ¤ndige MDN Nummer, die Sie dem Log einer Ãœbertragung entnehmen kÃ¶nnen." },        
+        {"no.data.uid", "**Es gibt keine Protokolldaten fÃ¼r die benutzerdefinierte Nummer \"{0}\" in dem gewÃ¤hlten Zeitraum. Bitte wÃ¤hlen Sie als Suchzeichenkette die vollstÃ¤ndige benutzerdefinierte Nummer, die Sie der Ãœbertragung mitgegeben haben." },        
         {"label.startdate", "Start: " },
         {"label.enddate", "Ende: " },
         {"button.close", "Schliessen" },
         {"label.search", "<html><div style=\"text-align:center\">Protokoll<br>durchsuchen</div></html>" },
-        {"label.info", "<html>Bitte definieren Sie einen Zeitraum, geben eine vollständige AS2 Nachrichtennummer oder die vollständige Nummer einer MDN ein, um alle Protokolleinträge dafür auf dem Server zu finden - dann drücken Sie bitte den Knopf \"Protokoll durchsuchen\". Die benutzerdefinierte Nummer können Sie für jede Transaktion definieren, wenn Sie die Daten über die Kommandozeile an den laufenden Server schicken.</html>" },
+        {"label.info", "<html>Bitte definieren Sie einen Zeitraum, geben eine vollstÃ¤ndige AS2 Nachrichtennummer oder die vollstÃ¤ndige Nummer einer MDN ein, um alle ProtokolleintrÃ¤ge dafÃ¼r auf dem Server zu finden - dann drÃ¼cken Sie bitte den Knopf \"Protokoll durchsuchen\". Die benutzerdefinierte Nummer kÃ¶nnen Sie fÃ¼r jede Transaktion definieren, wenn Sie die Daten Ã¼ber die Kommandozeile an den laufenden Server schicken.</html>" },
         {"textfield.preset", "mendelsonAS2@partnerAS2" },
         {"label.messageid", "Nachrichtennummer" },
         {"label.mdnid", "MDN Nummer" },

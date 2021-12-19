@@ -31,7 +31,7 @@ public class ResourceBundleFileBrowser_de extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         //dialog
-        {"button.ok", "Ausw‰hlen"},
+        {"button.ok", "Ausw√§hlen"},
         {"button.cancel", "Abbrechen"},
         {"wait", "Bitte warten"},};
 

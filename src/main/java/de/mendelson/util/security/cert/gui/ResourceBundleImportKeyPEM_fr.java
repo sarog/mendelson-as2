@@ -36,13 +36,13 @@ public class ResourceBundleImportKeyPEM_fr extends MecResourceBundle {
         {"button.browse", "Parcourir..."},
         {"label.importkey", "Importer le fichier clef (PEM):"},
         {"label.importcert", "Importer le fichier certificat:"},
-        {"label.alias", "Nouvel alias à utiliser:"},
+        {"label.alias", "Nouvel alias Ã  utiliser:"},
         {"label.keypass", "Mot de passe d'import de la clef:"},
         {"title", "Importer les clefs (format PEM)"},
-        {"filechooser.cert.import", "Merci de sélectionner le fichier de certificat pour l'import"},
-        {"filechooser.key.import", "Merci de sélectionner le fichier de clef pour l'import (format PEM)"},
-        {"key.import.success.message", "La clef a été importée avec succès."},
-        {"key.import.success.title", "Succès"},
+        {"filechooser.cert.import", "Merci de sÃ©lectionner le fichier de certificat pour l'import"},
+        {"filechooser.key.import", "Merci de sÃ©lectionner le fichier de clef pour l'import (format PEM)"},
+        {"key.import.success.message", "La clef a Ã©tÃ© importÃ©e avec succÃ¨s."},
+        {"key.import.success.title", "SuccÃ¨s"},
         {"key.import.error.message", "Une erreur a eu lieu lors du processus d'import.\n{0}"},
         {"key.import.error.title", "Erreur"},};
 

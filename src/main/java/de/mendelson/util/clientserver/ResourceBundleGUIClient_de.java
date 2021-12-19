@@ -29,19 +29,19 @@ public class ResourceBundleGUIClient_de extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         //dialog
-        {"password.required", "Fehler beim Login, es wird ein Passwort für den Benutzer {0} benötigt."},
-        {"connectionrefused.message", "{0}: Keine Verbindung möglich. Bitte stellen Sie sicher, dass der Server läuft."},
+        {"password.required", "Fehler beim Login, es wird ein Passwort fÃ¼r den Benutzer {0} benÃ¶tigt."},
+        {"connectionrefused.message", "{0}: Keine Verbindung mÃ¶glich. Bitte stellen Sie sicher, dass der Server lÃ¤uft."},
         {"connectionrefused.title", "Verbindungsproblem"},
         {"login.success", "Angemeldet als Benutzer \"{0}\""},
         {"login.failure", "Login als Benutzer \"{0}\" fehlgeschlagen"},
         {"connection.success", "Client verbunden mit {0}"},
-        {"logout.from.server", "Es wurde ein Logout vom Server durchgeführt"},
+        {"logout.from.server", "Es wurde ein Logout vom Server durchgefÃ¼hrt"},
         {"connection.closed", "Die lokale Client-Server Verbindung wurde vom Server getrennt"},
         {"connection.closed.title", "Lokaler Verbindungsabbruch"},
         {"connection.closed.message", "Die lokale Client-Server Verbindung wurde vom Server getrennt"},
         {"client.received.unprocessed.message", "Der Server hat eine Nachricht geschickt, die vom Client nicht verarbeitet wurde: {0}"},
         {"error", "Problem: {0}"},
         {"login.failed.client.incompatible.message", "Der Server meldet, dass dieser Client nicht die richtige Version hat.\nBitte verwenden Sie den zum Server passenden Client."},
-        {"login.failed.client.incompatible.title", "Login wurde zurückgewiesen"},
+        {"login.failed.client.incompatible.title", "Login wurde zurÃ¼ckgewiesen"},
     };
 }

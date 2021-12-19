@@ -33,7 +33,7 @@ public class ResourceBundleHideableColumns_fr extends MecResourceBundle {
         {"header.column", "Colonne"},
         {"header.visible", "Visible"},
         {"title", "Configuration de colonne"},
-        {"label.info", "S''il vous plaît sélectionner les colonnes visibles ci-dessous."},
+        {"label.info", "S''il vous plaÃ®t sÃ©lectionner les colonnes visibles ci-dessous."},
         {"header.icon", "[Image] - toujours visible"},
         {"label.ok", "Ok"},};
 
