@@ -76,7 +76,7 @@ public class AS2MDNCreation {
         header.setProperty("mime-version", "1.0");
         header.setProperty("message-id", "<" + info.getMessageId() + ">");
         //the data header must be always in english locale else there would be special
-        //french characters (e.g. 13 déc. 2011 16:28:56 CET) which is not allowed after 
+        //french characters (e.g. 13 dÃ©c. 2011 16:28:56 CET) which is not allowed after 
         //RFC 4130           
         DateFormat format = new SimpleDateFormat("EE, dd MMM yyyy HH:mm:ss zz", Locale.US);
         header.setProperty("date", format.format(new Date()));

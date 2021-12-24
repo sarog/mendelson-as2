@@ -471,6 +471,8 @@ public class AS2Server extends AbstractAS2Server implements AS2ServerMBean {
         Executors.newSingleThreadExecutor().submit(receiver);
     }
 
+    // -sg: see: https://www.eclipse.org/jetty/documentation/jetty-9/index.html#embedding-jetty
+    // "Like Jetty XML"
     private Server startHTTPServer() throws Exception {
         //start the HTTP server if this is requested
         if (this.startHTTPServer) {
@@ -481,14 +483,14 @@ public class AS2Server extends AbstractAS2Server implements AS2ServerMBean {
                     rb.getResourceString("httpserver.willstart"),
                     "");
             try {
-                //setup jetty base and home path
+                // setup jetty base and home path
                 System.setProperty("jetty.home", Paths.get("./jetty9").toAbsolutePath().toString());
                 System.setProperty("jetty.base", Paths.get("./jetty9").toAbsolutePath().toString());
-                //setup jetty logging
+                // setup jetty logging
                 System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StrErrLog");
                 System.setProperty("org.eclipse.jetty.LEVEL", "INFO");
                 System.setProperty("org.eclipse.jetty.websocket.LEVEL", "INFO");
-                //org.eclipse.jetty.start.Main.main(new String[0]);
+                // org.eclipse.jetty.start.Main.main(new String[0]);
                 URL jettyXMLConfigurationURL = Paths.get(System.getProperty("jetty.home") + "/etc/jetty.xml").toUri().toURL();
                 XmlConfiguration jettyXMLConfiguration = new XmlConfiguration(jettyXMLConfigurationURL);
                 org.eclipse.jetty.server.Server httpServer = new org.eclipse.jetty.server.Server();

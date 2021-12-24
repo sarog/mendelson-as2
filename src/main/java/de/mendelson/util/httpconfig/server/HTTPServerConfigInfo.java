@@ -174,15 +174,17 @@ public class HTTPServerConfigInfo {
         this.serverStatePath = serverStatePath;
     }
 
+    // -sg: see: https://www.eclipse.org/jetty/documentation/jetty-9/index.html#embedding-jetty
+    // "Embedding Web Applications" -> WebAppContext
     public static final HTTPServerConfigInfo computeHTTPServerConfigInfo(Server jettyHTTPServerInstance, boolean startHTTPServer,
             String receiptURLPath, String serverStatePath) {
         HTTPServerConfigInfo httpServerConfigInfo = new HTTPServerConfigInfo();
-        //try to find out the HTTP server version, look at it in the jetty server jar MANIFEST file
+        // try to find out the HTTP server version, look at it in the jetty server jar MANIFEST file
         try {
             Class serverClazz = jettyHTTPServerInstance.getClass();
             String serverClassName = serverClazz.getSimpleName() + ".class";
             String jettyServerJar = serverClazz.getResource(serverClassName).toString();
-            //ensure that this is a jar
+            // ensure that this is a jar
             if (jettyServerJar.startsWith("jar")) {
                 String manifestPath = jettyServerJar.substring(0, jettyServerJar.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
                 Manifest manifest = new Manifest(new URL(manifestPath).openStream());
@@ -197,10 +199,10 @@ public class HTTPServerConfigInfo {
         httpServerConfigInfo.setServerStatePath(serverStatePath);
         if (jettyHTTPServerInstance != null) {
             try {
-                //find out the deployed wars
+                // find out the deployed wars
                 Handler[] childHandler = jettyHTTPServerInstance.getChildHandlers();
                 for (Handler singleHandler : childHandler) {
-                    //System.out.println(singleHandler.getClass().getName());
+                    // System.out.println(singleHandler.getClass().getName());
                     if (singleHandler instanceof WebAppContext) {
                         WebAppContext context = (WebAppContext) singleHandler;
                         String warFilePath = context.getWar();
@@ -227,10 +229,10 @@ public class HTTPServerConfigInfo {
                         listener.setProtocol(serverConnector.getDefaultProtocol());
                         listener.setPort(serverConnector.getPort());
                         httpServerConfigInfo.addListener(listener);
-                        if( listener.getProtocol() != null && listener.getProtocol().toLowerCase().contains("ssl")){
+                        if (listener.getProtocol() != null && listener.getProtocol().toLowerCase().contains("ssl")){
                             serverUsesSSLPort = true;
                         }
-                        //collect the SLL parameter
+                        // collect the SSL parameter
                         Collection<ConnectionFactory> connectionFactories = serverConnector.getConnectionFactories();
                         for (ConnectionFactory connectionFactory : connectionFactories) {
                             if (!sslParameterCollected && (connectionFactory instanceof SslConnectionFactory)) {
@@ -251,7 +253,7 @@ public class HTTPServerConfigInfo {
                                 httpServerConfigInfo.setNeedClientAuthentication(needClientAuth);
                                 SSLServerSocketFactory sslServerSocketFactory = sslContextFactory.getSslContext().getServerSocketFactory();
                                 List<String> supportedCipherSuiteList = Arrays.asList(sslServerSocketFactory.getSupportedCipherSuites());
-                                //find out which cipher suites are possible and remove the disabled ciphers
+                                // find out which cipher suites are possible and remove the disabled ciphers
                                 List<String> includedCipherSuites = new ArrayList<String>();
                                 for (String cipher : supportedCipherSuiteList) {
                                     if (!excludedCiphers.contains(cipher)) {
@@ -333,6 +335,9 @@ public class HTTPServerConfigInfo {
         this.sslEnabled = sslEnabled;
     }
 
+    /**
+     * Listener
+     */
     public static class Listener {
 
         private String protocol = null;

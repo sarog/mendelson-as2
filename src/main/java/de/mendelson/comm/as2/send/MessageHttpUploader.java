@@ -542,7 +542,7 @@ public class MessageHttpUploader {
             filePost.addHeader("from", sender.getEmail());
             filePost.addHeader("connection", "close, TE");
             //the data header must be always in english locale else there would be special
-            //french characters (e.g. 13 déc. 2011 16:28:56 CET) which is not allowed after 
+            //french characters (e.g. 13 dÃ©c. 2011 16:28:56 CET) which is not allowed after 
             //RFC 4130           
             DateFormat format = new SimpleDateFormat("EE, dd MMM yyyy HH:mm:ss zz", Locale.US);
             filePost.addHeader("date", format.format(new Date()));
