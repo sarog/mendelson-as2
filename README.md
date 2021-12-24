@@ -13,3 +13,6 @@ Project Roadmap:
 - Add some crucial documentation that's sorely missing in the community version
 - Create a Windows service wrapper
 - External database support (e.g. MariaDB)
+
+Building notes
+- Need to download [Oracle Help for Java libraries](https://www.oracle.com/tools/downloads/jdeveloper-12c-downloads.html) from OTN (login required) which are part of the JDeveloper "Generic" ~~86MB~~ 180MB package **OR** extract them from the current Mendelson AS2 CE distribution and place them under `lib\help`.
