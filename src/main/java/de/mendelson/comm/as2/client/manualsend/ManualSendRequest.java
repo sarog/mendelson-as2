@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/client/manualsend/ManualSendRequest.java 11    11.12.20 14:57 Heller $
+//$Header: /as2/de/mendelson/comm/as2/client/manualsend/ManualSendRequest.java 12    28.07.21 14:58 Heller $
 package de.mendelson.comm.as2.client.manualsend;
 
 import de.mendelson.util.clientserver.clients.datatransfer.UploadRequestFile;
@@ -17,14 +17,20 @@ import java.util.List;
  * Message for the client server protocol
  *
  * @author S.Heller
- * @version $Revision: 11 $
+ * @version $Revision: 12 $
  */
 public class ManualSendRequest extends UploadRequestFile implements Serializable {
 
     
     public static final long serialVersionUID = 1L;
-    private String senderAS2Id;
+    private String senderAS2Id = null;
+    //If the sender AS2 name is used this results always in a AS2 id lookup on the server side!
+    //Better use the AS2 id if this is known
+    private String senderAS2Name = null;
     private String receiverAS2Id;
+    //If the receivers AS2 name is used this results always in a AS2 id lookup on the server side!
+    //Better use the AS2 id if this is known
+    private String receiverAS2Name = null;
     private List<String> filenames = new ArrayList<String>();
     private String resendMessageId = null;
     private String userdefinedId = null;
@@ -174,6 +180,34 @@ public class ManualSendRequest extends UploadRequestFile implements Serializable
      */
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    /**
+     * @return the senderAS2Name
+     */
+    public String getSenderAS2Name() {
+        return senderAS2Name;
+    }
+
+    /**
+     * @param senderAS2Name the senderAS2Name to set
+     */
+    public void setSenderAS2Name(String senderAS2Name) {
+        this.senderAS2Name = senderAS2Name;
+    }
+
+    /**
+     * @return the receiverAS2Name
+     */
+    public String getReceiverAS2Name() {
+        return receiverAS2Name;
+    }
+
+    /**
+     * @param receiverAS2Name the receiverAS2Name to set
+     */
+    public void setReceiverAS2Name(String receiverAS2Name) {
+        this.receiverAS2Name = receiverAS2Name;
     }
 
     

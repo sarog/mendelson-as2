@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/ResourceBundleDialogSearchLogfile_fr.java 1     7.12.18 13:54 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/ResourceBundleDialogSearchLogfile_fr.java 2     27.09.21 17:12 Heller $
 package de.mendelson.util.clientserver.log.search.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 1 $
+ * @version $Revision: 2 $
  */
 public class ResourceBundleDialogSearchLogfile_fr extends MecResourceBundle {
 
@@ -39,7 +39,7 @@ public class ResourceBundleDialogSearchLogfile_fr extends MecResourceBundle {
         {"button.close", "Fermer" },
         {"label.search", "Journal de recherche" },
         {"label.info", "<html>Veuillez définir une période de temps, entrez un numéro de message AS2 complet ou le numéro complet d''un MDN pour trouver toutes les entrées du journal sur le serveur - puis appuyez sur le bouton \"Rechercher le journal\". Vous pouvez définir le numéro défini par l'utilisateur pour chaque transaction lorsque vous envoyez les données au serveur en cours d''exécution depuis la ligne de commande.</html>" },
-        {"textfield.preset", "mendelsonAS2@partnerAS2" },
+        {"textfield.preset", "AS2 numéro de message, numéro MDN ou identification définie par l''utilisateur" },
         {"label.messageid", "Numéro de message" },
         {"label.mdnid", "Numéro MDN" },
         {"label.uid", "Nombre défini par l''utilisateur" },

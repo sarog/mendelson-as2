@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleDirPollManager_de.java 20    7.12.18 9:51 Heller $
+//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleDirPollManager_de.java 21    19/01/22 16:17 Heller $
 package de.mendelson.comm.as2.send;
 import de.mendelson.util.MecResourceBundle;
 /*
@@ -12,7 +12,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 20 $
+ * @version $Revision: 21 $
  */
 public class ResourceBundleDirPollManager_de extends MecResourceBundle{
     
@@ -29,6 +29,7 @@ public class ResourceBundleDirPollManager_de extends MecResourceBundle{
         {"manager.status.modified", "Die Verzeichnisüberwachung hat Verzeichnisüberwachungen verändert, es werden {0} Verzeichnisse überwacht" },
         {"poll.stopped", "Die Verzeichnisüberwachung für die Beziehung \"{0}/{1}\" wurde gestoppt." },
         {"poll.started", "Die Verzeichnisüberwachung für die Beziehung \"{0}/{1}\" wurde gestartet. Ignoriere: \"{2}\". Intervall: {3}s" },
+        {"poll.stopped.notscheduled", "[Verzeichnisüberwachung] Das System versuchte die Verzeichnisüberwachung für \"{0}/{1}\" zu stoppen - es gab aber keine Überwachnung." },
         {"poll.modified", "[Verzeichnisüberwachung] Die Partnereinstellungen für die Beziehung \"{0}/{1}\" wurden verändert." },
         {"warning.noread", "[Verzeichnisüberwachung] Kein Lesezugriff möglich für die Ausgangsdatei {0}, Datei wird ignoriert."},
         {"warning.ro", "[Verzeichnisüberwachung] Die Ausgangsdatei {0} ist schreibgeschützt, diese Datei wird ignoriert." },

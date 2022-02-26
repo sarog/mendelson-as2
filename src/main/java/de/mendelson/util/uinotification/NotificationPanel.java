@@ -1,7 +1,6 @@
-//$Header: /as2/de/mendelson/util/uinotification/NotificationPanel.java 9     14.02.20 12:54 Heller $package de.mendelson.util.uinotification;
+//$Header: /mendelson_business_integration/de/mendelson/util/uinotification/NotificationPanel.java 10    28.10.21 14:37 Heller $package de.mendelson.util.uinotification;
 package de.mendelson.util.uinotification;
 
-import de.mendelson.util.ColorUtil;
 import de.mendelson.util.MendelsonMultiResolutionImage;
 import java.awt.Color;
 import java.awt.Rectangle;

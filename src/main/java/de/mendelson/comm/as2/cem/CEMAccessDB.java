@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/cem/CEMAccessDB.java 24    21.08.20 13:22 Heller $
+//$Header: /as2/de/mendelson/comm/as2/cem/CEMAccessDB.java 26    26.08.21 13:59 Heller $
 package de.mendelson.comm.as2.cem;
 
 import de.mendelson.comm.as2.cem.messages.EDIINTCertificateExchangeRequest;
@@ -8,14 +8,13 @@ import de.mendelson.comm.as2.cem.messages.TrustResponse;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.server.AS2Server;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.logging.Logger;
  * Access the certificate lists in the database
  *
  * @author S.Heller
- * @version $Revision: 24 $
+ * @version $Revision: 26 $
  */
 public class CEMAccessDB {
 
@@ -45,85 +44,18 @@ public class CEMAccessDB {
      */
     private Connection runtimeConnection;
     private Connection configConnection;
-    /**HSQLDB supports Java_Objects, PostgreSQL does not support it. Means there are
-     * different access methods required for Object access
-     */
-    private boolean databaseSupportsJavaObjects = true;
+    private IDBDriverManager dbDriverManager;
 
     /**
      * Creates new message I/O log and connects to localhost
      *
      * @param host host to connect to
      */
-    public CEMAccessDB(Connection configConnection, Connection runtimeConnection) {
+    public CEMAccessDB(IDBDriverManager dbDriverManager,
+            Connection configConnection, Connection runtimeConnection) {
+        this.dbDriverManager = dbDriverManager;
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
-        this.analyzeDatabaseMetadata(configConnection);
-    }
-
-    private void analyzeDatabaseMetadata(Connection connection) {
-        try {
-            DatabaseMetaData data = connection.getMetaData();
-            ResultSet result = null;
-            try {
-                result = data.getTypeInfo();
-                while (result.next()) {
-                    if( result.getString( "TYPE_NAME").equalsIgnoreCase("bytea")){
-                        databaseSupportsJavaObjects = false;
-                    }
-                }
-            } finally {
-                if (result != null) {
-                    result.close();
-                }
-            }
-        } catch (Exception e) {
-            //ignore
-        }
-    }
-    
-    /**
-     * Reads a binary object from the database and returns a byte array that
-     * contains it. Will return null if the read data was null. Reading and
-     * writing binary objects differs relating the used database system
-     */
-    private String readTextStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
-        if( this.databaseSupportsJavaObjects){
-            Object object = result.getObject(columnName);
-            if (!result.wasNull()) {
-                if (object instanceof String) {
-                    return (((String) object));
-                } else if (object instanceof byte[]) {
-                    return (new String((byte[]) object));
-                }
-            }
-        }else{
-            byte[] bytes = result.getBytes(columnName);
-            if (result.wasNull()) {
-                return (null);
-            }
-            return (new String( bytes, StandardCharsets.UTF_8));
-        }
-        return (null);
-    }
-
-    /**Sets text data as parameter to a stored procedure. The handling depends if the database supports java objects
-     * 
-     */
-    private void setTextParameterAsJavaObject(PreparedStatement statement, int index, String text) throws SQLException{        
-        if( this.databaseSupportsJavaObjects ){
-            if (text == null) {
-                statement.setNull(index, Types.JAVA_OBJECT);
-            } else {
-                statement.setObject(index, text);
-            }
-        }else{
-            if (text == null) {
-                statement.setNull(index, Types.BINARY);
-            } else {
-                statement.setBytes(index, text.getBytes(StandardCharsets.UTF_8));
-            }
-        }
     }
     
     /**
@@ -181,28 +113,56 @@ public class CEMAccessDB {
     }
 
     /**
-     * Marks a request as processed, it will no longer be processed by the CertificateCEMController
+     * Marks a request as processed, it will no longer be processed by the
+     * CertificateCEMController
      */
     public void markAsProcessed(String requestId, int category) {
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionName = "CEM_markAsProcessed";
         PreparedStatement statement = null;
+        Statement transactionStatement = null;
         try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
             //get SSL and sign certificates
             String query = "UPDATE cem SET processed=?,processdate=? WHERE requestid=? AND category=?";
-            statement = this.runtimeConnection.prepareStatement(query);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query);
             statement.setInt(1, 1);
             statement.setLong(2, System.currentTimeMillis());
             statement.setString(3, requestId);
             statement.setInt(4, category);
             statement.executeUpdate();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe("CEMAccessDB.markAsProcessed: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (Exception e) {
                     this.logger.severe("CEMAccessDB.markAsProcessed: " + e.getMessage());
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }
@@ -241,8 +201,8 @@ public class CEMAccessDB {
                 cemEntry.setRequestMessageOriginated(result.getLong("requestmessageoriginated"));
                 cemEntry.setResponseMessageOriginated(result.getLong("responsemessageoriginated"));
                 cemEntry.setProcessDate(result.getLong("processdate"));
-                String reasonForRejectionStr = this.readTextStoredAsJavaObject(result, "reasonforrejection");
-                if( reasonForRejectionStr != null ){
+                String reasonForRejectionStr = this.dbDriverManager.readTextStoredAsJavaObject(result, "reasonforrejection");
+                if (reasonForRejectionStr != null) {
                     cemEntry.setReasonForRejection(reasonForRejectionStr);
                 }
                 entryList.add(cemEntry);
@@ -438,29 +398,56 @@ public class CEMAccessDB {
      */
     public void insertResponse(AS2MessageInfo info, Partner initiator, Partner receiver, EDIINTCertificateExchangeResponse response,
             TrustResponse trustResponse) {
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionName = "CEM_insertResponse";
         PreparedStatement statement = null;
+        Statement transactionStatement = null;
         try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
             String query = "UPDATE cem SET cemstate=?, responsemessageid=?,responsemessageoriginated=?,reasonforrejection=? WHERE "
                     + "requestid=? AND initiatoras2id=? AND receiveras2id=? AND serialid=?";
-            statement = this.runtimeConnection.prepareStatement(query);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query);
             statement.setInt(1, trustResponse.getState());
             statement.setString(2, info.getMessageId());
             statement.setLong(3, response.getTradingPartnerInfo().getMessageOriginated().getTime());
-            this.setTextParameterAsJavaObject(statement, 4, trustResponse.getReasonForRejection());
+            this.dbDriverManager.setTextParameterAsJavaObject(statement, 4, trustResponse.getReasonForRejection());
             statement.setString(5, response.getRequestId());
             statement.setString(6, initiator.getAS2Identification());
             statement.setString(7, receiver.getAS2Identification());
             statement.setString(8, trustResponse.getCertificateReference().getSerialNumber());
             statement.execute();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe("CEMAccessDB.insertResponse: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }    
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (Exception e) {
                     this.logger.severe("CEMAccessDB.insertResponse: " + e.getMessage());
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }
@@ -490,13 +477,20 @@ public class CEMAccessDB {
      */
     private void insertTrustRequest(AS2MessageInfo info, Partner initiator, Partner receiver, EDIINTCertificateExchangeRequest request,
             TrustRequest trustRequest, int category) {
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionName = "CEM_insertTrustRequest";
+        PreparedStatement statement = null;
+        Statement transactionStatement = null;            
         //cancel old entries with the same parameter
         this.setAllPendingRequestsToState(initiator.getAS2Identification(), receiver.getAS2Identification(), category, CEMEntry.STATUS_CANCELED_INT);
-        PreparedStatement statement = null;
         try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
             String query = "INSERT INTO cem(initiatoras2id,receiveras2id,requestid,requestmessageid,respondbydate,requestmessageoriginated,category,cemstate,serialid,issuername)"
                     + "VALUES(?,?,?,?,?,?,?,?,?,?)";
-            statement = this.runtimeConnection.prepareStatement(query);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query);
             statement.setString(1, initiator.getAS2Identification());
             statement.setString(2, receiver.getAS2Identification());
             statement.setString(3, request.getRequestId());
@@ -512,8 +506,14 @@ public class CEMAccessDB {
             statement.setInt(8, CEMEntry.STATUS_PENDING_INT);
             statement.setString(9, trustRequest.getEndEntity().getSerialNumber());
             statement.setString(10, trustRequest.getEndEntity().getIssuerName());
-            statement.execute();
+            statement.executeUpdate();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe("CEMAccessDB.insertTrustRequest: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
@@ -522,6 +522,20 @@ public class CEMAccessDB {
                     statement.close();
                 } catch (Exception e) {
                     this.logger.severe("CEMAccessDB.insertTrustRequest: " + e.getMessage());
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }
@@ -541,12 +555,19 @@ public class CEMAccessDB {
      */
     public void setPendingRequestsToState(String initiatorAS2Id, String receiverAS2Id, int category, String requestId, int newState) {
         PreparedStatement statement = null;
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionName = "CEM_setPendingRequestsToState";
+        Statement transactionStatement = null;
         try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
             String query = "UPDATE cem SET cemstate=? WHERE initiatoras2id=? AND receiveras2id=? AND category=? AND (cemstate=? OR cemstate=?) AND processed=?";
             if (requestId != null) {
                 query += " AND requestId=?";
             }
-            statement = this.runtimeConnection.prepareStatement(query);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query);
             statement.setInt(1, newState);
             statement.setString(2, initiatorAS2Id);
             statement.setString(3, receiverAS2Id);
@@ -557,16 +578,36 @@ public class CEMAccessDB {
             if (requestId != null) {
                 statement.setString(8, requestId);
             }
-            statement.execute();
+            statement.executeUpdate();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe(e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }  
             if (statement != null) {
                 try {
                     statement.close();
                 } catch (Exception e) {
                     this.logger.severe(e.getMessage());
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }
@@ -577,16 +618,29 @@ public class CEMAccessDB {
      * Remove an entry from the cem table
      */
     public void removeEntry(String initiatorAS2Id, String receiverAS2Id, int category, String requestId) {
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionName = "CEM_removeEntry";
         PreparedStatement statement = null;
+        Statement transactionStatement = null;
         try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
             String query = "DELETE FROM cem WHERE initiatoras2id=? AND receiveras2id=? AND category=? AND requestId=?";
-            statement = this.runtimeConnection.prepareStatement(query);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query);
             statement.setString(1, initiatorAS2Id);
             statement.setString(2, receiverAS2Id);
             statement.setInt(3, category);
             statement.setString(4, requestId);
             statement.execute();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe("CEMAccessDB.removeEntry: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
@@ -595,6 +649,19 @@ public class CEMAccessDB {
                     statement.close();
                 } catch (Exception e) {
                     this.logger.severe("CEMAccessDB.removeEntry: " + e.getMessage());
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }              
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }

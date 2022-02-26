@@ -251,7 +251,7 @@ public class JDialogPreferences extends JDialog {
         jPanelLanguage.add(jRadioButtonLangEN, gridBagConstraints);
 
         buttonGroupLanguage.add(jRadioButtonLangFR);
-        jRadioButtonLangFR.setText("Fran�ais");
+        jRadioButtonLangFR.setText("Français");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;

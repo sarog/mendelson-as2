@@ -1,11 +1,11 @@
-//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleHttpUploader.java 23    12.03.19 13:36 Heller $
+//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleHttpUploader.java 24    19.11.21 10:35 Heller $
 package de.mendelson.comm.as2.send;
 import de.mendelson.util.MecResourceBundle;
 
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 23 $
+ * @version $Revision: 24 $
  */
 public class ResourceBundleHttpUploader extends MecResourceBundle{
     
@@ -31,6 +31,7 @@ public class ResourceBundleHttpUploader extends MecResourceBundle{
         {"error.http503", "Connection problem, failed to transmit data (HTTP 503 - SERVICE UNAVAILABLE)" },
         {"error.http504", "Connection problem, failed to transmit data (HTTP 504 - GATEWAY TIMEOUT)" },
         {"using.proxy", "Using proxy {0}:{1}." },
+        {"using.proxy.auth", "Using proxy {0}:{1} (authenticating as {2})." },
         {"answer.no.sync.mdn", "The received sync MDN seems not to be in right format. As MDN structure problems are uncommon it might be that this is no answer of the AS2 system you wanted to address but perhaps a proxy or a standard web site? The following HTTP header values are missing: [{0}].\nThe returned data starts with the following :\n{1}" },
         {"hint.SSLPeerUnverifiedException", "Hint:\nThis is a problem that occured during the SSL handshake. The system was unable to establish a secure connection to your partner, this problem is not AS2 protocol related.\nPlease check the following to fix this issue:\n*Have you imported all your partners SSL certificates into your SSL keystore (incl. root/intermediate certificates)?\n*Has your partner imported all your certificates into his SSL keystore (incl. root/intermediate certificates)?" },
         {"hint.ConnectTimeoutException", "Hint:\nThis is a mainly an infrastructure problem which is not AS2 protocol related. The system was unable to establish an outbound connection to your partners AS2 system.\nPlease check the following to fix this issue:\n*Do you have an active internet connection?\n*Please recheck the receipt URL of your partner, is there a typo?\n*Please contact your partner, perhaps his AS2 system is down?" },

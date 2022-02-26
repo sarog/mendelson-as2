@@ -1,7 +1,6 @@
-//$Header: /as2/de/mendelson/comm/as2/log/DBLoggingHandler.java 17    20.08.20 15:47 Heller $
+//$Header: /as2/de/mendelson/comm/as2/log/DBLoggingHandler.java 21    10.03.21 8:56 Heller $
 package de.mendelson.comm.as2.log;
 
-import de.mendelson.comm.as2.database.DBDriverManagerHSQL;
 import de.mendelson.comm.as2.message.AS2MDNInfo;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
 import de.mendelson.comm.as2.server.AS2Server;
@@ -11,7 +10,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import de.mendelson.comm.as2.database.IDBDriverManager;
+import de.mendelson.util.database.IDBDriverManager;
+import java.io.UnsupportedEncodingException;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -23,20 +23,20 @@ import de.mendelson.comm.as2.database.IDBDriverManager;
 /**
  * Handler to log logger data to a data base
  * @author S.Heller
- * @version $Revision: 17 $
+ * @version $Revision: 21 $
  */
 public class DBLoggingHandler extends Handler {
 
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
-    private LogAccessDB access;
+    private LogAccessDB logAccess;
+    private Connection runtimeConnectionNoAutoCommit = null; 
 
     public DBLoggingHandler(IDBDriverManager dbDriverManager) {
         try {
-            Connection runtimeConnection 
-                    = dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME, "localhost");
-            Connection configConnection 
-                    = dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG, "localhost");
-            this.access = new LogAccessDB(configConnection, runtimeConnection);
+            this.runtimeConnectionNoAutoCommit 
+                    = dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            this.runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            this.logAccess = new LogAccessDB(dbDriverManager);
         } catch (Exception e) {
             this.logger.severe("DBLoggingHandler: " + e.getMessage());
         }
@@ -114,11 +114,14 @@ public class DBLoggingHandler extends Handler {
             if (parameter[0] instanceof AS2MessageInfo) {
                 AS2MessageInfo info = (AS2MessageInfo) parameter[0];
                 message = "[" + info.getMessageId() + "] " + message;
-                this.access.log(level, millis, message, info.getMessageId());
+                this.logAccess.logAsTransaction(this.runtimeConnectionNoAutoCommit, 
+                        level, millis, message, info.getMessageId());
             } else if (parameter[0] instanceof AS2MDNInfo) {
                 AS2MDNInfo info = (AS2MDNInfo) parameter[0];
                 message = "[" + info.getMessageId() + "] " + message;
-                this.access.log(level, millis, message, info.getRelatedMessageId());
+                this.logAccess.logAsTransaction(
+                        this.runtimeConnectionNoAutoCommit, 
+                        level, millis, message, info.getRelatedMessageId());
             }
         }
     }

@@ -1,7 +1,7 @@
-//$Header: /as2/de/mendelson/comm/as2/preferences/PreferencesPanelSecurity.java 25    5.11.19 10:45 Heller $
+//$Header: /as2/de/mendelson/comm/as2/preferences/PreferencesPanelSecurity.java 29    23.09.21 12:27 Heller $
 package de.mendelson.comm.as2.preferences;
 
-import de.mendelson.util.ColorUtil;
+import de.mendelson.util.passwordfield.PasswordOverlay;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
 import de.mendelson.util.clientserver.BaseClient;
@@ -25,7 +25,7 @@ import javax.swing.SwingUtilities;
  * Panel to define the directory preferences
  *
  * @author S.Heller
- * @version: $Revision: 25 $
+ * @version: $Revision: 29 $
  */
 public class PreferencesPanelSecurity extends PreferencesPanel {
 
@@ -41,8 +41,8 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
     private BaseClient baseClient;
 
     private final static MendelsonMultiResolutionImage ICON_CERTIFICATE
-            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/certificate.svg", 
-                    JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/certificate.svg",
+                    JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT * 2);
     private final static MendelsonMultiResolutionImage ICON_WARNING_SIGN
             = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/warning_sign.svg", 64, 128);
     
@@ -61,6 +61,8 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
         this.baseClient = baseClient;
         this.preferences = new PreferencesClient(baseClient);
         this.initComponents();
+        PasswordOverlay.addTo(this.jPasswordFieldKeystorePass);
+        PasswordOverlay.addTo(this.jPasswordFieldKeystoreHTTPPass);
         this.jLabelSecurityHint.setIcon(new ImageIcon(ICON_WARNING_SIGN));
         this.jLabelSecurityHint.setText(this.rb.getResourceString("keystore.hint"));
         this.jLabelSecurityHint.setIconTextGap(20);
@@ -100,6 +102,7 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
         jPanelWarning = new javax.swing.JPanel();
         jLabelSecurityHint = new javax.swing.JLabel();
         jPanelSpace = new javax.swing.JPanel();
+        jButtonBrowseKeystoreEncryptionSign = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -195,7 +198,6 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMargin.add(jLabelKeystoreEncryptionSign, gridBagConstraints);
 
-        jTextFieldKeystoreEncryptionSign.setEditable(false);
         jTextFieldKeystoreEncryptionSign.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextFieldKeystoreEncryptionSignKeyReleased(evt);
@@ -240,6 +242,20 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
         gridBagConstraints.weighty = 1.0;
         jPanelMargin.add(jPanelSpace, gridBagConstraints);
 
+        jButtonBrowseKeystoreEncryptionSign.setText("..");
+        jButtonBrowseKeystoreEncryptionSign.setToolTipText(this.rb.getResourceString( "button.browse"));
+        jButtonBrowseKeystoreEncryptionSign.setMargin(new java.awt.Insets(2, 8, 2, 8));
+        jButtonBrowseKeystoreEncryptionSign.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBrowseKeystoreEncryptionSignActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanelMargin.add(jButtonBrowseKeystoreEncryptionSign, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -275,11 +291,26 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
     }//GEN-LAST:event_jTextFieldKeystoreHTTPSKeyReleased
 
     private void jTextFieldKeystoreEncryptionSignKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldKeystoreEncryptionSignKeyReleased
-        // TODO add your handling code here:
+        this.preferences.put(PreferencesAS2.KEYSTORE, this.jTextFieldKeystoreEncryptionSign.getText());
 }//GEN-LAST:event_jTextFieldKeystoreEncryptionSignKeyReleased
+
+    private void jButtonBrowseKeystoreEncryptionSignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseKeystoreEncryptionSignActionPerformed
+        JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+        RemoteFileBrowser browser = new RemoteFileBrowser(parent, this.baseClient,
+                this.rb.getResourceString("filechooser.keystore"));
+        browser.setDirectoriesOnly(false);
+        browser.setSelectedFile(this.jTextFieldKeystoreEncryptionSign.getText());
+        browser.setVisible(true);
+        String selectedPath = browser.getSelectedPath();
+        if (selectedPath != null && selectedPath.trim().length() > 0) {
+            this.jTextFieldKeystoreEncryptionSign.setText(selectedPath);
+        }
+        this.preferences.put(PreferencesAS2.KEYSTORE, this.jTextFieldKeystoreEncryptionSign.getText());
+    }//GEN-LAST:event_jButtonBrowseKeystoreEncryptionSignActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBrowseKeystoreEncryptionSign;
     private javax.swing.JButton jButtonBrowseKeystoreHTTPS;
     private javax.swing.JLabel jLabelKeystoreEncryptionSign;
     private javax.swing.JLabel jLabelKeystoreHTTPS;
@@ -302,7 +333,7 @@ public class PreferencesPanelSecurity extends PreferencesPanel {
 
     @Override
     public ImageIcon getIcon() {
-        return (new ImageIcon( ICON_CERTIFICATE ));
+        return (new ImageIcon(ICON_CERTIFICATE));
                 
     }
 

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/database/DebuggableStatement.java 3     20.10.20 10:09 Heller $
+//$Header: /mec_oftp2/de/mendelson/util/database/DebuggableStatement.java 6     2/02/22 10:16 Heller $
 package de.mendelson.util.database;
 
 import java.sql.Connection;
@@ -6,8 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 /*
@@ -21,26 +20,38 @@ import java.util.logging.Logger;
  * Database statement that could be debugged
  *
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 6 $
  */
 public class DebuggableStatement implements Statement {
 
     private Statement statement;
     private Logger connectionLogger = null;
-    private String connectionName = null;
+    private String connectionName = "Unknown connection";
+    private DebuggableConnection connection;
     /**
      * Counter for the unique query ids
      */
-    private static long currentId = System.currentTimeMillis();
+    private final static AtomicLong currentId = new AtomicLong(0);
 
-    public DebuggableStatement(Statement statement, Logger connectionLogger, String connectionName) {
+    public DebuggableStatement(DebuggableConnection connection, Statement statement, Logger connectionLogger, String connectionName) {
+        this.connection = connection;
         this.statement = statement;
         this.connectionLogger = connectionLogger;
+        if (connectionName != null) {
         this.connectionName = connectionName;
     }
+    }
 
-    public DebuggableStatement(Statement statement) {
-        this(statement, null, null);
+    public DebuggableStatement(DebuggableConnection connection, Statement statement) {
+        this(connection, statement, null, null);
+    }
+
+    /**
+     * ConnectionName this statement has been created from - will be "Unknown
+     * connection" if none has been set
+     */
+    public String getConnectionName() {
+        return (this.connectionName);
     }
 
     @Override
@@ -80,7 +91,7 @@ public class DebuggableStatement implements Statement {
             return (returnValue);
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [problem in " + uniqueQueryName + "] "
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
                         + e.getClass().getSimpleName()
                         + " SQLState: " + e.getSQLState()
                         + " - " + e.getMessage();
@@ -123,7 +134,7 @@ public class DebuggableStatement implements Statement {
             return (result);
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [problem in " + uniqueQueryName + "] "
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
                         + e.getClass().getSimpleName()
                         + " SQLState: " + e.getSQLState()
                         + " - " + e.getMessage();
@@ -147,7 +158,7 @@ public class DebuggableStatement implements Statement {
 
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [problem in " + uniqueQueryName + "] "
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
                         + e.getClass().getSimpleName()
                         + " SQLState: " + e.getSQLState()
                         + " - " + e.getMessage();
@@ -175,7 +186,7 @@ public class DebuggableStatement implements Statement {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return (this.statement.getConnection());
+        return (this.connection);
     }
 
     @Override
@@ -321,12 +332,10 @@ public class DebuggableStatement implements Statement {
     /**
      * Creates a new id in the format yyyyMMddHHmm-nn
      */
-    private static synchronized String createId() {
-        StringBuilder idBuffer = new StringBuilder();
-        DateFormat format = new SimpleDateFormat("HHmmss");
-        idBuffer.append("STATEMENT" + format.format(new java.util.Date()));
-        idBuffer.append("-");
-        idBuffer.append(currentId++);
+    private static String createId() {
+        StringBuilder idBuffer = new StringBuilder()
+                .append("STATEMENT-")
+                .append(currentId.getAndIncrement());
         return (idBuffer.toString());
     }
 }

@@ -1,4 +1,4 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/partner/gui/JTreePartner.java 35    18.12.20 10:45 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/JTreePartner.java 36    27.07.21 15:33 Heller $
 package de.mendelson.comm.as2.partner.gui;
 
 import de.mendelson.util.security.cert.CertificateManager;
@@ -28,7 +28,7 @@ import javax.swing.tree.TreePath;
  * Tree to display the AS2 partner
  *
  * @author S.Heller
- * @version $Revision: 35 $
+ * @version $Revision: 36 $
  */
 public class JTreePartner extends JTree {
 
@@ -130,7 +130,7 @@ public class JTreePartner extends JTree {
         synchronized (this.getModel()) {
             this.root.removeAllChildren();
             PartnerListResponse response = (PartnerListResponse) this.baseClient.sendSync(
-                    new PartnerListRequest(PartnerListRequest.LIST_ALL));
+                    new PartnerListRequest(PartnerListRequest.LIST_ALL), Partner.TIMEOUT_PARTNER_REQUEST);
             List<Partner> partnerList = response.getList();
             SortableTreeNode nodePartner = null;
             SortableTreeNode firstNodePartner = null;

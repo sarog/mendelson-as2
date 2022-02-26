@@ -1,4 +1,4 @@
-///$Header: /as2/de/mendelson/comm/as2/servlet/HttpReceiver.java 53    10.03.20 14:53 Heller $
+///$Header: /as2/de/mendelson/comm/as2/servlet/HttpReceiver.java 54    23.08.21 13:48 Heller $
 package de.mendelson.comm.as2.servlet;
 
 import de.mendelson.Copyright;
@@ -14,10 +14,7 @@ import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -43,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet to receive AS2 messages via HTTP
  *
  * @author S.Heller
- * @version $Revision: 53 $
+ * @version $Revision: 54 $
  */
 public class HttpReceiver extends HttpServlet {
 
@@ -147,7 +144,7 @@ public class HttpReceiver extends HttpServlet {
             client = new AnonymousTextClient();
             client.setDisplayServerLogMessages(false);
             PreferencesAS2 preferences = new PreferencesAS2();
-            client.connect("localhost", preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT), 30000);
+            client.connect("localhost", AS2Server.CLIENTSERVER_COMM_PORT, 30000);
             IncomingMessageRequest messageRequest = new IncomingMessageRequest();
             messageRequest.setMessageDataFilename(dataFile.toAbsolutePath().toString());
             messageRequest.setContentType(request.getContentType());
@@ -195,31 +192,6 @@ public class HttpReceiver extends HttpServlet {
                 client.disconnect();
             }
         }
-    }
-
-    /**
-     * Checks if the mbi server runs local or not
-     */
-    public boolean serverRunsLocal() {
-        try {
-            String server = this.preferences.get(PreferencesAS2.SERVER_HOST);
-            String serverAddress = InetAddress.getByName(server).getHostAddress();
-            String localname = InetAddress.getLocalHost().getCanonicalHostName();
-            InetAddress[] localhost = InetAddress.getAllByName("127.0.0.1");
-            for (int i = 0; i < localhost.length; i++) {
-                if (localhost[i].getHostAddress().equals(serverAddress)) {
-                    return (true);
-                }
-            }
-            localhost = InetAddress.getAllByName(localname);
-            for (int i = 0; i < localhost.length; i++) {
-                if (localhost[i].getHostAddress().equals(serverAddress)) {
-                    return (true);
-                }
-            }
-        } catch (UnknownHostException ignore) {
-        }
-        return (false);
     }
 
     /**

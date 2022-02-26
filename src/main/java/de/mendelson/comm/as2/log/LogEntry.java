@@ -1,7 +1,12 @@
-//$Header: /as2/de/mendelson/comm/as2/log/LogEntry.java 10    4/06/18 12:21p Heller $
+//$Header: /as2/de/mendelson/comm/as2/log/LogEntry.java 11    8.09.21 10:12 Heller $
 package de.mendelson.comm.as2.log;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 
 /*
@@ -15,7 +20,7 @@ import java.util.logging.Level;
  * Enwrapps a single db log entry in an object
  *
  * @author S.Heller
- * @version $Revision: 10 $
+ * @version $Revision: 11 $
  */
 public class LogEntry implements Serializable {
 
@@ -84,4 +89,15 @@ public class LogEntry implements Serializable {
     private String toCDATA(String data) {
         return ("<![CDATA[" + data + "]]>");
     }
+    
+    /**Adds this entry to the passed parent JSON node*/
+    public void addToJSON( ArrayNode parent){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS' UTC'");
+        ObjectNode node = parent.addObject();        
+        node.put( "timestamp", dateFormat.format(new Date(this.getMillis())));
+        node.put( "unixtimestamp", this.getMillis());
+        node.put( "level", String.valueOf(this.level.intValue()));
+        node.put( "entry", this.message);
+    }
+    
 }

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/client/AS2StatusBar.java 29    16.09.19 10:55 Heller $
+//$Header: /as2/de/mendelson/comm/as2/client/AS2StatusBar.java 32    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.client;
 
 import de.mendelson.comm.as2.configurationcheck.gui.JDialogIssuesList;
@@ -8,6 +8,7 @@ import de.mendelson.comm.as2.clientserver.message.ConfigurationCheckResponse;
 import de.mendelson.util.IStatusBar;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
+import de.mendelson.util.NamedThreadFactory;
 import de.mendelson.util.ProgressPanel;
 import de.mendelson.util.clientserver.BaseClient;
 import java.awt.Dimension;
@@ -16,6 +17,7 @@ import java.awt.Graphics2D;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -33,7 +35,7 @@ import javax.swing.SwingUtilities;
  * Status bar for the AS2 GUI
  *
  * @author S.Heller
- * @version $Revision: 29 $
+ * @version $Revision: 32 $
  */
 public class AS2StatusBar extends JPanel implements IStatusBar {
 
@@ -41,29 +43,24 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
 
     private MecResourceBundle rb;
     public static final MendelsonMultiResolutionImage IMAGE_WARNING
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/warning_sign.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/warning_sign.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_PENDING
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/state_pending.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/state_pending.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_STOPPED
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/state_stopped.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/state_stopped.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_FINISHED
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/state_finished.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/state_finished.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_SERVED
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/state_all.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/state_all.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
      public static final MendelsonMultiResolutionImage IMAGE_ALL
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/state_all_sum.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/state_all_sum.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     public static final MendelsonMultiResolutionImage IMAGE_ALL_SELECTED
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/client/state_allselected.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/state_allselected.svg", ICON_HEIGHT, ICON_HEIGHT * 2);
     private ModuleStarter moduleStarter;
     private BaseClient baseClient = null;
     private ConfigurationCheckThread checkThread = null;
+    private final ScheduledExecutorService configurationCheckRefreshExecutor = Executors.newSingleThreadScheduledExecutor(
+        new NamedThreadFactory("client-configuration-check-schedule"));
 
     /**
      * Creates new form AS2StatusBar
@@ -81,12 +78,19 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
     }
 
     private void setMultiresolutionIcons() {
-        this.jLabelTransactionsFailure.setIcon(new ImageIcon(IMAGE_STOPPED.toMinResolution(ICON_HEIGHT)));
-        this.jLabelTransactionsOk.setIcon(new ImageIcon(IMAGE_FINISHED.toMinResolution(ICON_HEIGHT)));
-        this.jLabelTransactionsPending.setIcon(new ImageIcon(IMAGE_PENDING.toMinResolution(ICON_HEIGHT)));
-        this.jLabelTransactionsServed.setIcon(new ImageIcon(IMAGE_SERVED.toMinResolution(ICON_HEIGHT)));
-        this.jLabelTransactionsAll.setIcon(new ImageIcon(IMAGE_ALL.toMinResolution(ICON_HEIGHT)));
-        this.jLabelTransactionsSelected.setIcon(new ImageIcon(IMAGE_ALL_SELECTED.toMinResolution(ICON_HEIGHT)));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jLabelTransactionsFailure.setIcon(new ImageIcon(IMAGE_STOPPED.toMinResolution(ICON_HEIGHT)));
+                jLabelTransactionsOk.setIcon(new ImageIcon(IMAGE_FINISHED.toMinResolution(ICON_HEIGHT)));
+                jLabelTransactionsPending.setIcon(new ImageIcon(IMAGE_PENDING.toMinResolution(ICON_HEIGHT)));
+                jLabelTransactionsServed.setIcon(new ImageIcon(IMAGE_SERVED.toMinResolution(ICON_HEIGHT)));
+                jLabelTransactionsAll.setIcon(new ImageIcon(IMAGE_ALL.toMinResolution(ICON_HEIGHT)));
+                jLabelTransactionsSelected.setIcon(new ImageIcon(IMAGE_ALL_SELECTED.toMinResolution(ICON_HEIGHT)));
+            }
+
+        });
+
     }
 
     public void initialize(BaseClient baseClient, ModuleStarter moduleStarter) {
@@ -99,24 +103,40 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
             throw new IllegalArgumentException("Status bar: Please pass the base client to the status bar before starting the config checker.");
         }
         this.checkThread = new ConfigurationCheckThread();
-        Executors.newSingleThreadExecutor().submit(this.checkThread);
+        this.configurationCheckRefreshExecutor.scheduleWithFixedDelay(this.checkThread, 1, 30, TimeUnit.SECONDS);
     }
 
     public void setTransactionCount(int countAll, int countServed, int countOk, int countPending, int countFailed, int countSelected) {
-        this.jLabelTransactionsAll.setText(String.valueOf(countAll));
-        this.jLabelTransactionsServed.setText(String.valueOf(countServed));
-        this.jLabelTransactionsOk.setText(String.valueOf(countOk));
-        this.jLabelTransactionsPending.setText(String.valueOf(countPending));
-        this.jLabelTransactionsFailure.setText(String.valueOf(countFailed));
-        this.jLabelTransactionsSelected.setText(String.valueOf(countSelected));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jLabelTransactionsAll.setText(String.valueOf(countAll));
+                jLabelTransactionsServed.setText(String.valueOf(countServed));
+                jLabelTransactionsOk.setText(String.valueOf(countOk));
+                jLabelTransactionsPending.setText(String.valueOf(countPending));
+                jLabelTransactionsFailure.setText(String.valueOf(countFailed));
+                jLabelTransactionsSelected.setText(String.valueOf(countSelected));
+            }
+        });
+
     }
 
     public void setConnectedHost(String host) {
-        this.jLabelHost.setText(AS2ServerVersion.getProductName() + "@" + host);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jLabelHost.setText(AS2ServerVersion.getProductName() + "@" + host);
+            }
+        });
     }
 
     public void setSelectedTransactionCount(int countSelected) {
-        this.jLabelTransactionsSelected.setText(String.valueOf(countSelected));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jLabelTransactionsSelected.setText(String.valueOf(countSelected));
+            }
+        });
     }
 
     @Override
@@ -474,17 +494,11 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
 
     public class ConfigurationCheckThread implements Runnable {
 
-        private boolean stopRequested = false;
-        //wait this time between checks, once a day
-        private final long WAIT_TIME = TimeUnit.SECONDS.toMillis(30);
-
         public ConfigurationCheckThread() {
         }
 
         @Override
         public void run() {
-            Thread.currentThread().setName("Clientside configuration check thread");
-            while (!stopRequested) {
                 try {
                     ConfigurationCheckResponse response = (ConfigurationCheckResponse) baseClient.sendSync(new ConfigurationCheckRequest());
                     final int issueCount = response.getIssues().size();
@@ -494,9 +508,9 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
                             public void run() {
                                 jLabelConfigurationIssue.setIcon(null);
                                 String text = rb.getResourceString("no.configuration.issues");
+                            jLabelConfigurationIssue.setText(text);
                                 int labelWidth = computeStringWidth(text) + 10;
                                 jLabelConfigurationIssue.setPreferredSize(new Dimension(labelWidth, ICON_HEIGHT));
-                                jLabelConfigurationIssue.setText(text);
                             }
                         });
                     } else {
@@ -509,19 +523,17 @@ public class AS2StatusBar extends JPanel implements IStatusBar {
                                 } else {
                                     text = rb.getResourceString("configuration.issue.single", String.valueOf(issueCount));
                                 }
+                            jLabelConfigurationIssue.setText(text);
+                            jLabelConfigurationIssue.setIcon(new ImageIcon(IMAGE_WARNING.toMinResolution(ICON_HEIGHT)));
                                 //contents with some gap result in the label width
                                 final int labelWidth = computeStringWidth(text) 
                                         + new ImageIcon(IMAGE_WARNING.toMinResolution(ICON_HEIGHT)).getIconWidth() + 10;
                                 jLabelConfigurationIssue.setPreferredSize(new Dimension(labelWidth, ICON_HEIGHT));
-                                jLabelConfigurationIssue.setText(text);
-                                jLabelConfigurationIssue.setIcon(new ImageIcon(IMAGE_WARNING.toMinResolution(ICON_HEIGHT)));
                             }
                         });
                     }
-                    Thread.sleep(WAIT_TIME);
-                } catch (InterruptedException e) {
+            } catch (Throwable e) {
                     //nop
-                }
             }
         }
 

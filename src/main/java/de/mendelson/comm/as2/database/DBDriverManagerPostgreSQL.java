@@ -1,6 +1,8 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/database/DBDriverManagerPostgreSQL.java 2     17.12.20 9:52 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/database/DBDriverManagerPostgreSQL.java 3     2/02/22 14:35 Heller $
 package de.mendelson.comm.as2.database;
 
+import de.mendelson.util.database.AbstractDBDriverManagerPostgreSQL;
+import de.mendelson.util.database.IDBDriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -15,35 +17,97 @@ import java.sql.SQLException;
  * Class needed to access the database
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
-public class DBDriverManagerPostgreSQL implements IDBDriverManager, ISQLQueryModifier {
+public class DBDriverManagerPostgreSQL extends AbstractDBDriverManagerPostgreSQL implements IDBDriverManager, ISQLQueryModifier {
 
-    public static final boolean DEBUG = false;
-
-    @Override
-    public void setupConnectionPool() {
-        throw new UnsupportedOperationException("Not supported.");
+     /**
+     * keeps this as singleton for the whole server instance
+     */
+    private static DBDriverManagerPostgreSQL instance;
+    /**
+     * Singleton for the whole application. Looks uncommon but uses the double
+     * checked method for higher performance - in this case the method is not
+     * needed to be synchronized
+     */
+    public static DBDriverManagerPostgreSQL instance() {
+        if (instance == null) {
+            synchronized (DBDriverManagerPostgreSQL.class) {
+                if (instance == null) {
+                    instance = new DBDriverManagerPostgreSQL();
+                }
+            }
+        }
+        return (instance);
     }
 
+    /**
+     * Returns the version of this class
+     */
+    public static String getVersion() {
+        return ("0");
+    }
+
+    /**
+     * Setup the driver manager, initialize the connection pool
+     *
+     */
+    @Override
+    public synchronized void setupConnectionPool() {
+        throw new IllegalAccessError();
+    }
+
+    /**
+     * shutdown the connection pool
+     */
     @Override
     public void shutdownConnectionPool() throws SQLException {
-        throw new UnsupportedOperationException("Not supported.");
+        throw new IllegalAccessError();
     }
 
-    @Override
-    public boolean createDatabase(int DB_TYPE) throws Exception {
-        throw new UnsupportedOperationException("Not supported.");
+    /**
+     * Returns the DB name, depending on the system wide profile name
+     */
+    public String getDBName(final int DB_TYPE) {
+        throw new IllegalAccessError();
     }
 
+    /**
+     * Creates a new locale database
+     *
+     * @return true if it was created successfully
+     * @param DB_TYPE of the database that should be created, as defined in this
+     * class
+     */
     @Override
-    public Connection getConnectionWithoutErrorHandling(int DB_TYPE, String host) throws SQLException {
-        throw new UnsupportedOperationException("Not supported.");
+    public boolean createDatabase(final int DB_TYPE) throws Exception {
+        throw new IllegalAccessError();
+    }
+
+    /**
+     * Returns a connection to the database
+     *
+     * @param dummy Unused parameter
+     * @param DB_TYPE of the database that should be created, as defined in this
+     * class
+     */
+    @Override
+    public Connection getConnectionWithoutErrorHandling(final int DB_TYPE)
+            throws SQLException {
+        throw new IllegalAccessError();
     }
 
     @Override
     public String modifyQuery(String query) {
-        throw new UnsupportedOperationException("Not supported.");
+        throw new IllegalAccessError();
+    }
+
+    /**
+     * Returns some connection pool information for debug purpose
+     */
+    @Override
+    public String getPoolInformation(int DB_TYPE) {
+        throw new IllegalAccessError();
     }
 
 }

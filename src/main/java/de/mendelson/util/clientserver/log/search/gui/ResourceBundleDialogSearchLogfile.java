@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/ResourceBundleDialogSearchLogfile.java 1     20.12.18 15:05 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/ResourceBundleDialogSearchLogfile.java 2     27.09.21 17:12 Heller $
 package de.mendelson.util.clientserver.log.search.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 1 $
+ * @version $Revision: 2 $
  */
 public class ResourceBundleDialogSearchLogfile extends MecResourceBundle {
 
@@ -39,7 +39,7 @@ public class ResourceBundleDialogSearchLogfile extends MecResourceBundle {
         {"button.close", "Close" },
         {"label.search", "Log search" },
         {"label.info", "<html>Please enter a full AS2 message id or a full MDN id into the search field to find all log entries in the server side log files for the defined date period - then press the \"Log search\" button. The user defined id could be set for each transaction using the command line send process.</html>" },
-        {"textfield.preset", "mendelsonAS2@partnerAS2" },
+        {"textfield.preset", "AS2 message id, MDN id or userdefined id to search for" },
         {"label.messageid", "AS2 message id" },
         {"label.mdnid", "MDN id" },
         {"label.uid", "Userdefined id" },

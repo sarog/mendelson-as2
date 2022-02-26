@@ -1,11 +1,12 @@
-//$Header: /as2/de/mendelson/util/clientserver/user/UserAccess.java 6     1.11.18 12:36 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/user/UserAccess.java 8     10.11.21 13:45 Heller $
 package de.mendelson.util.clientserver.user;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 /*
@@ -19,11 +20,11 @@ import java.util.logging.Logger;
  * Contains several utilities for the user access
  *
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 8 $
  */
 public class UserAccess {
 
-    private File passwdFile = new File("passwd");
+    private Path passwdFile = Paths.get("passwd");
     private Logger logger;
 
     public UserAccess(Logger logger) {
@@ -32,7 +33,7 @@ public class UserAccess {
 
     public UserAccess(Logger logger, String passwdFilename) {
         this.logger = logger;
-        this.passwdFile = new File(passwdFilename);
+        this.passwdFile = Paths.get(passwdFilename);
     }
 
     public User addUser(String userName, char[] password) throws Exception {
@@ -47,8 +48,8 @@ public class UserAccess {
         }
         RandomAccessFile file = null;
         try {
-            file = new RandomAccessFile(this.passwdFile, "rw");
-            file.seek(this.passwdFile.length());
+            file = new RandomAccessFile(this.passwdFile.toFile(), "rw");
+            file.seek(Files.size(this.passwdFile));
             String newLine = User.serialize(user);
             file.writeBytes("\n");
             file.writeBytes(newLine);
@@ -81,7 +82,7 @@ public class UserAccess {
     public String readUserLine(String userName) {
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = Files.newBufferedReader(this.passwdFile.toPath(), StandardCharsets.UTF_8);
+            bufferedReader = Files.newBufferedReader(this.passwdFile, StandardCharsets.UTF_8);
             String line = "";
             while (line != null) {
                 line = bufferedReader.readLine();

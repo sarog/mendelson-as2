@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JPanelCertificates.java 48    11.11.20 17:06 Heller $
+//$Header: /as2/de/mendelson/util/security/cert/gui/JPanelCertificates.java 50    23.09.21 12:27 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.ColorUtil;
@@ -12,6 +12,7 @@ import de.mendelson.util.security.cert.KeystoreCertificate;
 import de.mendelson.util.security.cert.TableModelCertificates;
 import de.mendelson.util.security.cert.clientserver.RefreshKeystoreCertificates;
 import de.mendelson.util.tables.JTableColumnResizer;
+import de.mendelson.util.tables.PersistentTableRowSorter;
 import de.mendelson.util.tables.TableCellRendererDate;
 import de.mendelson.util.uinotification.UINotification;
 import java.awt.Color;
@@ -42,7 +43,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -55,7 +55,7 @@ import javax.swing.table.TableRowSorter;
  * Panel to configure the Certificates
  *
  * @author S.Heller
- * @version $Revision: 48 $
+ * @version $Revision: 50 $
  */
 public class JPanelCertificates extends JPanel implements ListSelectionListener, PopupMenuListener {
 
@@ -95,8 +95,16 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
 
     /**
      * Creates new form JPanelPartnerConfig
+     *
+     * @param moduleName The module name of this instance. As this Panel may be
+     * used in TLS and ENC/Sign environment and there is a unique key required
+     * for persistent settings this String should help
      */
-    public JPanelCertificates(Logger logger, ListSelectionListener additionalListener, GUIClient guiClient) {
+    public JPanelCertificates(Logger logger, ListSelectionListener additionalListener, GUIClient guiClient,
+            String moduleName) {
+        if (moduleName == null) {
+            moduleName = "";
+        }
         this.logger = logger;
         this.guiClient = guiClient;
         //load resource bundle
@@ -108,7 +116,8 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
         }
         initComponents();
         //add row sorter
-        RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(this.jTable.getModel());
+        RowSorter<TableModel> sorter = new PersistentTableRowSorter<TableModel>(this.jTable.getModel(),
+                this.getClass().getName() + "_" + moduleName);
         this.jTable.setRowHeight(TableModelCertificates.ROW_HEIGHT);
         this.jTable.setRowSorter(sorter);
         this.jTable.getTableHeader().setReorderingAllowed(false);
@@ -646,7 +655,8 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
             KeystoreCertificate certificate = ((TableModelCertificates) this.jTable.getModel()).getParameter(this.jTable.getSelectedRow());
             JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(
                     JFrame.class, this);
-            JDialogRenameEntry dialog = new JDialogRenameEntry(parent, this.manager, certificate.getAlias(), this.keystoreType);
+            JDialogRenameEntry dialog = new JDialogRenameEntry(parent, 
+                    this.manager, certificate.getAlias(), this.keystoreType, this.manager.getKeystorePass());
             dialog.setVisible(true);
             this.manager.saveKeystore();
             this.refreshData();
@@ -663,7 +673,8 @@ public class JPanelCertificates extends JPanel implements ListSelectionListener,
         KeystoreCertificate selectedCertificate = this.getSelectedCertificate();
         String oldAlias = selectedCertificate.getAlias();
         JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
-        JDialogRenameEntry dialog = new JDialogRenameEntry(parent, this.manager, oldAlias, this.keystoreType);
+        JDialogRenameEntry dialog = new JDialogRenameEntry(parent, this.manager, oldAlias, 
+                this.keystoreType, this.manager.getKeystorePass());
         dialog.setVisible(true);
         String newAlias = dialog.getNewAlias();
         dialog.dispose();

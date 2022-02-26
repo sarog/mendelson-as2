@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/clientserver/AnonymousTextClient.java 2     11.06.14 17:47 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/clientserver/AnonymousTextClient.java 3     28.10.21 11:46 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.messages.ClientServerMessage;
@@ -12,10 +12,10 @@ import de.mendelson.util.clientserver.messages.ClientServerResponse;
  * and brand names are trademarks of their respective owners.
  */
 /**
- * Text Client implementation that sends anonymous messages (no login required)
+ * Text Client implementation that sends anonymous messages (no login required).
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class AnonymousTextClient extends BaseTextClient {
 

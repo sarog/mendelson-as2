@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/loggui/TableModelMessageOverview.java 31    15.01.20 14:48 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/loggui/TableModelMessageOverview.java 33    30.11.21 11:08 Heller $
 package de.mendelson.comm.as2.message.loggui;
 
 import de.mendelson.comm.as2.message.AS2Message;
@@ -13,11 +13,11 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
@@ -33,12 +33,12 @@ import javax.swing.table.AbstractTableModel;
  * Model to display the message overview
  *
  * @author S.Heller
- * @version $Revision: 31 $
+ * @version $Revision: 33 $
  */
 public class TableModelMessageOverview extends AbstractTableModel {
 
     public static final int ROW_HEIGHT = 20;
-    protected static final int IMAGE_HEIGHT = ROW_HEIGHT-3;
+    protected static final int IMAGE_HEIGHT = ROW_HEIGHT - 3;
     
     public static final ImageIcon ICON_IN
             = new ImageIcon(MendelsonMultiResolutionImage.fromSVG(
@@ -70,7 +70,7 @@ public class TableModelMessageOverview extends AbstractTableModel {
     /**
      * Stores all partner ids and the corresponding partner objects
      */
-    private final Map<String, Partner> partnerMap = Collections.synchronizedMap(new HashMap<String, Partner>());
+    private final Map<String, Partner> partnerMap = new ConcurrentHashMap<String, Partner>();
     /**
      * Data to display
      */
@@ -79,7 +79,6 @@ public class TableModelMessageOverview extends AbstractTableModel {
      * Format the date display
      */
     private DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-    private ImageUtil imageUtil = new ImageUtil();
 
     /**
      * Creates new LogTableModel
@@ -103,9 +102,7 @@ public class TableModelMessageOverview extends AbstractTableModel {
      *
      */
     public void passPartner(Map<String, Partner> partnerMap) {
-        synchronized (this.partnerMap) {
             this.partnerMap.putAll(partnerMap);
-        }
         this.fireTableDataChanged();
     }
 
@@ -197,13 +194,13 @@ public class TableModelMessageOverview extends AbstractTableModel {
                     if (info.getResendCounter() == 0) {
                         return (ICON_FINISHED);
                     } else {
-                        return (this.imageUtil.mixImages(ICON_FINISHED, ICON_RESEND_OVERLAY));
+                        return (ImageUtil.mixImages(ICON_FINISHED, ICON_RESEND_OVERLAY));
                     }
                 } else if (info.getState() == AS2Message.STATE_STOPPED) {
                     if (info.getResendCounter() == 0) {
                         return (ICON_STOPPED);
                     } else {
-                        return (this.imageUtil.mixImages(ICON_STOPPED, ICON_RESEND_OVERLAY));
+                        return (ImageUtil.mixImages(ICON_STOPPED, ICON_RESEND_OVERLAY));
                     }
                 }
                 return (ICON_PENDING);
@@ -218,17 +215,14 @@ public class TableModelMessageOverview extends AbstractTableModel {
             case 3:
                 if (info.getDirection() != AS2MessageInfo.DIRECTION_IN) {
                     String id = info.getSenderId();
-                    synchronized (this.partnerMap) {
                         Partner sender = this.partnerMap.get(id);
                         if (sender != null) {
                             return (sender.getName());
                         } else {
                             return (id);
                         }
-                    }
                 } else {
                     String id = info.getReceiverId();
-                    synchronized (this.partnerMap) {
                         Partner receiver = this.partnerMap.get(id);
                         if (receiver != null) {
                             return (receiver.getName());
@@ -236,27 +230,22 @@ public class TableModelMessageOverview extends AbstractTableModel {
                             return (id);
                         }
                     }
-                }
             case 4:
                 if (info.getDirection() == AS2MessageInfo.DIRECTION_IN) {
                     String id = info.getSenderId();
-                    synchronized (this.partnerMap) {
                         Partner sender = this.partnerMap.get(id);
                         if (sender != null) {
                             return (sender.getName());
                         } else {
                             return (id);
                         }
-                    }
                 } else {
                     String id = info.getReceiverId();
-                    synchronized (this.partnerMap) {
                         Partner receiver = this.partnerMap.get(id);
                         if (receiver != null) {
                             return (receiver.getName());
                         } else {
                             return (id);
-                        }
                     }
                 }
             case 5:

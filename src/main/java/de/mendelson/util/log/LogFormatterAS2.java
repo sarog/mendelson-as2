@@ -1,10 +1,11 @@
-//$Header: /as2/de/mendelson/util/log/LogFormatterAS2.java 3     21.12.18 10:25 Heller $
+//$Header: /as2/de/mendelson/util/log/LogFormatterAS2.java 5     3.02.21 11:30 Heller $
 package de.mendelson.util.log;
 
 import de.mendelson.comm.as2.message.AS2MDNInfo;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
 import de.mendelson.comm.as2.message.MessageAccessDB;
 import de.mendelson.util.clientserver.log.search.LoglineImplAS2;
+import de.mendelson.util.database.IDBDriverManager;
 import java.sql.Connection;
 
 /*
@@ -30,9 +31,9 @@ public class LogFormatterAS2 extends LogFormatter {
     /**
      * Allows references to the user defined processing id for MDNs
      */
-    public LogFormatterAS2(int formatType, Connection configConnection, Connection runtimeConnection) {
+    public LogFormatterAS2(int formatType, IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         super(formatType);
-        this.messageAccess = new MessageAccessDB(configConnection, runtimeConnection);
+        this.messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
     }
 
     /**

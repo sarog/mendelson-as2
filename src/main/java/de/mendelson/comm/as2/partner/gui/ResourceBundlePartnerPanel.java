@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/gui/ResourceBundlePartnerPanel.java 60    30.12.20 11:23 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/ResourceBundlePartnerPanel.java 61    22.09.21 14:39 Heller $
 package de.mendelson.comm.as2.partner.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -13,7 +13,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 60 $
+ * @version $Revision: 61 $
  */
 public class ResourceBundlePartnerPanel extends MecResourceBundle {
 
@@ -27,7 +27,9 @@ public class ResourceBundlePartnerPanel extends MecResourceBundle {
     static final Object[][] CONTENTS = {
         {"title", "Partner configuration"},
         {"label.name", "Name:"},
+        {"label.name.hint", "Internal partner name"},
         {"label.id", "AS2 id:"},
+        {"label.id.hint", "Partner identification (AS2 protocol)"},
         {"label.partnercomment", "Comment:" },
         {"label.url", "Receipt URL:"},
         {"label.mdnurl", "MDN URL:"},
@@ -38,6 +40,7 @@ public class ResourceBundlePartnerPanel extends MecResourceBundle {
         {"label.signtype", "Digital signature algorithm:"},
         {"label.encryptiontype", "Message encryption algorithm:"},
         {"label.email", "EMail address:"},
+        {"label.email.hint", "Transmitted in the AS2 protocol but not used or validated."},
         {"label.localstation", "Local station"},
         {"label.compression", "Compress outbound messages (requires AS2 1.1 partner solution)"},
         {"label.usecommandonreceipt", "On msg receipt:"},
@@ -65,6 +68,7 @@ public class ResourceBundlePartnerPanel extends MecResourceBundle {
         {"label.polldir", "Poll directory:"},
         {"label.pollinterval", "Poll interval:"},
         {"label.pollignore", "Poll ignore files:"},
+        {"label.pollignore.hint", "List of files to be ignored by the directory poll, comma separated. Wildcards are allowed. "},
         {"label.maxpollfiles", "Max files per poll:"},
         {"label.usehttpauth", "Use HTTP authentication to send AS2 messages"},
         {"label.usehttpauth.user", "Username:"},

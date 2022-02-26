@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/client/manualsend/JDialogManualSend.java 36    14.12.20 10:10 Heller $
+//$Header: /as2/de/mendelson/comm/as2/client/manualsend/JDialogManualSend.java 39    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.client.manualsend;
 
 import de.mendelson.comm.as2.client.AS2StatusBar;
@@ -10,9 +10,9 @@ import de.mendelson.util.LockingGlassPane;
 import de.mendelson.util.MecFileChooser;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
+import de.mendelson.util.TextOverlay;
 import de.mendelson.util.clientserver.BaseClient;
 import de.mendelson.util.clientserver.clients.datatransfer.TransferClientWithProgress;
-import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.uinotification.UINotification;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -41,7 +42,7 @@ import javax.swing.SwingUtilities;
  * Dialog to send a file to a single partner
  *
  * @author S.Heller
- * @version $Revision: 36 $
+ * @version $Revision: 39 $
  */
 public class JDialogManualSend extends JDialog {
 
@@ -86,6 +87,7 @@ public class JDialogManualSend extends JDialog {
         this.baseClient = baseClient;
         this.setTitle(this.rb.getResourceString("title"));
         initComponents();
+        TextOverlay.addTo(this.jTextFieldFilename1, rb.getResourceString("label.filename.hint"));
         this.setMultiresolutionIcons();
         this.jButtonBrowse2.setVisible(MULTIPLE_FILES);
         this.jTextFieldFilename2.setVisible(MULTIPLE_FILES);
@@ -99,9 +101,9 @@ public class JDialogManualSend extends JDialog {
                             PartnerListRequest.DATA_COMPLETENESS_NAME_AS2ID_TYPE));
             List<Partner> allPartnerList = response.getList();
             for (Partner partner : allPartnerList) {
-                if( partner.isLocalStation()){
-                    this.localStations.add( partner );
-                }else{
+                if (partner.isLocalStation()) {
+                    this.localStations.add(partner);
+                } else {
                     this.jComboBoxRemotePartner.addItem(partner);
                 }
             }
@@ -237,7 +239,7 @@ public class JDialogManualSend extends JDialog {
      * @throws Throwable
      */
     public ManualSendResponse performResend(String resendMessageId, Partner sender, Partner receiver,
-            Path dataFile, String originalFilename) throws Throwable {
+            Path dataFile, String originalFilename, String subject) throws Throwable {
         InputStream inStream = null;
         ManualSendResponse response = null;
         try {
@@ -257,6 +259,7 @@ public class JDialogManualSend extends JDialog {
             request.addFilename(originalFilename, null);
             request.setReceiverAS2Id(receiver.getAS2Identification());
             request.setSenderAS2Id(sender.getAS2Identification());
+            request.setSubject(subject);
             response = (ManualSendResponse) transferClient.uploadWaitInfinite(request);
             if (response.getException() != null) {
                 throw (response.getException());
@@ -302,7 +305,9 @@ public class JDialogManualSend extends JDialog {
                 }
             }
         };
-        Executors.newSingleThreadExecutor().submit(runnable);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(runnable);
+        executor.shutdown();
     }
 
     /**

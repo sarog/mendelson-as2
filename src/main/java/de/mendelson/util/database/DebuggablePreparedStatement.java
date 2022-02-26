@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/database/DebuggablePreparedStatement.java 4     20.10.20 10:09 Heller $
+//$Header: /mec_oftp2/de/mendelson/util/database/DebuggablePreparedStatement.java 8     2/02/22 10:16 Heller $
 package de.mendelson.util.database;
 
 import java.io.InputStream;
@@ -20,12 +20,11 @@ import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 /*
@@ -39,7 +38,7 @@ import java.util.logging.Logger;
  * Database statement that could be debugged
  *
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 8 $
  */
 public class DebuggablePreparedStatement extends DebuggableStatement implements PreparedStatement {
 
@@ -50,19 +49,19 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
     /**
      * Counter for the unique query ids
      */
-    private static long currentId = System.currentTimeMillis();
+    private static final AtomicLong currentId = new AtomicLong(0);
 
     /**
      * Map that contains parameter for the prepared statement
      */
     private Map<Integer, String> map = new HashMap<Integer, String>();
 
-    public DebuggablePreparedStatement(String query, PreparedStatement statement) {
-        this(query, statement, null, null);
+    public DebuggablePreparedStatement(DebuggableConnection connection, String query, PreparedStatement statement) {
+        this(connection, query, statement, null, null);
     }
 
-    public DebuggablePreparedStatement(String query, PreparedStatement statement, Logger connectionLogger, String connectionName) {
-        super(statement, connectionLogger, connectionName);
+    public DebuggablePreparedStatement(DebuggableConnection connection, String query, PreparedStatement statement, Logger connectionLogger, String connectionName) {
+        super(connection, statement, connectionLogger, connectionName);
         this.statement = statement;
         this.query = query;
         this.connectionLogger = connectionLogger;
@@ -75,6 +74,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
         builder.append(query);
         builder.append("\n");
         builder.append("Parameter:\n");
+        try {
         ParameterMetaData parameterMeta = this.statement.getParameterMetaData();
         for (int i = 0; i < parameterMeta.getParameterCount(); i++) {
             Integer key = Integer.valueOf(i + 1);
@@ -85,6 +85,10 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
                 builder.append(this.map.get(key));
                 builder.append("\n");
             }
+        }
+        } catch (Exception e) {
+            builder.append("PROBLEM accessing query parameter: [" + e.getClass().getSimpleName() + "] " + e.getMessage())
+                    .append("\n");
         }
         return (builder.toString());
     }
@@ -122,7 +126,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
         String uniqueQueryName = null;
         if (this.connectionLogger != null) {
             uniqueQueryName = createId();
-            this.connectionLogger.info("[" + this.connectionName + "] [execute prep statement " + uniqueQueryName + "] "
+            this.connectionLogger.info("[" + this.connectionName + "] [execute prepared statement " + uniqueQueryName + "] "
                     + this.getQueryWithParameterSingleLine());
         }
         try {
@@ -130,7 +134,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
             return (result);
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [problem in " + uniqueQueryName + "] "
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
                         + e.getClass().getSimpleName()
                         + " SQLState: " + e.getSQLState()
                         + " - " + e.getMessage();
@@ -146,7 +150,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
         String uniqueQueryName = null;
         if (this.connectionLogger != null) {
             uniqueQueryName = createId();
-            this.connectionLogger.info("[" + this.connectionName + "] [executeQuery prep statement " + uniqueQueryName + "] "
+            this.connectionLogger.info("[" + this.connectionName + "] [executeQuery prepared statement " + uniqueQueryName + "] "
                     + this.getQueryWithParameterSingleLine());
         }
         try {
@@ -154,7 +158,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
             return (result);
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [problem in " + uniqueQueryName + "] "
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
                         + e.getClass().getSimpleName()
                         + " SQLState: " + e.getSQLState()
                         + " - " + e.getMessage();
@@ -170,7 +174,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
         String uniqueQueryName = null;
         if (this.connectionLogger != null) {
             uniqueQueryName = createId();
-            this.connectionLogger.info("[" + this.connectionName + "] [executeUpdate prep statement " + uniqueQueryName + "] "
+            this.connectionLogger.info("[" + this.connectionName + "] [executeUpdate prepared statement " + uniqueQueryName + "] "
                     + this.getQueryWithParameterSingleLine());
         }
         try {
@@ -178,7 +182,7 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
             return (updatedRows);
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [problem in " + uniqueQueryName + "] "
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
                         + e.getClass().getSimpleName()
                         + " SQLState: " + e.getSQLState()
                         + " - " + e.getMessage();
@@ -596,12 +600,10 @@ public class DebuggablePreparedStatement extends DebuggableStatement implements 
     /**
      * Creates a new id in the format yyyyMMddHHmm-nn
      */
-    private static synchronized String createId() {
-        StringBuilder idBuffer = new StringBuilder();
-        DateFormat format = new SimpleDateFormat("HHmmss");
-        idBuffer.append("PREP_STATEMENT" + format.format(new java.util.Date()));
-        idBuffer.append("-");
-        idBuffer.append(currentId++);
+    private static String createId() {
+        StringBuilder idBuffer = new StringBuilder()
+                .append("PREPARED_STATEMENT-")
+                .append(currentId.getAndIncrement());
         return (idBuffer.toString());
     }
 }

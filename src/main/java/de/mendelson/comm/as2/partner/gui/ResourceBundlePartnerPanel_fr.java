@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/gui/ResourceBundlePartnerPanel_fr.java 38    30.12.20 11:23 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/ResourceBundlePartnerPanel_fr.java 39    22.09.21 14:39 Heller $
 package de.mendelson.comm.as2.partner.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -14,7 +14,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 38 $
+ * @version $Revision: 39 $
  */
 public class ResourceBundlePartnerPanel_fr extends MecResourceBundle {
 
@@ -28,7 +28,9 @@ public class ResourceBundlePartnerPanel_fr extends MecResourceBundle {
     static final Object[][] CONTENTS = {
         {"title", "Configuration des partenaires"},
         {"label.name", "Nom:"},
+        {"label.name.hint", "Nom du partenaire interne"},
         {"label.id", "AS2 id:"},
+        {"label.id.hint", "Identification des partenaires (protocole AS2)"},
         {"label.partnercomment", "Commentaire:" },
         {"label.url", "URL de réception:"},
         {"label.mdnurl", "URL des MDN:"},
@@ -38,7 +40,8 @@ public class ResourceBundlePartnerPanel_fr extends MecResourceBundle {
         {"label.cryptalias.cert", "Certificat du partenaire (Cryptage):"},
         {"label.signtype", "Algorithme de signature numérique:"},
         {"label.encryptiontype", "Algorithme de chiffrement des messages:"},
-        {"label.email", "Adresse E-mail:"},
+        {"label.email", "E-mail:"},
+        {"label.email.hint", "Non utilisé ou validé dans le protocole AS2"},
         {"label.localstation", "Station locale"},
         {"label.compression", "Compresser les messages sortants (nécessite une solution AS2 1.1 en face)"},
         {"label.usecommandonreceipt", "Sur réception de message:"},
@@ -66,7 +69,8 @@ public class ResourceBundlePartnerPanel_fr extends MecResourceBundle {
         {"label.polldir", "Répertoire de scrutation:"},
         {"label.pollinterval", "Intervalle de scrutation:"},
         {"label.pollignore", "Ignorer les fichiers:"},
-        {"label.maxpollfiles", "Maximale des fichiers par sondage:"},
+        {"label.pollignore.hint", "Liste des fichiers à ignorer, séparés par virgules (caractères génériques autorisés)."},
+        {"label.maxpollfiles", "Max fichiers/sondage:"},
         {"label.usehttpauth", "Utiliser l''authentication HTTP pour envoyer les messages AS2"},
         {"label.usehttpauth.user", "Utilisateur:"},
         {"label.usehttpauth.pass", "Mot de passe:"},

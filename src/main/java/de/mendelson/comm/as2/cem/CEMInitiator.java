@@ -1,11 +1,10 @@
-//$Header: /as2/de/mendelson/comm/as2/cem/CEMInitiator.java 32    6.11.18 16:59 Heller $
+//$Header: /as2/de/mendelson/comm/as2/cem/CEMInitiator.java 37    9.03.21 13:30 Heller $
 package de.mendelson.comm.as2.cem;
 
 import de.mendelson.comm.as2.cem.messages.EDIINTCertificateExchangeRequest;
 import de.mendelson.comm.as2.cem.messages.EndEntity;
 import de.mendelson.comm.as2.cem.messages.TradingPartnerInfo;
 import de.mendelson.comm.as2.cem.messages.TrustRequest;
-import de.mendelson.comm.as2.cert.CertificateAccessDB;
 import de.mendelson.comm.as2.message.AS2Message;
 import de.mendelson.comm.as2.message.AS2MessageCreation;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
@@ -13,6 +12,7 @@ import de.mendelson.comm.as2.message.AS2Payload;
 import de.mendelson.comm.as2.message.MessageAccessDB;
 import de.mendelson.comm.as2.message.UniqueId;
 import de.mendelson.comm.as2.partner.Partner;
+import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.partner.PartnerSystem;
 import de.mendelson.comm.as2.partner.PartnerSystemAccessDB;
 import de.mendelson.comm.as2.sendorder.SendOrder;
@@ -20,10 +20,10 @@ import de.mendelson.comm.as2.sendorder.SendOrderSender;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.KeyStoreUtil;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.security.cert.KeystoreCertificate;
-import java.io.File;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  * Initiates a CEM request
  *
  * @author S.Heller
- * @version $Revision: 32 $
+ * @version $Revision: 37 $
  */
 public class CEMInitiator {
 
@@ -63,9 +63,10 @@ public class CEMInitiator {
     /**
      * Partner access
      */
-    private CertificateAccessDB certificateAccess;
     private Connection configConnection;
     private Connection runtimeConnection;
+    private IDBDriverManager dbDriverManager;
+    private PartnerAccessDB partnerAccess;
     private MecResourceBundle rb;
 
     /**
@@ -73,7 +74,7 @@ public class CEMInitiator {
      *
      * @param host host to connect to
      */
-    public CEMInitiator(Connection configConnection,
+    public CEMInitiator(IDBDriverManager dbDriverManager, Connection configConnection,
             Connection runtimeConnection, CertificateManager certificateManagerEncSign) {
         //load resource bundle
         try {
@@ -84,8 +85,9 @@ public class CEMInitiator {
         }
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
+        this.dbDriverManager = dbDriverManager;
         this.certificateManagerEncSign = certificateManagerEncSign;
-        this.certificateAccess = new CertificateAccessDB(this.configConnection, this.runtimeConnection);
+        this.partnerAccess = new PartnerAccessDB(dbDriverManager);
     }
 
     /**
@@ -97,10 +99,10 @@ public class CEMInitiator {
             throws Exception {
         //get all partner that are CEM enabled
         List<Partner> cemPartnerList = new ArrayList<Partner>();
-        PartnerSystemAccessDB systemAccess = new PartnerSystemAccessDB(this.configConnection, this.runtimeConnection);
+        PartnerSystemAccessDB systemAccess = new PartnerSystemAccessDB(this.partnerAccess);
         //check again if this partner supports CEM...
         for (Partner partner : receiver) {
-            PartnerSystem partnerSystem = systemAccess.getPartnerSystem(partner);
+            PartnerSystem partnerSystem = systemAccess.getPartnerSystem(partner, this.configConnection);
             if (partnerSystem != null && partnerSystem.supportsCEM()) {
                 cemPartnerList.add(partner);
             }
@@ -111,7 +113,8 @@ public class CEMInitiator {
             orderList.add(sendOrder);
         }
         for (SendOrder order : orderList) {
-            SendOrderSender orderSender = new SendOrderSender(this.configConnection, this.runtimeConnection);
+            SendOrderSender orderSender
+                    = new SendOrderSender(this.dbDriverManager, this.configConnection, this.runtimeConnection);
             orderSender.send(order);
         }
         return (cemPartnerList);
@@ -180,9 +183,12 @@ public class CEMInitiator {
         order.setSender(initiator);
         AS2MessageInfo messageInfo = (AS2MessageInfo) order.getMessage().getAS2Info();
         //enter the request to the CEM table in the db
-        CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+        CEMAccessDB cemAccess = new CEMAccessDB(
+                this.dbDriverManager,
+                this.configConnection, this.runtimeConnection);
         cemAccess.insertRequest((AS2MessageInfo) order.getMessage().getAS2Info(), initiator, order.getReceiver(), request);
-        MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+        MessageAccessDB messageAccess
+                = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
         messageAccess.initializeOrUpdateMessage(messageInfo);
         this.logger.log(Level.INFO, this.rb.getResourceString("cem.created.request",
                 new Object[]{

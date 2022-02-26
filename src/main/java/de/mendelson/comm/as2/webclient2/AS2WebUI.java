@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/webclient2/AS2WebUI.java 43    16.12.20 12:52 Heller $
+//$Header: /as2/de/mendelson/comm/as2/webclient2/AS2WebUI.java 63    27/01/22 17:19 Heller $
 package de.mendelson.comm.as2.webclient2;
 
 import com.vaadin.annotations.Theme;
@@ -43,10 +43,10 @@ import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.comm.as2.database.DBDriverManagerHSQL;
+import de.mendelson.comm.as2.database.DBDriverManagerMySQL;
 import de.mendelson.comm.as2.database.DBDriverManagerPostgreSQL;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
 import de.mendelson.comm.as2.message.ResourceBundleAS2Message;
-import de.mendelson.comm.as2.preferences.PreferencesAS2;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.clientserver.AnonymousTextClient;
 import de.mendelson.util.clientserver.about.ServerInfoRequest;
@@ -55,14 +55,16 @@ import de.mendelson.util.clientserver.user.User;
 import java.sql.Connection;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import de.mendelson.comm.as2.database.IDBDriverManager;
 import de.mendelson.comm.as2.message.AS2Message;
 import de.mendelson.comm.as2.message.AS2Payload;
 import de.mendelson.comm.as2.message.MessageAccessDB;
 import de.mendelson.comm.as2.message.MessageOverviewFilter;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
+import de.mendelson.comm.as2.server.AS2Server;
+import de.mendelson.comm.as2.server.ServerPlugins;
 import de.mendelson.util.clientserver.user.UserAccess;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.PBKDF2;
 import java.io.File;
 import java.nio.file.Files;
@@ -72,6 +74,8 @@ import java.text.DateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,7 +96,7 @@ import java.util.logging.Logger;
  * Main frame for the web interface
  *
  * @author S.Heller
- * @version $Revision: 43 $
+ * @version $Revision: 63 $
  */
 @Theme("valo")
 public class AS2WebUI extends UI {
@@ -100,8 +104,6 @@ public class AS2WebUI extends UI {
     public static final int ICON_SIZE_STANDARD = 20;
     public static final int ICON_SIZE_BUTTON = 24;
 
-    private Connection configConnection = null;
-    private Connection runtimeConnection = null;
     private Button buttonDetails = null;
     /**
      * Format the date display
@@ -118,6 +120,7 @@ public class AS2WebUI extends UI {
     private FileResource RESOURCE_IMAGE_LOCALSTATION;
     private FileResource RESOURCE_IMAGE_SINGLEPARTNER;
     private FileResource RESOURCE_IMAGE_USER;
+    private FileResource RESOURCE_IMAGE_SUM_OF_MESSAGES_IN_SYSTEM;
     private final MecResourceBundle rbMessage;
     /**
      * Stores information about the browser
@@ -133,6 +136,7 @@ public class AS2WebUI extends UI {
     private Label footerTransactionOkSum = new Label();
     private Label footerTransactionPendingSum = new Label();
     private Label footerTransactionErrorSum = new Label();
+    private Label footerTransactionSumAllInSystem = new Label();
     private Panel footerPanel;
     private GridLayout welcomeLayout = new GridLayout(2, 2);
     private final IDBDriverManager dbDriverManager;
@@ -147,8 +151,12 @@ public class AS2WebUI extends UI {
     private RadioButtonGroup<String> buttonGroupTimezone = null;
     private String buttonLabelTimezoneStrLocal = null;
     private String buttonLabelTimezoneStrServer = null;
-    private String timezoneServer = null;
-    private String timezoneLocal = null;
+    private String timezoneStrServer = null;
+    private String timezoneStrLocal = null;
+    private long timezoneOffsetInS = 0L;
+    private boolean pluginActivatedHA = false;
+    private boolean pluginActivatedPostgreSQL = false;
+    private boolean pluginActivatedMySQL = false;
 
     /**
      * This is the entry point of you application as denoted in your web.xml
@@ -167,16 +175,29 @@ public class AS2WebUI extends UI {
         AnonymousTextClient client = null;
         try {
             client = new AnonymousTextClient();
-            PreferencesAS2 preferences = new PreferencesAS2();
-            client.connect("localhost", preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT), 30000);
+            client.setDisplayServerLogMessages(false);
+            client.connect("localhost", AS2Server.CLIENTSERVER_COMM_PORT, 30000);
             ServerInfoResponse response = (ServerInfoResponse) client.sendSync(new ServerInfoRequest(), 30000);
-            String databaseProduct = response.getProperties().getProperty(ServerInfoRequest.DB_SERVER_VERSION);
-            if (databaseProduct.contains("HSQL")) {
-                this.dbDriverManager = new DBDriverManagerHSQL();
-            } else {
-                this.dbDriverManager = new DBDriverManagerPostgreSQL();
+            if (response.getException() != null) {
+                throw response.getException();
             }
-        } catch (Exception e) {
+            this.pluginActivatedHA = response.getProperties().getProperty(ServerInfoRequest.PLUGINS)
+                    != null && response.getProperties().getProperty(ServerInfoRequest.PLUGINS)
+                            .contains(ServerPlugins.PLUGIN_HA);
+            this.pluginActivatedPostgreSQL = response.getProperties().getProperty(ServerInfoRequest.PLUGINS)
+                    != null && response.getProperties().getProperty(ServerInfoRequest.PLUGINS)
+                            .contains(ServerPlugins.PLUGIN_POSTGRESQL);
+            this.pluginActivatedMySQL = response.getProperties().getProperty(ServerInfoRequest.PLUGINS)
+                    != null && response.getProperties().getProperty(ServerInfoRequest.PLUGINS)
+                            .contains(ServerPlugins.PLUGIN_MYSQL);
+            if (this.pluginActivatedPostgreSQL) {
+                this.dbDriverManager = DBDriverManagerPostgreSQL.instance();
+            } else if (this.pluginActivatedMySQL) {
+                this.dbDriverManager = DBDriverManagerMySQL.instance();
+            } else {
+                this.dbDriverManager = DBDriverManagerHSQL.instance();
+            }
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         } finally {
             if (client != null && client.isConnected()) {
@@ -199,6 +220,7 @@ public class AS2WebUI extends UI {
         RESOURCE_IMAGE_PENDING = new FileResource(new File("/VAADIN/theme/mendelson/images/state_pending.svg"));
         RESOURCE_IMAGE_STOPPED = new FileResource(new File("/VAADIN/theme/mendelson/images/state_stopped.svg"));
         RESOURCE_IMAGE_FINISHED = new FileResource(new File("/VAADIN/theme/mendelson/images/state_finished.svg"));
+        RESOURCE_IMAGE_SUM_OF_MESSAGES_IN_SYSTEM = new FileResource(new File("/VAADIN/theme/mendelson/images/state_all_sum.svg"));
         RESOURCE_IMAGE_ALL = new FileResource(new File("/VAADIN/theme/mendelson/images/state_all.svg"));
         RESOURCE_IMAGE_LOCALSTATION = new FileResource(new File("/VAADIN/theme/mendelson/images/localstation.svg"));
         RESOURCE_IMAGE_SINGLEPARTNER = new FileResource(new File("/VAADIN/theme/mendelson/images/singlepartner.svg"));
@@ -206,8 +228,6 @@ public class AS2WebUI extends UI {
         //establish database connection
         try {
             this.checkVersionMatch();
-            this.configConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG, "localhost");
-            this.runtimeConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME, "localhost");
         } catch (Exception e) {
             e.printStackTrace();
             new Notification("Fatal", e.getMessage(),
@@ -231,6 +251,17 @@ public class AS2WebUI extends UI {
             }
         });
         this.resizeGrid(Page.getCurrent().getBrowserWindowHeight());
+    }
+
+    /**
+     * Prevents to output any text that might contain JavaScript
+     *
+     * @param text
+     * @return
+     */
+    public static final String replaceJavaScriptOutput(String text) {
+        String pattern = "(\\<)(.*?)(\\>)";
+        return (text.replaceAll(pattern, (char) 0xFF1C + "$2" + (char) 0xFF1E));
     }
 
     /**
@@ -274,6 +305,7 @@ public class AS2WebUI extends UI {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setMargin(new MarginInfo(true, true, true, true));
         layout.setSpacing(true);
+        layout.addComponent(this.footerTransactionSumAllInSystem);
         layout.addComponent(this.footerTransactionSum);
         layout.addComponent(this.footerTransactionOkSum);
         layout.addComponent(this.footerTransactionPendingSum);
@@ -302,8 +334,8 @@ public class AS2WebUI extends UI {
         AnonymousTextClient client = null;
         try {
             client = new AnonymousTextClient();
-            PreferencesAS2 preferences = new PreferencesAS2();
-            client.connect("localhost", preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT), 30000);
+            client.setDisplayServerLogMessages(false);
+            client.connect("localhost", AS2Server.CLIENTSERVER_COMM_PORT, 30000);
             ServerInfoResponse response = (ServerInfoResponse) client.sendSync(new ServerInfoRequest(), 30000);
             String remoteProductName = response.getProperties().getProperty(ServerInfoResponse.SERVER_PRODUCT_NAME);
             String remoteServerVersion = response.getProperties().getProperty(ServerInfoResponse.SERVER_VERSION);
@@ -330,18 +362,24 @@ public class AS2WebUI extends UI {
     private void displayMessageDetailsOfSelectedRow() {
         //ignore quick double clicks
         if (this.getWindows().isEmpty()) {
-            AS2MessageInfo selectedInfo = this.overviewGrid.getSelectionModel().getFirstSelectedItem().get().getMessageInfo();
+            Optional<GridOverviewRow> selection = this.overviewGrid.getSelectionModel().getFirstSelectedItem();
+            if (!selection.isEmpty() && selection.isPresent()) {
+                GridOverviewRow selectedRow = selection.get();
+                if (selectedRow != null) {
+                    AS2MessageInfo selectedInfo = selectedRow.getMessageInfo();
             String displayTimezone = null;
             //get the timezone string for the date/time transformation
-            if( this.buttonGroupTimezone.getSelectedItem().get().equals( this.buttonLabelTimezoneStrLocal)){
-                displayTimezone = this.timezoneLocal;
-            }else{
-                displayTimezone = this.timezoneServer;
+                    if (this.buttonGroupTimezone.getSelectedItem().get().equals(this.buttonLabelTimezoneStrLocal)) {
+                        displayTimezone = this.timezoneStrLocal;
+                    } else {
+                        displayTimezone = this.timezoneStrServer;
             }
-            OkDialog dialog = new TransactionDetailsDialog(AS2WebUI.this.configConnection, AS2WebUI.this.runtimeConnection,
-                    selectedInfo, displayTimezone, this.browser.getLocale());
+                    OkDialog dialog = new TransactionDetailsDialog(
+                            selectedInfo, displayTimezone, this.browser.getLocale(), this.dbDriverManager);
             dialog.init(false);
             this.addWindow(dialog);
+        }
+    }
         }
     }
 
@@ -385,7 +423,7 @@ public class AS2WebUI extends UI {
         List<Partner> remoteStationsPartnerList = new ArrayList<Partner>();
         //load partner data
         try {
-            PartnerAccessDB partnerAccess = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
+            PartnerAccessDB partnerAccess = new PartnerAccessDB(this.dbDriverManager);
             localStationsPartnerList.addAll(
                     partnerAccess.getLocalStations(PartnerAccessDB.DATA_COMPLETENESS_NAMES_AS2ID_TYPE));
             remoteStationsPartnerList.addAll(
@@ -439,23 +477,56 @@ public class AS2WebUI extends UI {
         return (buttonLayout);
     }
 
+    /**
+     * Computes the difference between the local and the server timezones in
+     * seconds and returns it
+     */
+    private long computeTimezoneOffsetInS() {
+        ZoneId zoneIdLocal = ZoneId.of(this.timezoneStrLocal);
+        ZoneOffset zoneOffsetLocal = LocalDateTime.now().atZone(zoneIdLocal).getOffset();
+        ZoneId zoneIdServer = ZoneId.of(this.timezoneStrServer);
+        ZoneOffset zoneOffsetServer = LocalDateTime.now().atZone(zoneIdServer).getOffset();
+        int zoneOffsetServerAsSeconds = zoneOffsetServer.getTotalSeconds();
+        int zoneOffsetLocalAsSeconds = zoneOffsetLocal.getTotalSeconds();
+        int differenceInSeconds = zoneOffsetLocalAsSeconds - zoneOffsetServerAsSeconds;
+        return (differenceInSeconds);
+    }
+
+    /**
+     * Returns the offset of a timezone given by its id. Will return something
+     * like "-08:00"
+     *
+     * @param timezoneId
+     * @return
+     */
+    private String getTimezoneOffsetAsString(String timezoneIdStr) {
+        ZoneId zoneId = ZoneId.of(timezoneIdStr);
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(zoneId);
+        ZoneOffset zoneOffset = zonedDateTime.getOffset();
+        String offsetStr = zoneOffset.getId().replaceAll("Z", "+00:00");
+        return (offsetStr);
+    }
+
     private Layout createTimeSelection() {
         HorizontalLayout layout = new HorizontalLayout();
-        this.buttonGroupTimezone = new RadioButtonGroup<>("Date/Time display");
-        this.timezoneLocal = ZoneId.systemDefault().toString();
-        this.timezoneServer = ZoneId.systemDefault().toString();
+        this.buttonGroupTimezone = new RadioButtonGroup<String>("Date/Time display");
+        this.timezoneStrLocal = ZoneId.systemDefault().toString();
+        this.timezoneStrServer = ZoneId.systemDefault().toString();
         if (this.browser != null && this.browser.getTimeZoneId() != null) {
             //not all browsers might support the time zone
-            this.timezoneLocal = this.browser.getTimeZoneId();
+            this.timezoneStrLocal = this.browser.getTimeZoneId();
         }
-        this.buttonLabelTimezoneStrLocal = "Local [" + this.timezoneLocal + "]";
-        this.buttonLabelTimezoneStrServer = "AS2 server [" + this.timezoneServer + "]";
+        this.buttonLabelTimezoneStrLocal = "Local [" + this.timezoneStrLocal
+                + "; " + this.getTimezoneOffsetAsString(timezoneStrLocal) + "]";
+        this.buttonLabelTimezoneStrServer = "AS2 server [" + this.timezoneStrServer
+                + "; " + this.getTimezoneOffsetAsString(timezoneStrServer) + "]";
+        this.timezoneOffsetInS = this.computeTimezoneOffsetInS();
         buttonGroupTimezone.setItems(this.buttonLabelTimezoneStrLocal, this.buttonLabelTimezoneStrServer);
-        if( this.timezoneServer.equals(this.timezoneLocal)){
+        if (this.timezoneStrServer.equals(this.timezoneStrLocal)) {
             this.buttonGroupTimezone.setItemEnabledProvider(new SerializablePredicate<String>() {
                 @Override
                 public boolean test(String itemStr) {
-                    return( itemStr.equals(AS2WebUI.this.buttonLabelTimezoneStrLocal));
+                    return (itemStr.equals(AS2WebUI.this.buttonLabelTimezoneStrLocal));
                 }
             });
         }
@@ -517,6 +588,18 @@ public class AS2WebUI extends UI {
                 AS2WebUI.this.addWindow(dialog);
             }
         };
+        MenuBar.Command haOverviewCommand = null;
+        if (this.pluginActivatedHA) {
+            haOverviewCommand = new MenuBar.Command() {
+
+                @Override
+                public void menuSelected(MenuItem selectedItem) {
+                    OkDialog dialog = new HADialog(dbDriverManager);
+                    dialog.init(false);
+                    AS2WebUI.this.addWindow(dialog);
+                }
+            };
+        }
         MenuBar.Command aboutCommand = new MenuBar.Command() {
 
             @Override
@@ -529,6 +612,9 @@ public class AS2WebUI extends UI {
         MenuBar menubar = new MenuBar();
         MenuBar.MenuItem fileItem = menubar.addItem("AS2 server", null, null);
         fileItem.addItem("State", null, stateCommand);
+        if (haOverviewCommand != null) {
+            fileItem.addItem("HA Cluster overview", null, haOverviewCommand);
+        }
         fileItem.addItem("Logout", null, logoutCommand);
         MenuBar.MenuItem helpItem = menubar.addItem("Help", null, null);
         helpItem.addItem("About", null, aboutCommand);
@@ -594,7 +680,7 @@ public class AS2WebUI extends UI {
         Map<String, Partner> partnerMap = new HashMap<String, Partner>();
         //load partner data
         try {
-            PartnerAccessDB partnerAccess = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
+            PartnerAccessDB partnerAccess = new PartnerAccessDB(this.dbDriverManager);
             List<Partner> partner = partnerAccess.getAllPartner(PartnerAccessDB.DATA_COMPLETENESS_NAMES_AS2ID_TYPE);
             for (Partner singlePartner : partner) {
                 partnerMap.put(singlePartner.getAS2Identification(), singlePartner);
@@ -604,14 +690,20 @@ public class AS2WebUI extends UI {
                     Notification.Type.WARNING_MESSAGE, true)
                     .show(Page.getCurrent());
         }
-        int sum = 0;
+        int displaySum = 0;
         int sumPending = 0;
         int sumOk = 0;
         int sumError = 0;
+        int sumAllInSystem = 0;
         //load message data
+        Connection configConnection = null;
+        Connection runtimeConnection = null;
         try {
-            MessageAccessDB access = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+            configConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
+            runtimeConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, configConnection, runtimeConnection);
             MessageOverviewFilter filter = new MessageOverviewFilter();
+            sumAllInSystem = messageAccess.getMessageCount();
             //1000 transactions max
             filter.setLimit(1000);
             Optional<PartnerEntry> localStationFilter = this.comboboxFilterLocalstation.getSelectedItem();
@@ -631,16 +723,16 @@ public class AS2WebUI extends UI {
             filter.setShowFinished(this.checkboxOk.getValue().booleanValue());
             filter.setShowPending(this.checkboxPending.getValue().booleanValue());
             filter.setShowStopped(this.checkboxStopped.getValue().booleanValue());
-            List<AS2MessageInfo> info = access.getMessageOverview(filter);
+            List<AS2MessageInfo> info = messageAccess.getMessageOverview(filter);
             List<GridOverviewRow> displayList = new ArrayList<GridOverviewRow>();
             for (int i = 0; i < info.size(); i++) {
                 AS2MessageInfo messageInfo = info.get(i);
                 AS2Message message = new AS2Message(messageInfo);
-                List<AS2Payload> payloads = access.getPayload(messageInfo.getMessageId());
+                List<AS2Payload> payloads = messageAccess.getPayload(messageInfo.getMessageId());
                 for (AS2Payload payload : payloads) {
                     message.addPayload(payload);
                 }
-                sum++;
+                displaySum++;
                 if (messageInfo.getState() == AS2Message.STATE_FINISHED) {
                     sumOk++;
                 } else if (messageInfo.getState() == AS2Message.STATE_STOPPED) {
@@ -652,7 +744,8 @@ public class AS2WebUI extends UI {
             }
             this.overviewGrid.setItems(displayList);
             //refresh the footer
-            this.refreshFooterLabel(this.footerTransactionSum, RESOURCE_IMAGE_ALL, sum);
+            this.refreshFooterLabel(this.footerTransactionSumAllInSystem, RESOURCE_IMAGE_SUM_OF_MESSAGES_IN_SYSTEM, sumAllInSystem);
+            this.refreshFooterLabel(this.footerTransactionSum, RESOURCE_IMAGE_ALL, displaySum);
             this.refreshFooterLabel(this.footerTransactionErrorSum, RESOURCE_IMAGE_STOPPED, sumError);
             this.refreshFooterLabel(this.footerTransactionPendingSum, RESOURCE_IMAGE_PENDING, sumPending);
             this.refreshFooterLabel(this.footerTransactionOkSum, RESOURCE_IMAGE_FINISHED, sumOk);
@@ -660,6 +753,19 @@ public class AS2WebUI extends UI {
             new Notification("Problem", "[" + e.getClass().getSimpleName() + "] " + e.getMessage(),
                     Notification.Type.WARNING_MESSAGE, true)
                     .show(Page.getCurrent());
+        } finally {
+            if (configConnection != null) {
+                try {
+                    configConnection.close();
+                } catch (Exception e) {
+                }
+            }
+            if (runtimeConnection != null) {
+                try {
+                    runtimeConnection.close();
+                } catch (Exception e) {
+                }
+            }
         }
     }
 
@@ -825,23 +931,8 @@ public class AS2WebUI extends UI {
             if (AS2WebUI.this.buttonGroupTimezone.getSelectedItem().get().equals(AS2WebUI.this.buttonLabelTimezoneStrServer)) {
                 return (this.messageInfo.getInitDate());
             } else {
-                //switch date/time to local browser time
-                Instant instant = this.messageInfo.getInitDate().toInstant();
-                ZoneId zoneId = null;
-                if (AS2WebUI.this.browser != null) {
-                    String browserTimezoneIdStr = AS2WebUI.this.browser.getTimeZoneId();
-                    try {
-                        zoneId = ZoneId.of(browserTimezoneIdStr);
-                    } catch (Exception e) {
-                        //DateTimeException - ignore it
-                    }
-                }
-                if (zoneId != null) {
-                    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-                    return (Date.from(localDateTime.toInstant(zoneId.getRules().getOffset(localDateTime))));
-                } else {
-                    return (Date.from(instant));
-                }
+                Instant localInstant = this.messageInfo.getInitDate().toInstant().plusSeconds(timezoneOffsetInS);
+                return (new Date(localInstant.toEpochMilli()));
             }
         }
 
@@ -864,6 +955,8 @@ public class AS2WebUI extends UI {
                     localStationStr = id;
                 }
             }
+            //prevent JavaScript
+            localStationStr = AS2WebUI.replaceJavaScriptOutput(localStationStr);
             return (localStationStr);
         }
 
@@ -886,11 +979,16 @@ public class AS2WebUI extends UI {
                     partnerStr = id;
                 }
             }
+            //prevent JavaScript
+            partnerStr = AS2WebUI.replaceJavaScriptOutput(partnerStr);
             return (partnerStr);
         }
 
         public String getMessageId() {
-            return (this.messageInfo.getMessageId());
+            String messageId = this.messageInfo.getMessageId();
+            //prevent JavaScript
+            messageId = AS2WebUI.replaceJavaScriptOutput(messageId);
+            return (messageId);
         }
 
         public String getPayload() {

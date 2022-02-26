@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/datasheet/DatasheetBuilder.java 15    16.05.19 14:29 Heller $
+//$Header: /as2/de/mendelson/comm/as2/datasheet/DatasheetBuilder.java 17    16.09.21 15:30 Heller $
 package de.mendelson.comm.as2.datasheet;
 
 import de.intarsys.pdf.cds.CDSRectangle;
@@ -21,6 +21,8 @@ import de.mendelson.comm.as2.message.AS2Message;
 import de.mendelson.comm.as2.message.ResourceBundleAS2Message;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.security.encryption.EncryptionConstantsAS2;
+import de.mendelson.util.security.signature.SignatureConstantsAS2;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -43,7 +45,7 @@ import java.util.ResourceBundle;
  * Class that is responsible for the creation of a PDF file
  *
  * @author S.Heller
- * @version $Revision: 15 $
+ * @version $Revision: 17 $
  */
 public class DatasheetBuilder {
 
@@ -120,25 +122,25 @@ public class DatasheetBuilder {
 
     private String[] getSignatureAlgorithms() {
         List<String> algorithms = new ArrayList<String>();
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_NONE));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA1));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_MD5));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA256));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA384));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA512));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA1_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA224_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA256_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA384_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA512_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_224));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_256));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_384));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_512));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_224_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_256_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_384_RSASSA_PSS));
-        algorithms.add(this.rbMessage.getResourceString("signature." + AS2Message.SIGNATURE_SHA3_512_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_NONE));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA1));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_MD5));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA256));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA384));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA512));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA1_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA224_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA256_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA384_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA512_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_224));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_256));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_384));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_512));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_224_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_256_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_384_RSASSA_PSS));
+        algorithms.add(this.rbMessage.getResourceString("signature." + SignatureConstantsAS2.SIGNATURE_SHA3_512_RSASSA_PSS));
         String[] algorithmArray = new String[algorithms.size()];
         algorithmArray = algorithms.toArray(algorithmArray);
         return (algorithmArray);
@@ -146,22 +148,22 @@ public class DatasheetBuilder {
 
     private String[] getEncryptionAlgorithms() {
         List<String> algorithms = new ArrayList<String>();
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_NONE));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_3DES));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_DES));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC2_40));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC2_64));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC2_128));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC2_196));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC4_40));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC4_56));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_RC4_128));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_AES_128));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_AES_192));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_AES_256));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_AES_128_RSAES_AOEP));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_AES_192_RSAES_AOEP));
-        algorithms.add(this.rbMessage.getResourceString("encryption." + AS2Message.ENCRYPTION_AES_256_RSAES_AOEP));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_NONE));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_3DES));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_DES));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC2_40));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC2_64));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC2_128));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC2_196));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC4_40));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC4_56));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_RC4_128));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_AES_128));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_AES_192));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_AES_256));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_AES_128_RSAES_AOEP));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_AES_192_RSAES_AOEP));
+        algorithms.add(this.rbMessage.getResourceString("encryption." + EncryptionConstantsAS2.ENCRYPTION_AES_256_RSAES_AOEP));
         String[] algorithmArray = new String[algorithms.size()];
         algorithmArray = algorithms.toArray(algorithmArray);
         return (algorithmArray);
@@ -359,7 +361,7 @@ public class DatasheetBuilder {
         height = 130;
         this.drawTableRow(creator, x, y, height, new int[]{rowWidth1, rowWidth2, rowWidth3});
         this.writeTextBold(creator, rowX1Abs, y - ygap, 12, "Comment");
-        String comment = this.wrapString( this.localInformation.getComment(), "\n", MAX_LINE_LENGTH );        
+        String comment = this.wrapString(this.localInformation.getComment(), "\n", MAX_LINE_LENGTH);
         this.writeText(creator, rowX2Abs, y - ygap, 10, comment);
         this.addFormFieldText(page, rowX3Abs, y - ygap, rowWidth3 - 2 * xgap, 115, 10, true, "comment", "<Comment>");
         y -= height;

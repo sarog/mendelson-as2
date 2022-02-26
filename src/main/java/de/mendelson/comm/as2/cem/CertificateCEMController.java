@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/cem/CertificateCEMController.java 8     7.11.18 17:14 Heller $
+//$Header: /as2/de/mendelson/comm/as2/cem/CertificateCEMController.java 14    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.cem;
 
 import de.mendelson.util.security.cert.CertificateManager;
@@ -10,8 +10,8 @@ import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.clientserver.ClientServer;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.cert.KeystoreCertificate;
-import de.mendelson.util.systemevents.SystemEventManager;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.sql.Connection;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 /**
  * Checks the database and switches certificates if there are two available for a partner
  * @author S.Heller
- * @version $Revision: 8 $
+ * @version $Revision: 14 $
  */
 public class CertificateCEMController implements Runnable {
 
@@ -39,6 +39,7 @@ public class CertificateCEMController implements Runnable {
     /**Connection to the database*/
     private Connection configConnection = null;
     private Connection runtimeConnection = null;
+    private IDBDriverManager dbDriverManager;
     /**Stores the certificates*/
     private CertificateManager certificateManager;
     private ClientServer clientserver;
@@ -46,16 +47,18 @@ public class CertificateCEMController implements Runnable {
     /** Creates new message I/O log and connects to localhost
      *@param host host to connect to
      */
-    public CertificateCEMController(ClientServer clientserver, Connection configConnection, Connection runtimeConnection, CertificateManager certificateManager) {
+    public CertificateCEMController(ClientServer clientserver, 
+            IDBDriverManager dbDriverManager,
+            Connection configConnection, Connection runtimeConnection, CertificateManager certificateManager) {
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
         this.certificateManager = certificateManager;
+        this.dbDriverManager = dbDriverManager;
         this.clientserver = clientserver;
     }
 
     @Override
     public void run() {
-        Thread.currentThread().setName("CEM Certificate Controller");
         while (true) {
             try {
                 try {
@@ -74,13 +77,15 @@ public class CertificateCEMController implements Runnable {
     }
 
     /**In CEM the certifiates for signatures and ssl may contain a respond
-     * bydate to enable them. If the bydate is not give in the request nothing will happen until a response
+     * by date to enable them. If the bydate is not given in the request nothing will happen until a response
      * comes.
      */
     private void handleCertificateConfigChangeShouldHappenNow() {
         PartnerAccessDB partnerAccess 
-                = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
-        CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+                = new PartnerAccessDB(this.dbDriverManager);
+        CEMAccessDB cemAccess = new CEMAccessDB(
+                this.dbDriverManager,
+                this.configConnection, this.runtimeConnection);
         List<CEMEntry> certificateChangeList = cemAccess.getCertificatesToChange();
         SystemEventManagerImplAS2 eventManager 
                 = new SystemEventManagerImplAS2();
@@ -109,9 +114,12 @@ public class CertificateCEMController implements Runnable {
     /**Checks if a CEM request came back with a failure MDN. In this case the whole request should be set
      * to processing error*/
     private void handleRequestProcessingErrors() {
-        CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+        CEMAccessDB cemAccess = new CEMAccessDB(
+                this.dbDriverManager,
+                this.configConnection, this.runtimeConnection);
         MessageAccessDB messageAccess 
-                = new MessageAccessDB(this.configConnection,
+                = new MessageAccessDB(
+                        this.dbDriverManager, this.configConnection,
                         this.runtimeConnection);
         List<CEMEntry> pendingCEM = cemAccess.getCEMEntriesPending();
         for (CEMEntry entry : pendingCEM) {

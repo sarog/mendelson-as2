@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/store/ResourceBundleMessageStoreHandler.java 9     7.12.18 9:45 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/store/ResourceBundleMessageStoreHandler.java 10    30.07.21 10:27 Heller $
 package de.mendelson.comm.as2.message.store;
 import de.mendelson.util.MecResourceBundle;
 /*
@@ -12,7 +12,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 10 $
  */
 public class ResourceBundleMessageStoreHandler extends MecResourceBundle{
     
@@ -28,7 +28,7 @@ public class ResourceBundleMessageStoreHandler extends MecResourceBundle{
         {"message.error.stored", "The message payload has been stored to \"{0}\"." },
         {"message.error.raw.stored", "The raw outgoing message has been stored to \"{0}\"." },        
         {"dir.createerror", "Unable to create directory \"{0}\"." },  
-        {"comm.success", "The AS2 communication was successful, the payload {0} has been moved to \"{1}\"." },
+        {"comm.success", "The AS2 communication was successful, the payload {0} has been moved to \"{1}\" ({2})." },
         {"outboundstatus.written", "The outbound status file has been written to \"{0}\"."},
     };
     

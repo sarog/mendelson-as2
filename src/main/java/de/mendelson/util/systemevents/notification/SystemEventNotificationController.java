@@ -1,6 +1,7 @@
-//$Header: /as2/de/mendelson/util/systemevents/notification/SystemEventNotificationController.java 9     6.11.18 16:59 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/notification/SystemEventNotificationController.java 12    27/01/22 11:35 Heller $
 package de.mendelson.util.systemevents.notification;
 
+import de.mendelson.util.NamedThreadFactory;
 import de.mendelson.util.clientserver.ClientServer;
 import de.mendelson.util.systemevents.SystemEvent;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -33,21 +36,24 @@ import java.util.logging.Logger;
  * a partner
  *
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 12 $
  */
-public abstract class SystemEventNotificationController implements Runnable {
+public abstract class SystemEventNotificationController {
 
     /**
      * Wait time, this is how long this thread waits
      */
-    private final long WAIT_TIME = TimeUnit.MINUTES.toMillis(1);
+    private final long WAIT_TIME_IN_MS = TimeUnit.MINUTES.toMillis(1);
     private final DateFormat eventFileDateFormat = new SimpleDateFormat("HH-mm");
     private final DateFormat dailySubDirFormat = new SimpleDateFormat("yyyyMMdd");
+    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+            new NamedThreadFactory("notification-control"));    
     /**
      * Logger to log information to
      */
     private Logger logger;
     private ClientServer clientserver;
+    private final NotificationCheckThread notificationCheckThread;
 
     /**
      * Controller that checks notifications and sends them out if required
@@ -57,24 +63,9 @@ public abstract class SystemEventNotificationController implements Runnable {
     public SystemEventNotificationController(Logger logger, ClientServer clientserver, Connection configConnection, Connection runtimeConnection) {
         this.logger = logger;
         this.clientserver = clientserver;
-    }
+        this.notificationCheckThread = new NotificationCheckThread();
+        this.scheduledExecutor.scheduleWithFixedDelay(this.notificationCheckThread, 0, WAIT_TIME_IN_MS, TimeUnit.MILLISECONDS);
 
-    @Override
-    public void run() {
-        Thread.currentThread().setName("Notification Controller");
-        while (true) {
-            try {
-                try {
-                    Thread.sleep(this.WAIT_TIME);
-                } catch (InterruptedException e) {
-                    //nop
-                }
-                this.checkForNotificationToSend();
-            } catch (Throwable e) {
-                e.printStackTrace();
-                this.logger.severe("NotificationController: [" + e.getClass().getSimpleName() + "] " + e.getMessage());
-            }
-        }
     }
 
     /**
@@ -83,7 +74,7 @@ public abstract class SystemEventNotificationController implements Runnable {
      */
     private void checkForNotificationToSend() throws IOException {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MILLISECOND, -2 * ((int) this.WAIT_TIME));
+        calendar.add(Calendar.MILLISECOND, -2 * ((int) this.WAIT_TIME_IN_MS));
         Path storageDir = Paths.get(this.getStorageDir(),
                 this.dailySubDirFormat.format(new Date())
                 + FileSystems.getDefault().getSeparator() + "events");
@@ -151,5 +142,16 @@ public abstract class SystemEventNotificationController implements Runnable {
      * Returns the product specific notification dir
      */
     public abstract String getStorageDir();
+    public class NotificationCheckThread implements Runnable {
+        @Override
+        public void run() {
+            try {
+                checkForNotificationToSend();
+            } catch (Throwable e) {
+                e.printStackTrace();
+                logger.severe("NotificationController: [" + e.getClass().getSimpleName() + "] " + e.getMessage());
+            }
+        }
+    }
 
 }

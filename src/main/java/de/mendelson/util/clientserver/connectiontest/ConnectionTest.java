@@ -1,4 +1,4 @@
-//$Header: /as4/de/mendelson/util/clientserver/connectiontest/ConnectionTest.java 15    18.11.20 12:12 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/connectiontest/ConnectionTest.java 19    19.11.21 10:35 Heller $
 package de.mendelson.util.clientserver.connectiontest;
 
 import de.mendelson.util.MecResourceBundle;
@@ -37,7 +37,7 @@ import javax.net.ssl.X509TrustManager;
  * Performs a connection test and returns information about the results
  *
  * @author S.Heller
- * @version $Revision: 15 $
+ * @version $Revision: 19 $
  */
 public class ConnectionTest {
 
@@ -94,7 +94,7 @@ public class ConnectionTest {
                     socket = new Socket();
                     this.logger.info(this.getLogTag() + this.rb.getResourceString("test.connection.direct"));
                 } else {
-                    proxy = this.proxy.asProxy();
+                    proxy = this.proxy.asProxy(this.testType);
                     //proxy connected socket
                     socket = new Socket(proxy);
                     if (this.proxy.usesAuthentication()) {
@@ -173,9 +173,9 @@ public class ConnectionTest {
     /**
      * Performs a SSL connection test with the default TLS protocol list and SNI
      */
-    public ConnectionTestResult checkConnectionSSL(String host, int port, long timeout,
-            CertificateManager certificateManagerSSL) {
-        return (this.checkConnectionSSL(host, port, timeout, certificateManagerSSL, DEFAULT_TLS_PROTOCOL_LIST, true));
+    public ConnectionTestResult checkConnectionTLS(String host, int port, long timeout,
+            CertificateManager certificateManagerTLS) {
+        return (this.checkConnectionTLS(host, port, timeout, certificateManagerTLS, DEFAULT_TLS_PROTOCOL_LIST, true));
     }
 
     /**
@@ -189,7 +189,7 @@ public class ConnectionTest {
      * @return True if the user was able to examine the certificate, false
      * otherwise
      */
-    public ConnectionTestResult checkConnectionSSL(String host, int port, long timeout,
+    public ConnectionTestResult checkConnectionTLS(String host, int port, long timeout,
             CertificateManager certificateManagerSSL, String[] protocols, boolean useSNI) {
         this.remoteAddress = new InetSocketAddress(host, port);
         ConnectionTestResult testResult = new ConnectionTestResult(this.remoteAddress, true);
@@ -206,9 +206,7 @@ public class ConnectionTest {
                 sslSocket = (SSLSocket) socketFactory.createSocket();
                 this.logger.info(this.getLogTag() + this.rb.getResourceString("test.connection.direct"));
             } else {
-                Proxy proxy = this.proxy.asProxy();
-                //create a unconnected socket            
-                sslSocket = (SSLSocket) socketFactory.createSocket(new Socket(proxy), this.proxy.getAddress(), this.proxy.getPort(), true);
+                Proxy proxy = this.proxy.asProxy(this.testType);
                 if (this.proxy.usesAuthentication()) {
                     this.logger.info(this.getLogTag() + this.rb.getResourceString("test.connection.proxy.auth",
                             new Object[]{
@@ -219,6 +217,8 @@ public class ConnectionTest {
                     this.logger.info(this.getLogTag() + this.rb.getResourceString("test.connection.proxy.noauth",
                             this.proxy.getAddress() + ":" + this.proxy.getPort()));
                 }
+                //create a unconnected socket. If the proxy is invalid this will already throw an exception            
+                sslSocket = (SSLSocket) socketFactory.createSocket(new Socket(proxy), this.proxy.getAddress(), this.proxy.getPort(), true);                
             }
             sslSocket.setSoTimeout((int) timeout);
             //set the used protocols for the negotiation

@@ -1,11 +1,10 @@
-//$Header: /as2/de/mendelson/comm/as2/sendorder/SendOrderReceiver.java 21    25.04.19 14:32 Heller $
+//$Header: /as2/de/mendelson/comm/as2/sendorder/SendOrderReceiver.java 35    26.08.21 15:21 Heller $
 package de.mendelson.comm.as2.sendorder;
 
 import de.mendelson.comm.as2.clientserver.message.RefreshClientMessageOverviewList;
 import de.mendelson.comm.as2.message.AS2MDNInfo;
 import de.mendelson.comm.as2.message.AS2Message;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
-import de.mendelson.comm.as2.message.postprocessingevent.ExecuteShellCommand;
 import de.mendelson.comm.as2.message.MessageAccessDB;
 import de.mendelson.comm.as2.message.postprocessingevent.ProcessingEvent;
 import de.mendelson.comm.as2.message.store.MessageStoreHandler;
@@ -16,6 +15,9 @@ import de.mendelson.comm.as2.send.NoConnectionException;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.clientserver.ClientServer;
+import de.mendelson.util.database.IDBDriverManager;
+import de.mendelson.util.systemevents.SystemEvent;
+import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,7 +25,9 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -37,22 +41,21 @@ import java.util.logging.Logger;
  * and brand names are trademarks of their respective owners.
  */
 /**
- * Receiver class that enqueues send orders
+ * Receiver class that reads the enqueued send orders and starts the AS2 message
+ * send process for each message
  *
  * @author S.Heller
- * @version $Revision: 21 $
+ * @version $Revision: 35 $
  */
-public class SendOrderReceiver implements Runnable {
+public class SendOrderReceiver {
 
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
     private MecResourceBundle rb;
     private Connection configConnection;
     private Connection runtimeConnection;
+    //transactional connection to the database just to read the data from the poll queue - no auto commit
+    private Connection runtimeConnectionPollNoCommit;
     private SendOrderAccessDB sendOrderAccess;
-    /**
-     * Thread will stop if this is no longer set
-     */
-    private boolean runPermission = true;
     /**
      * Needed for refresh
      */
@@ -66,9 +69,12 @@ public class SendOrderReceiver implements Runnable {
      */
     private MessageStoreHandler messageStoreHandler;
     private MessageAccessDB messageAccess;
+    private IDBDriverManager dbDriverManager;
+    private SendOrderReceiverThread sendOrderReceiverThread = null;
+    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 
     public SendOrderReceiver(Connection configConnection, Connection runtimeConnection,
-            ClientServer clientserver) {
+            ClientServer clientserver, IDBDriverManager dbDriverManager) throws Exception {
         //Load default resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
@@ -77,80 +83,90 @@ public class SendOrderReceiver implements Runnable {
         catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
+        this.dbDriverManager = dbDriverManager;
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
-        this.sendOrderAccess = new SendOrderAccessDB(this.configConnection, this.runtimeConnection);
-        this.messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
-        this.messageStoreHandler = new MessageStoreHandler(this.configConnection, this.runtimeConnection);
+        this.runtimeConnectionPollNoCommit = dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+        this.runtimeConnectionPollNoCommit.setAutoCommit(false);
+        this.sendOrderAccess = new SendOrderAccessDB(
+                dbDriverManager, this.configConnection, this.runtimeConnection);
+        this.messageAccess = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
+        this.messageStoreHandler = new MessageStoreHandler(dbDriverManager, this.configConnection, this.runtimeConnection);
         this.clientserver = clientserver;
     }
 
-    /**
-     * Stops the listener
-     */
-    public void stopReceiver() {
-        this.runPermission = false;
+    public void execute() {
+        this.sendOrderReceiverThread = new SendOrderReceiverThread();
+        this.scheduledExecutor.scheduleWithFixedDelay(this.sendOrderReceiverThread, 1, 5, TimeUnit.SECONDS);
     }
 
-    @Override
-    public void run() {
-        int maxOutboundConnections = this.preferences.getInt(PreferencesAS2.MAX_OUTBOUND_CONNECTIONS);
+    public class SendOrderReceiverThread implements Runnable {
+
+        private ThreadPoolExecutor threadExecutor;
+        private long lastConfigCheckTime = System.currentTimeMillis();
+        //stores the time a warning ist last displayed that all outbound connections are used
+        private long lastWarningMaxOutboundConnectionsReachedTime = System.currentTimeMillis();
+        private int maxOutboundConnections = 0;
+
+        public SendOrderReceiverThread() {
+            this.maxOutboundConnections = preferences.getInt(PreferencesAS2.MAX_OUTBOUND_CONNECTIONS);
         if (maxOutboundConnections == 0) {
-            this.logger.config(this.rb.getResourceString("as2.send.disabled"));
+                logger.config(rb.getResourceString("as2.send.disabled"));
         }
         //Max number of outbound connections. All other connection attempts are scheduled in a queue
         //Queue to store the (not active) threads
         LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
         //This is a fixed thread executor - it will not use the queue
         //Parameter for pool executor: corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue        
-        ThreadPoolExecutor threadExecutor
+            this.threadExecutor
                 = new ThreadPoolExecutor(Math.max(maxOutboundConnections, 1), Math.max(maxOutboundConnections, 1),
                         0L, TimeUnit.MILLISECONDS, queue);
-        //listen until send stop is requested
-        long lastConfigCheckTime = System.currentTimeMillis();
-        //stores the time a warning ist last displayed that all outbound connections are used
-        long lastWarningMaxOutboundConnectionsReachedTime = System.currentTimeMillis();
-        while (this.runPermission) {
+        }
+
+        @Override
+        public void run() {
             //this try is necessary because this thread must never stop. If it stops no more messages
             //and MDN are send!
             try {
-                //read new orders from the database if there are free possible outbound connections
-                if (System.currentTimeMillis() - lastConfigCheckTime > TimeUnit.SECONDS.toMillis(10)) {
-                    int activeConnections = threadExecutor.getActiveCount();
+                //check for a configuration change - if the user changed the number of outbound connections
+                //that has to be computed. This check will just happen from time to time
+                if (System.currentTimeMillis() - this.lastConfigCheckTime > TimeUnit.SECONDS.toMillis(10)) {
+                    int activeConnections = this.threadExecutor.getActiveCount();
                     //check if the user has changed the outbound connection settings
-                    int maxOutboundConnectionsNew = this.preferences.getInt(PreferencesAS2.MAX_OUTBOUND_CONNECTIONS);
-                    if (maxOutboundConnectionsNew != maxOutboundConnections) {
+                    int maxOutboundConnectionsNew = preferences.getInt(PreferencesAS2.MAX_OUTBOUND_CONNECTIONS);
+                    if (maxOutboundConnectionsNew != this.maxOutboundConnections) {
                         try {
-                            maxOutboundConnections = maxOutboundConnectionsNew;
-                            if (maxOutboundConnections > 0) {
-                                if (threadExecutor.getCorePoolSize() != maxOutboundConnections) {
-                                    threadExecutor.setCorePoolSize(maxOutboundConnections);
-                                    if (threadExecutor.getMaximumPoolSize() != maxOutboundConnections) {
-                                        threadExecutor.setMaximumPoolSize(maxOutboundConnections);
+                            this.maxOutboundConnections = maxOutboundConnectionsNew;
+                            if (this.maxOutboundConnections > 0) {
+                                if (this.threadExecutor.getCorePoolSize() != this.maxOutboundConnections) {
+                                    this.threadExecutor.setCorePoolSize(this.maxOutboundConnections);
+                                    if (this.threadExecutor.getMaximumPoolSize() != this.maxOutboundConnections) {
+                                        this.threadExecutor.setMaximumPoolSize(this.maxOutboundConnections);
                                     }
                                 }
-                                this.logger.config(this.rb.getResourceString("as2.send.newmaxconnections", String.valueOf(maxOutboundConnections)));
+                                logger.config(rb.getResourceString("as2.send.newmaxconnections", String.valueOf(this.maxOutboundConnections)));
                             } else {
-                                this.logger.config(this.rb.getResourceString("as2.send.disabled"));
+                                logger.config(rb.getResourceString("as2.send.disabled"));
                             }
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
                     }
-                    if (activeConnections > maxOutboundConnections) {
-                        this.logger.config(this.rb.getResourceString("send.connectionsstillopen",
+                    if (activeConnections > this.maxOutboundConnections) {
+                        logger.config(rb.getResourceString("send.connectionsstillopen",
                                 new Object[]{
-                                    String.valueOf(maxOutboundConnections),
+                                    String.valueOf(this.maxOutboundConnections),
                                     String.valueOf(activeConnections)
                                 }));
                     }
-                    lastConfigCheckTime = System.currentTimeMillis();
+                    this.lastConfigCheckTime = System.currentTimeMillis();
                 }
                 //check if new outbound connection are currently possible
-                int possibleNewConnections = maxOutboundConnections - threadExecutor.getActiveCount();
+                int possibleNewConnections = this.maxOutboundConnections - this.threadExecutor.getActiveCount();
                 if (possibleNewConnections > 0) {
                     //Get max number of outbound send orders and pass them to the thread executor
-                    List<SendOrder> waitingOrders = this.sendOrderAccess.getNext(possibleNewConnections);
+                    List<SendOrder> waitingOrders = sendOrderAccess.getNext(
+                            possibleNewConnections, dbDriverManager, runtimeConnectionPollNoCommit);
                     for (SendOrder order : waitingOrders) {
                         final SendOrder finalOrder = order;
                         final int finalMaxOutboundConnectionCount = maxOutboundConnections;
@@ -164,24 +180,22 @@ public class SendOrderReceiver implements Runnable {
                         };
                         threadExecutor.execute(connectionRunner);
                     }
-                }else{
-                    if (System.currentTimeMillis() - lastWarningMaxOutboundConnectionsReachedTime > TimeUnit.MINUTES.toMillis(1)) {
-                        this.logger.warning(this.rb.getResourceString("warning.nomore.outbound.connections.available",
+                } else {
+                    if (System.currentTimeMillis() - this.lastWarningMaxOutboundConnectionsReachedTime > TimeUnit.MINUTES.toMillis(1)) {
+                        logger.warning(rb.getResourceString("warning.nomore.outbound.connections.available",
                                 new Object[]{
-                                    String.valueOf(maxOutboundConnections),                                    
-                                }));
-                        lastWarningMaxOutboundConnectionsReachedTime = System.currentTimeMillis();
+                                    String.valueOf(maxOutboundConnections),}));
+                        this.lastWarningMaxOutboundConnectionsReachedTime = System.currentTimeMillis();
                     }
                 }
-                Thread.sleep(TimeUnit.MILLISECONDS.toMillis(200));
             } catch (Throwable e) {
                 e.printStackTrace();
-            }
+                SystemEventManagerImplAS2.systemFailure(e);
         }
     }
 
     /**
-     * Processes a single send oder
+         * Processes a single send order
      */
     private void processOrder(SendOrder order,
             int maxOutboundConnectionsCount,
@@ -203,7 +217,7 @@ public class SendOrderReceiver implements Runnable {
                 AS2MessageInfo messageInfo = (AS2MessageInfo) order.getMessage().getAS2Info();
                 if (messageInfo.getMessageType() == AS2Message.MESSAGETYPE_AS2) {
                     //update the message info from the database
-                    messageInfo = this.messageAccess.getLastMessageEntry(messageInfo.getMessageId());
+                        messageInfo = messageAccess.getLastMessageEntry(messageInfo.getMessageId());
                     if (messageInfo == null || messageInfo.getState() == AS2Message.STATE_STOPPED) {
                         processingAllowed = false;
                     }
@@ -215,39 +229,35 @@ public class SendOrderReceiver implements Runnable {
                 //display some log information that the outbound connection is prepared
                 if (order.getMessage().isMDN()) {
                     AS2MDNInfo mdnInfo = (AS2MDNInfo) order.getMessage().getAS2Info();
+                        AS2MessageInfo relatedMessageInfo = messageAccess.getLastMessageEntry(mdnInfo.getRelatedMessageId());                        
+                        String asyncMDNURL = relatedMessageInfo.getAsyncMDNURL();
                     logger.log(Level.INFO, rb.getResourceString("outbound.connection.prepare.mdn",
                             new Object[]{
-                                order.getReceiver().getMdnURL(),
+                                    asyncMDNURL,
                                 String.valueOf(activeConnectionsCount),
                                 String.valueOf(maxOutboundConnectionsCount),}), mdnInfo);
-//                    logger.log(Level.INFO, mdnInfo.getMessageId() + ": Sleeping for 1 min...", mdnInfo);
-//                    Thread.sleep(TimeUnit.MINUTES.toMillis(1));
-//                    logger.log(Level.INFO, mdnInfo.getMessageId() + ": Woke up...", mdnInfo);
                 } else {
                     //its a AS2 message that has been sent
                     AS2MessageInfo messageInfo = (AS2MessageInfo) order.getMessage().getAS2Info();
-                    this.messageAccess.initializeOrUpdateMessage(messageInfo);
-                    this.logger.log(Level.INFO, rb.getResourceString("outbound.connection.prepare.message",
+                        messageAccess.initializeOrUpdateMessage(messageInfo);
+                        logger.log(Level.INFO, rb.getResourceString("outbound.connection.prepare.message",
                             new Object[]{
                                 order.getReceiver().getURL(),
                                 String.valueOf(activeConnectionsCount),
                                 String.valueOf(maxOutboundConnectionsCount),}), messageInfo);
-//                    logger.log(Level.INFO, messageInfo.getMessageId() + ": Sleeping for 1 min...", messageInfo);
-//                    Thread.sleep(TimeUnit.MINUTES.toMillis(1));
-//                    logger.log(Level.INFO, messageInfo.getMessageId() + ": Woke up...", messageInfo);
                 }
                 MessageHttpUploader messageUploader = new MessageHttpUploader();
-                if (!this.preferences.getBoolean(PreferencesAS2.CEM)) {
+                    if (!preferences.getBoolean(PreferencesAS2.CEM)) {
                     messageUploader.setEDIINTFeatures("multiple-attachments");
                 } else {
                     messageUploader.setEDIINTFeatures("multiple-attachments, CEM");
                 }
-                messageUploader.setLogger(this.logger);
-                messageUploader.setAbstractServer(this.clientserver);
-                messageUploader.setDBConnection(this.configConnection, this.runtimeConnection);
+                    messageUploader.setLogger(logger);
+                    messageUploader.setAbstractServer(clientserver);
+                    messageUploader.setDBConnection(dbDriverManager, configConnection, runtimeConnection);
                 //configure the connection parameters
                 HttpConnectionParameter connectionParameter = new HttpConnectionParameter();
-                connectionParameter.setConnectionTimeoutMillis(this.preferences.getInt(PreferencesAS2.HTTP_SEND_TIMEOUT));
+                    connectionParameter.setConnectionTimeoutMillis(preferences.getInt(PreferencesAS2.HTTP_SEND_TIMEOUT));
                 connectionParameter.setHttpProtocolVersion(order.getReceiver().getHttpProtocolVersion());
                 connectionParameter.setProxy(messageUploader.createProxyObjectFromPreferences());
                 connectionParameter.setUseExpectContinue(true);
@@ -258,10 +268,10 @@ public class SendOrderReceiver implements Runnable {
                     AS2MDNInfo mdnInfo = (AS2MDNInfo) order.getMessage().getAS2Info();
                     if (mdnInfo.getState() == AS2Message.STATE_FINISHED) {
                         AS2MessageInfo relatedMessageInfo = messageAccess.getLastMessageEntry(mdnInfo.getRelatedMessageId());
-                        this.messageStoreHandler.movePayloadToInbox(relatedMessageInfo.getMessageType(), mdnInfo.getRelatedMessageId(),
+                            messageStoreHandler.movePayloadToInbox(relatedMessageInfo.getMessageType(), mdnInfo.getRelatedMessageId(),
                                 order.getSender(), order.getReceiver());
                         //execute a shell command after send SUCCESS
-                        ProcessingEvent.enqueueEventIfRequired(this.configConnection, this.runtimeConnection,
+                            ProcessingEvent.enqueueEventIfRequired(dbDriverManager, configConnection, runtimeConnection,
                                 relatedMessageInfo, null);
                     }
                     //set the transaction state to the MDN state
@@ -282,27 +292,29 @@ public class SendOrderReceiver implements Runnable {
                     }
                 }
             }
-            //even if a processing was not possible: delete the sendorder
-            this.sendOrderAccess.delete(order.getDbId());
-            this.clientserver.broadcastToClients(new RefreshClientMessageOverviewList());
+                //Either it is processed now or the entry in the queue was no longer valid - delete it in both cases
+                sendOrderAccess.delete(order.getDbId());
+                //send push messages to all clients that the number/state of transaction has been changed
+                clientserver.broadcastToClients(new RefreshClientMessageOverviewList());
         } catch (NoConnectionException e) {
             int retryCount = order.incRetryCount();
-            int maxRetryCount = this.preferences.getInt(PreferencesAS2.MAX_CONNECTION_RETRY_COUNT);
+                int maxRetryCount = preferences.getInt(PreferencesAS2.MAX_CONNECTION_RETRY_COUNT);
             //to many retries: cancel the transaction
             if (retryCount > maxRetryCount) {
-                if( e.getMessage() != null && e.getMessage().trim().length() > 0 ){
+                    if (e.getMessage() != null && e.getMessage().trim().length() > 0) {
                     logger.log(Level.WARNING, e.getMessage(), order.getMessage().getAS2Info());
                 }
                 logger.log(Level.SEVERE, rb.getResourceString("max.retry.reached",
-                        String.valueOf( maxRetryCount )), order.getMessage().getAS2Info());
+                            String.valueOf(maxRetryCount)), order.getMessage().getAS2Info());
+                    sendOrderAccess.delete(order.getDbId());
                 this.processUploadError(order);
             } else {
-                if( e.getMessage() != null && e.getMessage().trim().length() > 0 ){
+                    if (e.getMessage() != null && e.getMessage().trim().length() > 0) {
                     logger.log(Level.WARNING, e.getMessage(), order.getMessage().getAS2Info());
                 }
                 logger.log(Level.WARNING, rb.getResourceString("retry",
                         new Object[]{
-                            String.valueOf(this.preferences.getInt(PreferencesAS2.CONNECTION_RETRY_WAIT_TIME_IN_S)),
+                                String.valueOf(preferences.getInt(PreferencesAS2.CONNECTION_RETRY_WAIT_TIME_IN_S)),
                             String.valueOf(retryCount),
                             String.valueOf(maxRetryCount)
                         }), order.getMessage().getAS2Info());
@@ -320,18 +332,19 @@ public class SendOrderReceiver implements Runnable {
      */
     private void sendOrderToRetry(SendOrder order) {
         SendOrderSender sender = null;
-        sender = new SendOrderSender(this.configConnection, this.runtimeConnection);
-        sender.resend(order, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(this.preferences.getInt(PreferencesAS2.CONNECTION_RETRY_WAIT_TIME_IN_S)));
+            sender = new SendOrderSender(dbDriverManager, configConnection, runtimeConnection);
+            sender.resend(order, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(
+                    preferences.getInt(PreferencesAS2.CONNECTION_RETRY_WAIT_TIME_IN_S)));
     }
 
     /**
-     * The upload process of the data failed. Set the message state, execute the
-     * command, ..
+         * The upload process of the data failed. Set the message state, execute
+         * the command, ..
      */
     private void processUploadError(SendOrder order) {
         try {
             //stores
-            this.messageStoreHandler.storeSentErrorMessage(
+                messageStoreHandler.storeSentErrorMessage(
                     order.getMessage(), order.getSender(), order.getReceiver());
             if (!order.getMessage().isMDN()) {
                 //message upload failure
@@ -341,22 +354,22 @@ public class SendOrderReceiver implements Runnable {
                 //for pending messages
                 order.getMessage().getAS2Info().setState(AS2Message.STATE_STOPPED);
                 messageAccess.updateFilenames((AS2MessageInfo) order.getMessage().getAS2Info());
-                ProcessingEvent.enqueueEventIfRequired(this.configConnection, this.runtimeConnection, 
+                    ProcessingEvent.enqueueEventIfRequired(dbDriverManager, configConnection, runtimeConnection,
                         (AS2MessageInfo) order.getMessage().getAS2Info(), null);
                 //write status file
-                this.messageStoreHandler.writeOutboundStatusFile((AS2MessageInfo) order.getMessage().getAS2Info());
+                    messageStoreHandler.writeOutboundStatusFile((AS2MessageInfo) order.getMessage().getAS2Info());
             } else {
                 //MDN send failure, e.g. wrong URL for async MDN in message
                 messageAccess.setMessageState(((AS2MDNInfo) order.getMessage().getAS2Info()).getRelatedMessageId(),
                         AS2Message.STATE_STOPPED);
             }
-            this.sendOrderAccess.delete(order.getDbId());
-            this.clientserver.broadcastToClients(new RefreshClientMessageOverviewList());
+                clientserver.broadcastToClients(new RefreshClientMessageOverviewList());
         } catch (Exception ee) {
             ee.printStackTrace();
             logger.log(Level.SEVERE, "SendOrderReceiver.processUploadError(): " + ee.getMessage(),
                     order.getMessage().getAS2Info());
-            this.messageAccess.setMessageState(order.getMessage().getAS2Info().getMessageId(), AS2Message.STATE_STOPPED);
+                messageAccess.setMessageState(order.getMessage().getAS2Info().getMessageId(), AS2Message.STATE_STOPPED);
+            }
         }
     }
 

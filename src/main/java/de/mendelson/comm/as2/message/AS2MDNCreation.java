@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2MDNCreation.java 43    14.12.20 14:54 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2MDNCreation.java 44    26.08.21 11:30 Heller $
 package de.mendelson.comm.as2.message;
 
 import com.sun.mail.util.LineOutputStream;
@@ -43,7 +43,7 @@ import javax.mail.util.ByteArrayDataSource;
  * Packs a message with all necessary headers and attachments
  *
  * @author S.Heller
- * @version $Revision: 43 $
+ * @version $Revision: 44 $
  */
 public class AS2MDNCreation {
 
@@ -167,7 +167,6 @@ public class AS2MDNCreation {
         if (this.logger != null) {
             this.logger.log(Level.FINE, this.rb.getResourceString("mdn.creation.start",
                     new Object[]{
-                        relatedMessageInfo.getMessageId(),
                         mdnInfo.getMessageId()
                     }),
                     relatedMessageInfo);

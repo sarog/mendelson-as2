@@ -1,19 +1,18 @@
-//$Header: /as2/de/mendelson/comm/as2/send/RawMessageSender.java 21    20.08.20 15:47 Heller $
+//$Header: /as2/de/mendelson/comm/as2/send/RawMessageSender.java 26    13.12.21 8:39 Heller $
 package de.mendelson.comm.as2.send;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.comm.as2.clientserver.message.IncomingMessageRequest;
 import de.mendelson.comm.as2.clientserver.message.IncomingMessageResponse;
-import de.mendelson.comm.as2.database.DBDriverManagerHSQL;
-import de.mendelson.comm.as2.preferences.PreferencesAS2;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.clientserver.AnonymousTextClient;
 import de.mendelson.util.security.BCCryptoHelper;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Logger;
-import de.mendelson.comm.as2.database.IDBDriverManager;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -23,11 +22,11 @@ import de.mendelson.comm.as2.database.IDBDriverManager;
  * Other product and brand names are trademarks of their respective owners.
  */
 /**
- * Raw data uploader, mainly for test purpose. Sends a already fully prepared
+ * Raw data uploader, for test purpose. Sends a already fully prepared
  * AS2 message to a specified sender
  *
  * @author S.Heller
- * @version $Revision: 21 $
+ * @version $Revision: 26 $
  */
 public class RawMessageSender {
 
@@ -39,17 +38,22 @@ public class RawMessageSender {
     public RawMessageSender() {
     }
 
-    private IncomingMessageResponse send(File rawDataFile, File headerFile) throws Throwable {
+    private IncomingMessageResponse send(Path rawDataFile, Path headerFile) throws Throwable {
         Properties header = new Properties();
-        FileInputStream headerStream = new FileInputStream(headerFile);
+        InputStream headerStream = null;
+        try {
+            headerStream = Files.newInputStream(headerFile);
         header.load(headerStream);
+        } finally {
+            if (headerStream != null) {
         headerStream.close();
+            }
+        }
         AnonymousTextClient client = null;
         client = new AnonymousTextClient();
-        PreferencesAS2 preferences = new PreferencesAS2();
-        client.connect("localhost", preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT), 30000);
+        client.connect("localhost", AS2Server.CLIENTSERVER_COMM_PORT, 30000);        
         IncomingMessageRequest messageRequest = new IncomingMessageRequest();
-        messageRequest.setMessageDataFilename(rawDataFile.getAbsolutePath());
+        messageRequest.setMessageDataFilename(rawDataFile.toAbsolutePath().toString());
         messageRequest.setHeader(header);
         messageRequest.setContentType(header.getProperty("content-type"));
         messageRequest.setRemoteHost("localhost");
@@ -69,17 +73,21 @@ public class RawMessageSender {
         System.out.println("Options are:");
         System.out.println("-datafile <String>: File that contains the AS2 message, fully packed");
         System.out.println("-headerfile <String>: File that contains the AS2 message header");
+        System.out.println("-repeat <int>: Repeat the send process n times, defaults to 1 (single send)");
     }
 
     public static final void main(String[] args) {
-        String file = null;
-        String header = null;
+        String filenameStr = null;
+        String headerFilenameStr = null;
+        int repeatCount = 1;
         int optind;
         for (optind = 0; optind < args.length; optind++) {
             if (args[optind].toLowerCase().equals("-datafile")) {
-                file = args[++optind];
+                filenameStr = args[++optind];
             } else if (args[optind].toLowerCase().equals("-headerfile")) {
-                header = args[++optind];
+                headerFilenameStr = args[++optind];
+            } else if (args[optind].toLowerCase().equals("-repeat")) {
+                repeatCount = Integer.valueOf(args[++optind]).intValue();
             } else if (args[optind].toLowerCase().equals("-?")) {
                 RawMessageSender.printUsage();
                 System.exit(1);
@@ -91,26 +99,29 @@ public class RawMessageSender {
                 System.exit(1);
             }
         }
-        if (file == null) {
+        if (filenameStr == null) {
             System.err.println("Parameter missing: " + "datafile");
             printUsage();
             System.exit(1);
         }
-        if (header == null) {
+        if (headerFilenameStr == null) {
             System.err.println("Parameter missing: " + "headerfile");
             printUsage();
             System.exit(1);
         }
         RawMessageSender sender = new RawMessageSender();
         try {
-            //register the database drivers for the VM
-            IDBDriverManager manager = new DBDriverManagerHSQL();
             //initialize the security provider
             BCCryptoHelper helper = new BCCryptoHelper();
             helper.initialize();
-            IncomingMessageResponse response = sender.send(new File(file), new File(header));
+            for (int i = 0; i < repeatCount; i++) {
+                if (repeatCount > 0) {
+                    Logger.getLogger(AS2Server.SERVER_LOGGER_NAME).info("Send attempt " + (i + 1) + "/" + (repeatCount + 1));
+                }
+                IncomingMessageResponse response = sender.send(Paths.get(filenameStr), Paths.get(headerFilenameStr));
             if (response.getMDNData() != null) {
                 Logger.getLogger(AS2Server.SERVER_LOGGER_NAME).info(new String(response.getMDNData()));
+                }
             }
         } catch (Throwable e) {
             e.printStackTrace();

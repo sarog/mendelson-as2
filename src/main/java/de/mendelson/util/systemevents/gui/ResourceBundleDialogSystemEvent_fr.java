@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/systemevents/gui/ResourceBundleDialogSystemEvent_fr.java 7     23.01.20 9:27 Hel $
+//$Header: /mendelson_business_integration/de/mendelson/util/systemevents/gui/ResourceBundleDialogSystemEvent_fr.java 8     27.09.21 16:10 He $
 package de.mendelson.util.systemevents.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 7 $
+ * @version $Revision: 8 $
  */
 public class ResourceBundleDialogSystemEvent_fr extends MecResourceBundle {
 
@@ -45,7 +45,7 @@ public class ResourceBundleDialogSystemEvent_fr extends MecResourceBundle {
         {"label.enddate", "Fin: " },
         {"no.data", "Aucun événement système ne correspond à la sélection de date/type en cours." },  
         {"label.freetext", "Rechercher du texte: " },
-        {"label.freetext.hint", "<HTML>Recherche par numéro d''événement ou par texte<br>dans la partie texte des événements</HTML>" },
+        {"label.freetext.hint", "Identifiant complet de l''événement ou recherche textuelle dans le corps et le sujet" },
         {"category.all", "-- Tous --" },      
         {"label.close", "Fermer" },
         {"label.search", "<HTML><div style=\"text-align:center\">Recherche par événement</div></HTML>" },

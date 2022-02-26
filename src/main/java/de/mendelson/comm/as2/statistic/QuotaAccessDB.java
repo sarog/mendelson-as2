@@ -1,47 +1,37 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/statistic/QuotaAccessDB.java 7     8.01.19 9:48 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/statistic/QuotaAccessDB.java 9     2/02/22 16:22 Heller $
 package de.mendelson.comm.as2.statistic;
 
-import de.mendelson.comm.as2.partner.Partner;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Dummy class, not used
  * @author S.Heller
- * @version $Revision: 7 $
+ * @version $Revision: 9 $
  */
 public class QuotaAccessDB {
 
 
-    /** Creates new message I/O log and connects to localhost
-     *@param host host to connect to
-     */
-    public QuotaAccessDB(Connection configConnection, Connection runtimeConnection){
+    public QuotaAccessDB(Object a, Object b, Object c){
     }
 
-    /**Resets a counter/quota entry in the db for a localstation/partner combination*/
-    public void resetCounter(String localStationId, String partnerId) {
+    public void resetCounter(String a, String b) {
     }
 
 
-    public static synchronized void incSentMessages(Connection configConnection, Connection runtimeConnection, Partner localStation, Partner partner, int state, String messageId) {
+    public static synchronized void incSentMessages(Object a, Object b, Object c, Object d, Object e, int state, Object f) {
     }
 
-    public static synchronized void incReceivedMessages(Connection configConnection, Connection runtimeConnection, Partner localStation, Partner partner, int state, String messageId) {
+    public static synchronized void incReceivedMessages(Object a, Object b, Object c, Object d, Object e, int state, Object f) {
     }
 
-    public static synchronized void incSentMessages(Connection configConnection, Connection runtimeConnection, String localStationId, String partnerId, int state, String messageId) {
-    }
 
-    public static synchronized void incReceivedMessages(Connection configConnection, Connection runtimeConnection, String localStationId, String partnerId, int state, String messageId) {
-    }
 
-    public StatisticOverviewEntry getStatisticOverview(String localStationId, String partnerId){
+    public StatisticOverviewEntry getStatisticOverview(Object a, Object b){
         return( new StatisticOverviewEntry());
     }
     
-    public List<StatisticOverviewEntry> getStatisticOverview(String localStationId) {
+    public List<StatisticOverviewEntry> getStatisticOverview(Object localStationId) {
         return( new ArrayList<StatisticOverviewEntry>());
     }    
     

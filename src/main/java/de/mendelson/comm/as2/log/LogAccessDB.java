@@ -1,18 +1,16 @@
-//$Header: /as2/de/mendelson/comm/as2/log/LogAccessDB.java 32    21.08.20 13:22 Heller $
+//$Header: /as2/de/mendelson/comm/as2/log/LogAccessDB.java 38    10.03.21 8:56 Heller $
 package de.mendelson.comm.as2.log;
 
 import de.mendelson.comm.as2.server.AS2Server;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -31,7 +29,7 @@ import java.util.logging.Logger;
  * Access to the AS2 log that stores log messages for every transaction
  *
  * @author S.Heller
- * @version $Revision: 32 $
+ * @version $Revision: 38 $
  */
 public class LogAccessDB {
 
@@ -43,93 +41,18 @@ public class LogAccessDB {
      * Logger to log information to
      */
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
+    private IDBDriverManager dbDriverManager;
     /**
-     * Connection to the database
-     */
-    private Connection runtimeConnection;
-    private Connection configConnection;
-    /**
-     * Store the timestamps in the database in UTC to nake the database portable
+     * Store the timestamps in the database in UTC to make the database portable
      * and to prevent daylight saving problems
      */
     private Calendar calendarUTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    /**HSQLDB supports Java_Objects, PostgreSQL does not support it. Means there are
-     * different access methods required for Object access
-     */
-    private boolean databaseSupportsJavaObjects = true;
 
     /**
      * @param host host to connect to
      */
-    public LogAccessDB(Connection configConnection, Connection runtimeConnection) {
-        this.runtimeConnection = runtimeConnection;
-        this.configConnection = configConnection;
-        this.analyzeDatabaseMetadata(configConnection);
-    }
-
-    private void analyzeDatabaseMetadata(Connection connection) {
-        try {
-            DatabaseMetaData data = connection.getMetaData();
-            ResultSet result = null;
-            try {
-                result = data.getTypeInfo();
-                while (result.next()) {
-                    if( result.getString( "TYPE_NAME").equalsIgnoreCase("bytea")){
-                        databaseSupportsJavaObjects = false;
-                    }
-                }
-            } finally {
-                if (result != null) {
-                    result.close();
-                }
-            }
-        } catch (Exception e) {
-            //ignore
-        }
-    }
-    
-    /**
-     * Reads a binary object from the database and returns a byte array that
-     * contains it. Will return null if the read data was null. Reading and
-     * writing binary objects differs relating the used database system
-     */
-    private String readTextStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
-        if( this.databaseSupportsJavaObjects){
-            Object object = result.getObject(columnName);
-            if (!result.wasNull()) {
-                if (object instanceof String) {
-                    return (((String) object));
-                } else if (object instanceof byte[]) {
-                    return (new String((byte[]) object));
-                }
-            }
-        }else{
-            byte[] bytes = result.getBytes(columnName);
-            if (result.wasNull()) {
-                return (null);
-            }
-            return (new String( bytes, StandardCharsets.UTF_8));
-        }
-        return (null);
-    }
-
-    /**Sets text data as parameter to a stored procedure. The handling depends if the database supports java objects
-     * 
-     */
-    private void setTextParameterAsJavaObject(PreparedStatement statement, int index, String text) throws SQLException{        
-        if( this.databaseSupportsJavaObjects ){
-            if (text == null) {
-                statement.setNull(index, Types.JAVA_OBJECT);
-            } else {
-                statement.setObject(index, text);
-            }
-        }else{
-            if (text == null) {
-                statement.setNull(index, Types.BINARY);
-            } else {
-                statement.setBytes(index, text.getBytes(StandardCharsets.UTF_8));
-            }
-        }
+    public LogAccessDB(IDBDriverManager dbDriverManager) {
+        this.dbDriverManager = dbDriverManager;
     }
     
     private int convertLevel(Level level) {
@@ -161,19 +84,25 @@ public class LogAccessDB {
     /**
      * Adds a log line to the db
      */
-    public void log(Level level, long millis, String logMessage, String messageId) {
+    public void logAsTransaction(Connection runtimeConnectionNoAutoCommit,
+            Level level, long millis, String logMessage, String messageId) {
         if (logMessage == null) {
             return;
         }
         PreparedStatement statement = null;
+        Statement transactionStatement = null;
+        String transactionName = "LogAccessDB_logAsTransaction";
         try {
-            statement = this.runtimeConnection.prepareStatement(
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(
                     "INSERT INTO messagelog(timestamputc,messageid,loglevel,details)VALUES(?,?,?,?)");
             statement.setTimestamp(1, new Timestamp(millis), this.calendarUTC);
             statement.setString(2, messageId);
             statement.setInt(3, this.convertLevel(level));
-            this.setTextParameterAsJavaObject(statement, 4, logMessage);
-            statement.execute();
+            this.dbDriverManager.setTextParameterAsJavaObject(statement, 4, logMessage);
+            statement.executeUpdate();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (SQLIntegrityConstraintViolationException e) {
             String errorMessage = "LogAccessDB.log "
                     + "(" + e.getClass().getSimpleName() + "): "
@@ -181,11 +110,21 @@ public class LogAccessDB {
                     + "\", but this message seems not to exist in the system.\n"
                     + "The reason might be an unreferenced MDN or a bad inbound AS2 message structure.";
             this.logger.severe(errorMessage);
-            SystemEvent event = new SystemEvent( SystemEvent.SEVERITY_ERROR, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_TRANSACTION_ANY );
+            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_ERROR, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_TRANSACTION_ANY);
             event.setBody(errorMessage + "\n\nLog message: \"" + logMessage + "\"");
             event.setSubject("Unreferenced MDN or bad message structure");
             SystemEventManagerImplAS2.newEvent(event);
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex);
+            }
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex);
+            }
             this.logger.severe("LogAccessDB.log: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
@@ -196,24 +135,31 @@ public class LogAccessDB {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
         }
     }
 
     /**
      * Returns the whole log of a single instance
      */
-    public List<LogEntry> getLog(String messageId) {
+    public List<LogEntry> getLog(Connection runtimeConnection, String messageId) {
         List<LogEntry> list = new ArrayList<LogEntry>();
         PreparedStatement statement = null;
         try {
-            statement = this.runtimeConnection.prepareStatement("SELECT * FROM messagelog WHERE messageid=? ORDER BY timestamputc");
+            statement = runtimeConnection.prepareStatement("SELECT * FROM messagelog WHERE messageid=? ORDER BY timestamputc");
             statement.setString(1, messageId);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 LogEntry entry = new LogEntry();
                 entry.setLevel(this.convertLevel(result.getInt("loglevel")));
-                String detailsStr = this.readTextStoredAsJavaObject(result, "details");
-                if( detailsStr != null ){
+                String detailsStr = this.dbDriverManager.readTextStoredAsJavaObject(result, "details");
+                if (detailsStr != null) {
                     entry.setMessage(detailsStr);
                 }
                 entry.setMessageId(messageId);
@@ -239,19 +185,28 @@ public class LogAccessDB {
      * Deletes all information from the table messagelog regarding the passed
      * message instance
      */
-    public void deleteMessageLog(String messageId) {
+    public void deleteMessageLog(List<String> messageIds, Connection runtimeConnectionNoAutoCommit) throws Exception {
         PreparedStatement statement = null;
         try {
-            if (messageId != null) {
-                statement = this.runtimeConnection.prepareStatement("DELETE FROM messagelog WHERE messageid=?");
-                statement.setString(1, messageId);
+            if (messageIds != null && !messageIds.isEmpty()) {
+                StringBuilder deleteQuery = new StringBuilder("DELETE FROM messagelog WHERE messageid IN (");
+                for (int i = 0; i < messageIds.size(); i++) {
+                    if (i > 0) {
+                        deleteQuery.append(",");
+                    }
+                    deleteQuery.append("?");
+                }
+                deleteQuery.append(")");
+                statement = runtimeConnectionNoAutoCommit.prepareStatement(deleteQuery.toString());
+                for (int i = 0; i < messageIds.size(); i++) {
+                    statement.setString(i + 1, messageIds.get(i));
+                }
             } else {
-                statement = this.runtimeConnection.prepareStatement("DELETE FROM messagelog WHERE messageid IS NULL");
+                statement = runtimeConnectionNoAutoCommit.prepareStatement("DELETE FROM messagelog WHERE messageid IS NULL");
             }
             statement.execute();
         } catch (Exception e) {
-            this.logger.severe("deleteMessageLog: " + e.getMessage());
-            SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
+            throw e;
         } finally {
             if (statement != null) {
                 try {
@@ -262,4 +217,53 @@ public class LogAccessDB {
             }
         }
     }
+
+    /**
+     * Deletes all information from the table messagelog regarding the passed
+     * message instance - opens a new db connection - transactional
+     */
+    public void deleteMessageLog(List<String> messageIds) {
+        Statement statement = null;
+        //a new connection to the database is required because the message storage contains several tables and all this has to be transactional
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionname = "Message_deleteLog";
+        try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            statement = runtimeConnectionNoAutoCommit.createStatement();
+            //start transaction
+            this.dbDriverManager.startTransaction(statement, transactionname);
+            this.dbDriverManager.setTableLockDELETE(statement,
+                    new String[]{
+                        "messagelog"});
+            this.deleteMessageLog(messageIds, runtimeConnectionNoAutoCommit);
+            //all ok - finish transaction and release all locks
+            this.dbDriverManager.commitTransaction(statement, transactionname);
+        } catch (Exception e) {
+            try {
+                //an error occured - rollback transaction and release all table locks
+                this.dbDriverManager.rollbackTransaction(statement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
+            this.logger.severe("MessageAccessDB.deleteMessage: " + e.getMessage());
+            SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
+                    //nop
+                }
+        }
+    }
+    }
+
 }

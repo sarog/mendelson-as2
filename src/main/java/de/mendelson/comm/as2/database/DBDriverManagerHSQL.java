@@ -1,11 +1,15 @@
-//$Header: /as2/de/mendelson/comm/as2/database/DBDriverManagerHSQL.java 4     21.08.20 17:59 Heller $
+//$Header: /as2/de/mendelson/comm/as2/database/DBDriverManagerHSQL.java 23    15.12.21 16:23 Heller $
 package de.mendelson.comm.as2.database;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.comm.as2.preferences.PreferencesAS2;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.AbstractDBDriverManagerHSQL;
 import de.mendelson.util.database.DebuggableConnection;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.sql.Connection;
@@ -15,7 +19,6 @@ import java.sql.Statement;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -28,16 +31,20 @@ import org.apache.commons.dbcp2.BasicDataSource;
  * Class needed to access the database
  *
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 23 $
  */
-public class DBDriverManagerHSQL implements IDBDriverManager{
+public class DBDriverManagerHSQL extends AbstractDBDriverManagerHSQL implements IDBDriverManager, ISQLQueryModifier {
 
-    private static BasicDataSource dataSourceConfig;
-    private static BasicDataSource dataSourceRuntime;    
     public static final boolean DEBUG = false;
     public static final PreferencesAS2 preferences = new PreferencesAS2();
     private final static String DB_USER_NAME = "sa";
     public final static String DB_PASSWORD = "as2dbadmin";
+    public static final boolean USE_CONNECTION_POOLING = true;
+
+    private final HikariConfig configConnectionPoolConfig = new HikariConfig();
+    private final HikariConfig configConnectionPoolRuntime = new HikariConfig();
+    private static HikariDataSource configDatasource = null;
+    private static HikariDataSource runtimeDatasource = null;
     /**
      * Resourcebundle to localize messages of the DB server
      */
@@ -45,10 +52,9 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
 
     static {
         //register db driver
-        try{
+        try {
             Class.forName("org.hsqldb.jdbcDriver");
-        }
-        catch( Throwable e){
+        } catch (Throwable e) {
             throw new RuntimeException("Unable to register database driver for HSQL database - [" 
                     + e.getClass().getSimpleName() + "] " + e.getMessage());
         }
@@ -63,34 +69,46 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
     }
 
     /**
+     * keeps this as singleton for the whole server instance
+     */
+    private static DBDriverManagerHSQL instance;
+    /**
+     * Singleton for the whole application. Looks uncommon but uses the double
+     * checked method for higher performance - in this case the method is not
+     * needed to be synchronized
+     */
+    public static DBDriverManagerHSQL instance() {
+        if (instance == null) {
+            synchronized (DBDriverManagerHSQL.class) {
+                if (instance == null) {
+                    instance = new DBDriverManagerHSQL();
+                }
+            }
+        }
+        return (instance);
+    }
+
+    private DBDriverManagerHSQL() {
+    }
+    
+    /**
      * Setup the driver manager, initialize the connection pool
      *
      */
     @Override
     public synchronized void setupConnectionPool() {
-        String driverName = "org.hsqldb.jdbcDriver";
-        String dbHost = "localhost";
-        //in client-server environment this may be called from client and server in the same VM
-        if (dataSourceConfig == null) {
-            dataSourceConfig = new BasicDataSource();
-            dataSourceConfig.setDriverClassName(driverName);
-            dataSourceConfig.setUrl(getConnectionURI(dbHost, DB_CONFIG));
-            dataSourceConfig.setUsername(DB_USER_NAME);
-            dataSourceConfig.setPassword(DB_PASSWORD);
-            dataSourceConfig.setDefaultAutoCommit(true);
-            dataSourceConfig.setDefaultReadOnly(false);
-            dataSourceConfig.setPoolPreparedStatements(false);
-        }
-        //in client-server environment this may be called from client and server in the same VM
-        if (dataSourceRuntime == null) {
-            dataSourceRuntime = new BasicDataSource();
-            dataSourceRuntime.setDriverClassName(driverName);
-            dataSourceRuntime.setUrl(getConnectionURI(dbHost, DB_RUNTIME));
-            dataSourceRuntime.setUsername(DB_USER_NAME);
-            dataSourceRuntime.setPassword(DB_PASSWORD);
-            dataSourceRuntime.setDefaultAutoCommit(true);
-            dataSourceRuntime.setDefaultReadOnly(false);
-            dataSourceRuntime.setPoolPreparedStatements(false);
+        if (USE_CONNECTION_POOLING) {
+            this.configConnectionPoolConfig.setJdbcUrl(this.getConnectionURI("localhost", DB_CONFIG));
+            this.configConnectionPoolConfig.setUsername(DB_USER_NAME);
+            this.configConnectionPoolConfig.setPassword(DB_PASSWORD);
+            this.configConnectionPoolConfig.setPoolName(this.getDBName(DB_CONFIG));
+            this.configDatasource = new HikariDataSource(this.configConnectionPoolConfig);
+
+            this.configConnectionPoolRuntime.setJdbcUrl(this.getConnectionURI("localhost", DB_RUNTIME));
+            this.configConnectionPoolRuntime.setUsername(DB_USER_NAME);
+            this.configConnectionPoolRuntime.setPassword(DB_PASSWORD);
+            this.configConnectionPoolRuntime.setPoolName(this.getDBName(DB_RUNTIME));
+            this.runtimeDatasource = new HikariDataSource(this.configConnectionPoolRuntime);
         }
     }
 
@@ -99,13 +117,9 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
      */
     @Override
     public void shutdownConnectionPool() throws SQLException {
-        if (dataSourceConfig != null) {
-            BasicDataSource bdsConfig = (BasicDataSource) dataSourceConfig;
-            bdsConfig.close();
-        }
-        if (dataSourceRuntime != null) {
-            BasicDataSource bdsRuntime = (BasicDataSource) dataSourceRuntime;
-            bdsRuntime.close();
+        if (USE_CONNECTION_POOLING) {
+            this.configDatasource.close();
+            this.runtimeDatasource.close();
         }
     }
 
@@ -113,8 +127,7 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
      * Returns the URI to connect to
      */
     private String getConnectionURI(String host, final int DB_TYPE) {
-        int port = DBDriverManagerHSQL.preferences.getInt(PreferencesAS2.SERVER_DB_PORT);
-        return ("jdbc:hsqldb:hsql://" + host + ":" + port + "/" + this.getDBAlias(DB_TYPE));
+        return ("jdbc:hsqldb:hsql://" + host + ":" + DBServerHSQL.DB_PORT + "/" + this.getDBAlias(DB_TYPE));
     }
 
     /**
@@ -141,7 +154,7 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
             alias = alias + "config";
         } else if (DB_TYPE == DBDriverManagerHSQL.DB_RUNTIME) {
             alias = alias + "runtime";
-        } else if (DB_TYPE != DB_DEPRICATED) {
+        } else if (DB_TYPE != IDBDriverManager.DB_DEPRICATED) {
             throw new RuntimeException("Unknown DB type requested in DBDriverManager.");
         }
         return (alias);
@@ -226,15 +239,15 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
      * Connects to a local database called "MecDriverManager.DB_NAME"
      */
     protected Connection getLocalConnection(final int DB_TYPE) {
-        return (getConnection(DB_TYPE, "127.0.0.1"));
+        return (getConnection(DB_TYPE));
     }
 
     /**
      * Returns a connection to the database
      */
-    protected Connection getConnection(final int DB_TYPE, String hostName) {
+    protected Connection getConnection(final int DB_TYPE) {
         try {
-            return (getConnectionWithoutErrorHandling(DB_TYPE, hostName));
+            return (getConnectionWithoutErrorHandling(DB_TYPE));
         } catch (SQLException e) {
             Logger.getLogger(AS2Server.SERVER_LOGGER_NAME).severe(e.getMessage());
         }
@@ -244,45 +257,33 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
     /**
      * Returns a connection to the database
      *
-     * @param hostName Name of the database server to connect to. Use
-     * "localhost" to connect to your local host
      * @param DB_TYPE of the database that should be created, as defined in this
      * class
      */
     @Override
-    public synchronized Connection getConnectionWithoutErrorHandling(final int DB_TYPE, String host)
+    public synchronized Connection getConnectionWithoutErrorHandling(final int DB_TYPE)
             throws SQLException {
         Connection connection = null;
         if (DB_TYPE == DB_RUNTIME) {
-            //no pooling
-            if (dataSourceRuntime == null) {
-                connection = DriverManager.getConnection(
-                        getConnectionURI(host, DB_TYPE),
-                        DB_USER_NAME, DB_PASSWORD);
+            if (this.runtimeDatasource != null && this.runtimeDatasource.getHikariPoolMXBean().getIdleConnections() > 0) {
+                connection = this.runtimeDatasource.getConnection();
             } else {
-                int maxConnections = dataSourceRuntime.getMaxTotal();
-                if (maxConnections < dataSourceRuntime.getNumActive() + 1) {
-                    dataSourceRuntime.setMaxTotal(maxConnections + 1);
-                }
-                connection = dataSourceRuntime.getConnection();
+                connection = DriverManager.getConnection(
+                        getConnectionURI("localhost", DB_TYPE),
+                        DB_USER_NAME, DB_PASSWORD);
             }
         } else if (DB_TYPE == DB_CONFIG) {
-            //no pooling
-            if (dataSourceConfig == null) {
-                connection = DriverManager.getConnection(
-                        getConnectionURI(host, DB_TYPE),
-                        DB_USER_NAME, DB_PASSWORD);
+            if (this.configDatasource != null && this.configDatasource.getHikariPoolMXBean().getIdleConnections() > 0) {
+                connection = this.configDatasource.getConnection();
             } else {
-                int maxConnections = dataSourceConfig.getMaxTotal();
-                if (maxConnections < dataSourceConfig.getNumActive() + 1) {
-                    dataSourceConfig.setMaxTotal(maxConnections + 1);
-                }
-                connection = dataSourceConfig.getConnection();
+                connection = DriverManager.getConnection(
+                        getConnectionURI("localhost", DB_TYPE),
+                        DB_USER_NAME, DB_PASSWORD);
             }
         } else if (DB_TYPE == DB_DEPRICATED) {
             //deprecated connection: no pooling
             connection = DriverManager.getConnection(
-                    getConnectionURI(host, DB_TYPE),
+                    getConnectionURI("localhost", DB_TYPE),
                     DB_USER_NAME, DB_PASSWORD);
         } else {
             throw new RuntimeException("Requested invalid db type in getConnectionWithoutErrorHandling");
@@ -292,12 +293,47 @@ public class DBDriverManagerHSQL implements IDBDriverManager{
         return (new DebuggableConnection(connection));
     }
     
-    /**Just used for data migration from the HSQLDB config database to an other one*/
-    public Connection getConnectionFileBased(final int DB_TYPE) throws Exception{
+    /**
+     * Just used for data migration from the HSQLDB config database to an other
+     * one
+     */
+    public Connection getConnectionFileBased(final int DB_TYPE) throws Exception {
         String configDBName = this.getDBName(DB_TYPE);
         Connection connection = DriverManager.getConnection("jdbc:hsqldb:file:" + configDBName, 
                     DB_USER_NAME, DB_PASSWORD);
-        return( connection );
+        return (connection);
+    }
+
+    @Override
+    public String modifyQuery(String query) {
+        return( query );
+    }
+
+    /**
+     * Returns some connection pool information for debug purpose
+     */
+    @Override
+    public String getPoolInformation(int DB_TYPE) {
+        StringBuilder output = new StringBuilder();
+        HikariDataSource datasource = null;
+        if (DB_TYPE == DB_CONFIG) {
+            datasource = this.configDatasource;
+            output.append("[CONFIG DB]");
+        } else {
+            datasource = this.runtimeDatasource;
+            output.append("[RUNTIME DB]");
+        }
+        if (!USE_CONNECTION_POOLING || datasource == null) {
+            output.append("No connection pooling");
+        } else {
+            int activeConnections = datasource.getHikariPoolMXBean().getActiveConnections();
+            int totalConnections = datasource.getHikariPoolMXBean().getTotalConnections();
+            int idleConnections = datasource.getHikariPoolMXBean().getIdleConnections();
+            output.append(" Total [").append(String.valueOf(totalConnections)).append("]");
+            output.append(" Active [").append(String.valueOf(activeConnections)).append("]");
+            output.append(" Idle [").append(String.valueOf(idleConnections)).append("]");
+        }
+        return (output.toString());
     }
     
 }

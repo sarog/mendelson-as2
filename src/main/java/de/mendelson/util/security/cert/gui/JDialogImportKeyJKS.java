@@ -1,9 +1,13 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogImportKeyJKS.java 9     11.11.20 17:06 Heller $
+//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogImportKeyJKS.java 14    25/01/22 13:17 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.MecFileChooser;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.TextOverlay;
+import de.mendelson.util.passwordfield.PasswordOverlay;
+import de.mendelson.util.security.BCCryptoHelper;
+import de.mendelson.util.security.JKSKeys2JKS;
 import de.mendelson.util.security.JKSKeys2PKCS12;
 import de.mendelson.util.security.KeyStoreUtil;
 import de.mendelson.util.uinotification.UINotification;
@@ -31,7 +35,7 @@ import javax.swing.SwingUtilities;
  * Import a JKS key into the PCKS#12 keystore
  *
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 14 $
  */
 public class JDialogImportKeyJKS extends JDialog {
 
@@ -60,10 +64,13 @@ public class JDialogImportKeyJKS extends JDialog {
         }
         this.setTitle(this.rb.getResourceString("title"));
         initComponents();
+        TextOverlay.addTo(jTextFieldImportJKSFile, this.rb.getResourceString("label.importkey.hint"));
+        PasswordOverlay.addTo(this.jPasswordFieldPassphrase, this.rb.getResourceString("label.keypass.hint"));
         this.jLabelIcon.setIcon(new ImageIcon(JDialogCertificates.IMAGE_IMPORT_MULTIRESOLUTION.toMinResolution(32)));
         this.logger = logger;
         this.manager = manager;
         this.getRootPane().setDefaultButton(this.jButtonOk);
+        this.setButtonState();
     }
 
     public String getNewAlias() {
@@ -110,6 +117,8 @@ public class JDialogImportKeyJKS extends JDialog {
                 }
                 selectedAlias = selectedAliasObject.toString();
             }
+            if (this.manager.getKeystoreType().equals(BCCryptoHelper.KEYSTORE_PKCS12)) {
+                //import JKS key to PKCS#12 keystore
             JKSKeys2PKCS12 importer = new JKSKeys2PKCS12(this.logger);
             importer.setTargetKeyStore(this.manager.getKeystore());
 
@@ -119,6 +128,17 @@ public class JDialogImportKeyJKS extends JDialog {
                 return;
             }
             importer.exportKey(sourceKeystore, sourceKeypass, selectedAlias);
+            }else{
+                //import JKS key to JKS keystore
+                JKSKeys2JKS importer = new JKSKeys2JKS(this.logger);
+                importer.setTargetKeyStore(this.manager.getKeystore(), this.manager.getKeystorePass());
+                char[] sourceKeypass = this.requestKeyPass(parent, selectedAlias);
+                //user canceled
+                if (sourceKeypass == null) {
+                    return;
+                }
+                importer.exportKey(sourceKeystore, sourceKeypass, selectedAlias);
+            }
             this.newAlias = selectedAlias;
             UINotification.instance().addNotification(null,
                     UINotification.TYPE_SUCCESS,
@@ -184,14 +204,14 @@ public class JDialogImportKeyJKS extends JDialog {
         jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);
         jPanelEdit.add(jLabelIcon, gridBagConstraints);
 
         jLabelImportKeystoreFile.setText(this.rb.getResourceString( "label.importkey"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelImportKeystoreFile, gridBagConstraints);
 
@@ -205,7 +225,7 @@ public class JDialogImportKeyJKS extends JDialog {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jTextFieldImportJKSFile, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -225,17 +245,20 @@ public class JDialogImportKeyJKS extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jButtonBrowseImportFile, gridBagConstraints);
 
         jLabelKeystorePassphrase.setText(this.rb.getResourceString( "label.keypass"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelKeystorePassphrase, gridBagConstraints);
 
+        jPasswordFieldPassphrase.setMinimumSize(new java.awt.Dimension(180, 20));
+        jPasswordFieldPassphrase.setPreferredSize(new java.awt.Dimension(180, 20));
         jPasswordFieldPassphrase.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jPasswordFieldPassphraseKeyReleased(evt);
@@ -244,9 +267,8 @@ public class JDialogImportKeyJKS extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jPasswordFieldPassphrase, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -286,7 +308,7 @@ public class JDialogImportKeyJKS extends JDialog {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanelButtons, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(409, 245));
+        setSize(new java.awt.Dimension(418, 254));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

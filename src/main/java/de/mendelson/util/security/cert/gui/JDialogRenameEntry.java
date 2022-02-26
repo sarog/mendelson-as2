@@ -1,8 +1,10 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogRenameEntry.java 7     11.11.20 17:06 Heller $
+//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogRenameEntry.java 10    23.09.21 12:27 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.TextOverlay;
+import de.mendelson.util.passwordfield.PasswordOverlay;
 import de.mendelson.util.security.BCCryptoHelper;
 import de.mendelson.util.security.cert.KeystoreCertificate;
 import de.mendelson.util.uinotification.UINotification;
@@ -12,7 +14,6 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 
 /*
@@ -26,7 +27,7 @@ import javax.swing.JOptionPane;
  * Dialog to configure a single partner
  *
  * @author S.Heller
- * @version $Revision: 7 $
+ * @version $Revision: 10 $
  */
 public class JDialogRenameEntry extends JDialog {
 
@@ -46,7 +47,7 @@ public class JDialogRenameEntry extends JDialog {
      * @param parameterList List of available parameter
      */
     public JDialogRenameEntry(JFrame parent, CertificateManager manager,
-            String oldAlias, String keystoreType) {
+            String oldAlias, String keystoreType, char[] keystorepass) {
         super(parent, true);
         //load resource bundle
         try {
@@ -58,6 +59,8 @@ public class JDialogRenameEntry extends JDialog {
         this.keystoreType = keystoreType;
         this.setTitle(this.rb.getResourceString("title", oldAlias));
         initComponents();
+        TextOverlay.addTo(this.jTextFieldNewAlias, this.rb.getResourceString("label.newalias.hint"));
+        PasswordOverlay.addTo(this.jPasswordFieldKeyPairPass);        
         this.manager = manager;
         this.getRootPane().setDefaultButton(this.jButtonOk);
         this.oldAlias = oldAlias;
@@ -65,14 +68,13 @@ public class JDialogRenameEntry extends JDialog {
         this.jLabelKeyPairPass.setEnabled(this.keystoreType.equals(BCCryptoHelper.KEYSTORE_JKS));
         this.jPasswordFieldKeyPairPass.setEditable(this.keystoreType.equals(BCCryptoHelper.KEYSTORE_JKS));
         this.jPasswordFieldKeyPairPass.setEnabled(this.keystoreType.equals(BCCryptoHelper.KEYSTORE_JKS));
+        if( this.keystoreType.equals(BCCryptoHelper.KEYSTORE_JKS)){
+            this.jPasswordFieldKeyPairPass.setText(new String(keystorepass));
+        }
         //request the focus on the new alias field
         this.jTextFieldNewAlias.requestFocusInWindow();
-        if (oldAlias != null) {
-            this.jTextFieldNewAlias.setText(oldAlias);
-            this.jTextFieldNewAlias.setSelectionStart(0);
-            this.jTextFieldNewAlias.setSelectionEnd(oldAlias.length());
-        }
         this.jLabelIcon.setIcon(new ImageIcon(JDialogCertificates.IMAGE_EDIT_MULTIRESOLUTION.toMinResolution(32)));
+        this.setButtonState();
     }
 
     /**
@@ -141,14 +143,14 @@ public class JDialogRenameEntry extends JDialog {
         jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);
         jPanelEdit.add(jLabelIcon, gridBagConstraints);
 
         jLabelNewAlias.setText(this.rb.getResourceString( "label.newalias"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelNewAlias, gridBagConstraints);
 
@@ -175,14 +177,21 @@ public class JDialogRenameEntry extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelKeyPairPass, gridBagConstraints);
+
+        jPasswordFieldKeyPairPass.setMinimumSize(new java.awt.Dimension(150, 20));
+        jPasswordFieldKeyPairPass.setPreferredSize(new java.awt.Dimension(150, 20));
+        jPasswordFieldKeyPairPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jPasswordFieldKeyPairPassKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jPasswordFieldKeyPairPass, gridBagConstraints);
 
@@ -246,10 +255,15 @@ public class JDialogRenameEntry extends JDialog {
         } else {
             UINotification.instance().addNotification(null,
                     UINotification.TYPE_ERROR,
-                    this.rb.getResourceString( "alias.exists.title"),
-                    this.rb.getResourceString( "alias.exists.message", newAliasTemp));
+                    this.rb.getResourceString("alias.exists.title"),
+                    this.rb.getResourceString("alias.exists.message", newAliasTemp));
         }
     }//GEN-LAST:event_jButtonOkActionPerformed
+
+    private void jPasswordFieldKeyPairPassKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordFieldKeyPairPassKeyReleased
+        this.setButtonState();
+    }//GEN-LAST:event_jPasswordFieldKeyPairPassKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;

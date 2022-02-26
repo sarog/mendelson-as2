@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/AS2Tools.java 10    14.06.19 10:28 Heller $
+//$Header: /as2/de/mendelson/util/AS2Tools.java 11    3.08.21 16:28 Heller $
 package de.mendelson.util;
 
 import java.io.IOException;
@@ -25,10 +25,12 @@ import java.util.Locale;
  * Some programming tools for mendelson business integration
  *
  * @author S.Heller
- * @version $Revision: 10 $
+ * @version $Revision: 11 $
  */
 public class AS2Tools {
 
+    private final static DateFormat DATE_FORMAT_TEMP_FILE = new SimpleDateFormat("yyyyMMdd");        
+    
     /**
      * Replaces the string tag by the string replacement in the sourceString
      *
@@ -85,9 +87,8 @@ public class AS2Tools {
      * Creates a temp file in a data stamped folder below the directory temp
      */
     public static synchronized Path createTempFile(String prefix, String suffix) throws IOException {
-        DateFormat dateformat = new SimpleDateFormat("yyyyMMdd");        
         String tempDirStr = Paths.get("temp").toAbsolutePath().toString();
-        Path targetDir = Paths.get(tempDirStr + FileSystems.getDefault().getSeparator() + dateformat.format(new Date()));
+        Path targetDir = Paths.get(tempDirStr + FileSystems.getDefault().getSeparator() + DATE_FORMAT_TEMP_FILE.format(new Date()));
         if (!Files.exists(targetDir)) {
             Files.createDirectories(targetDir);
         }

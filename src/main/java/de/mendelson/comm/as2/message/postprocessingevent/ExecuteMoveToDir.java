@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ExecuteMoveToDir.java 3     10.09.20 12:57 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ExecuteMoveToDir.java 8     25.03.21 16:37 Heller $
 package de.mendelson.comm.as2.message.postprocessingevent;
 
 import de.mendelson.comm.as2.message.AS2Message;
@@ -10,6 +10,7 @@ import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,28 +34,21 @@ import java.util.logging.Logger;
  * message receipt
  *
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 8 $
  */
 public class ExecuteMoveToDir implements IProcessingExecution {
 
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
     private MessageAccessDB messageAccess;
-    private MDNAccessDB mdnAccess;
     private PartnerAccessDB partnerAccess;
     /**
      * Localize your GUI!
      */
     private MecResourceBundle rb = null;
-    //DB connection
-    private Connection runtimeConnection;
-    private Connection configConnection;
 
-    public ExecuteMoveToDir(Connection configConnection, Connection runtimeConnection) {
-        this.runtimeConnection = runtimeConnection;
-        this.configConnection = configConnection;
-        this.messageAccess = new MessageAccessDB(configConnection, runtimeConnection);
-        this.mdnAccess = new MDNAccessDB(configConnection, runtimeConnection);
-        this.partnerAccess = new PartnerAccessDB(configConnection, runtimeConnection);
+    public ExecuteMoveToDir(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
+        this.messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        this.partnerAccess = new PartnerAccessDB(dbDriverManager);
         //Load resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(

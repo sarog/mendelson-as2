@@ -1,11 +1,13 @@
-//$Header: /as2/de/mendelson/comm/as2/send/DirPollManager.java 49    10.12.20 12:04 Heller $
+//$Header: /as2/de/mendelson/comm/as2/send/DirPollManager.java 57    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.send;
 
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.NamedThreadFactory;
 import de.mendelson.util.clientserver.ClientServer;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
@@ -19,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /*
@@ -34,7 +38,7 @@ import java.util.logging.Logger;
  * and sends them
  *
  * @author S.Heller
- * @version $Revision: 49 $
+ * @version $Revision: 57 $
  */
 public class DirPollManager {
 
@@ -45,6 +49,12 @@ public class DirPollManager {
      */
     private final Map<String, DirPollThread> mapPollThread = Collections.synchronizedMap(new HashMap<String, DirPollThread>());
     /**
+     * Executor service for all poll threads, with n poll threads at the same
+     * time
+     */
+    private ScheduledThreadPoolExecutor scheduledExecutor = new ScheduledThreadPoolExecutor(5,
+            new NamedThreadFactory("dir-poll"));
+    /**
      * Localize the GUI
      */
     private MecResourceBundle rb = null;
@@ -52,12 +62,14 @@ public class DirPollManager {
     private Connection configConnection;
     private Connection runtimeConnection;
     private ClientServer clientserver;
+    private IDBDriverManager dbDriverManager;
 
     public DirPollManager(CertificateManager certificateManager, Connection configConnection, Connection runtimeConnection,
-            ClientServer clientserver) {
+            ClientServer clientserver, IDBDriverManager dbDriverManager) throws Exception {
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
         this.clientserver = clientserver;
+        this.dbDriverManager = dbDriverManager;
         //Load default resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
@@ -67,6 +79,9 @@ public class DirPollManager {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
         this.certificateManager = certificateManager;
+        //Remove all threads from the scheduler queue once they are canceled. 
+        //The threads are canceled by canceling their future.
+        this.scheduledExecutor.setRemoveOnCancelPolicy(true);
     }
 
     /**
@@ -128,16 +143,21 @@ public class DirPollManager {
         List<String> pollStopLines = new ArrayList<String>();
         List<String> pollStartLines = new ArrayList<String>();
 
-        PartnerAccessDB access = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
-        List<Partner> partner = access.getPartner();
-        List<Partner> localStations = access.getLocalStations();
-        if (partner == null) {
+        PartnerAccessDB access = new PartnerAccessDB(dbDriverManager);
+        List<Partner> allPartnerList = access.getAllPartner();
+        if (allPartnerList == null) {
             this.logger.severe("partnerConfigurationChanged: Unable to load partner");
             return;
         }
+        List<Partner> localStationList = new ArrayList<Partner>();
+        for (Partner partner : allPartnerList) {
+            if (partner.isLocalStation()) {
+                localStationList.add(partner);
+            }
+        }
         synchronized (this.mapPollThread) {
-            for (Partner sender : localStations) {
-                for (Partner receiver : partner) {
+            for (Partner sender : localStationList) {
+                for (Partner receiver : allPartnerList) {
                     String id = sender.getDBId() + "_" + receiver.getDBId();
                     //add partner task if it does not exist so far and if the receiver is no local station and the dir poll is enabled
                     if (!this.mapPollThread.containsKey(id) && !receiver.isLocalStation() && receiver.isEnableDirPoll()) {
@@ -175,8 +195,8 @@ public class DirPollManager {
             }
             for (String id : idList) {
                 boolean idFound = false;
-                for (Partner sender : localStations) {
-                    for (Partner receiver : partner) {
+                for (Partner sender : localStationList) {
+                    for (Partner receiver : allPartnerList) {
                         String relationShipId = sender.getDBId() + "_" + receiver.getDBId();
                         if (id.equals(relationShipId)) {
                             idFound = true;
@@ -248,11 +268,16 @@ public class DirPollManager {
      *
      */
     private DirPollThread addPartnerPollThread(Partner localStation, Partner partner) {
-        DirPollThread thread = new DirPollThread(this.configConnection, this.runtimeConnection, this.clientserver, this.certificateManager,
+        DirPollThread thread = new DirPollThread(this.dbDriverManager, this.configConnection,
+                this.runtimeConnection, this.clientserver, this.certificateManager,
                 localStation, partner);
         synchronized (this.mapPollThread) {
             this.mapPollThread.put(localStation.getDBId() + "_" + partner.getDBId(), thread);
-            Executors.newSingleThreadExecutor().submit(thread);
+            thread.initializeThread();
+            ScheduledFuture future = this.scheduledExecutor.scheduleWithFixedDelay(thread, 5000, thread.getPollIntervalInMS(), TimeUnit.MILLISECONDS);
+            //set the future to the thread to have the possibility to cancel it later and 
+            //remove it from the schedulers internal queue
+            thread.setFuture(future);
         }
         return (thread);
     }

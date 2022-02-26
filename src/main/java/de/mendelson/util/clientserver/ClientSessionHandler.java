@@ -1,10 +1,9 @@
-//$Header: /as2/de/mendelson/util/clientserver/ClientSessionHandler.java 22    4/06/18 10:56a Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/clientserver/ClientSessionHandler.java 28    6.12.21 11:54 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.messages.ClientServerMessage;
 import de.mendelson.util.clientserver.messages.ClientServerResponse;
 import de.mendelson.util.clientserver.messages.ServerLogMessage;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +24,7 @@ import org.apache.mina.core.session.IoSession;
  * Client side protocol handler
  *
  * @author S.Heller
- * @version $Revision: 22 $
+ * @version $Revision: 28 $
  */
 public class ClientSessionHandler extends IoHandlerAdapter {
 
@@ -38,10 +37,11 @@ public class ClientSessionHandler extends IoHandlerAdapter {
     /**
      * stores the sync requests
      */
-    private final Map<Long, BlockingQueue<ClientServerResponse>> syncMap = Collections.synchronizedMap(new ConcurrentHashMap<Long, BlockingQueue<ClientServerResponse>>());
+    private final Map<Long, BlockingQueue<ClientServerResponse>> syncMap
+            = new ConcurrentHashMap<Long, BlockingQueue<ClientServerResponse>>();
     /**
      * Indicates if the server log messages should be displayed in the client
-     * log
+     * log - defaults to true
      */
     private boolean displayServerLogMessages = true;
 
@@ -49,8 +49,8 @@ public class ClientSessionHandler extends IoHandlerAdapter {
         this.callback = callback;
     }
 
-    public ClientSessionHandlerCallback getCallback(){
-        return( this.callback);
+    public ClientSessionHandlerCallback getCallback() {
+        return (this.callback);
     }
     
     /**
@@ -62,7 +62,7 @@ public class ClientSessionHandler extends IoHandlerAdapter {
     }
 
     public boolean getDisplayServerLogMessages() {
-        return( this.displayServerLogMessages);
+        return (this.displayServerLogMessages);
     }
     
     @Override
@@ -93,7 +93,6 @@ public class ClientSessionHandler extends IoHandlerAdapter {
         //sync response: check if there was a request for this message
         if (message._isSyncRequest()) {
             ClientServerResponse response = (ClientServerResponse) message;
-            synchronized (this.syncMap) {
                 if (!this.syncMap.containsKey(response.getReferenceId())) {
                     Exception unreferredSyncResponse = new Exception("[Client-Server communication] The client received a unreferred sync response. Type: " + response.getClass().getName()
                             + ", reference id: " + response.getReferenceId());
@@ -103,7 +102,6 @@ public class ClientSessionHandler extends IoHandlerAdapter {
                     queue.offer(response);
                 }
             }
-        }
         if (message instanceof ServerLogMessage) {
             if (this.displayServerLogMessages) {
                 //server log messages are just passed through to the client log if requested
@@ -123,14 +121,15 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 
     public ClientServerResponse waitForSyncAnswerInfinite(IoSession session, Long referenceId) throws Exception {
         ClientServerResponse response = null;
-        while( response == null ){
+        while (response == null) {
+            //wait for 5s and then repeat..
             response = this.waitForSyncAnswer(referenceId, TimeUnit.SECONDS.toMillis(5));
-            if( !session.isConnected()){
+            if (!session.isConnected()) {
                 this.callback.getLogger().log(Level.WARNING, "[Client-Server communication] ClientSessionHandler.waitForSyncAnswerInfinite: Session closed by remote host.");
-                throw new Exception( "[Client-Server communication] Session closed by remote host.");
+                throw new Exception("[Client-Server communication] Session closed by remote host.");
             }
         }        
-        return( response );
+        return (response);
     }
     
     /**
@@ -138,7 +137,6 @@ public class ClientSessionHandler extends IoHandlerAdapter {
      */
     public ClientServerResponse waitForSyncAnswer(Long referenceId, long timeoutInMS) throws Exception {
         BlockingQueue<ClientServerResponse> queue = null;
-        synchronized (this.syncMap) {
             if (!this.syncMap.containsKey(referenceId)) {
                 Exception unreferredSyncResponse = new Exception("[Client-Server communication] ClientSessionHandler.waitForSyncAnswer: "
                         + "The message that should be waited for is unreferred."
@@ -147,7 +145,6 @@ public class ClientSessionHandler extends IoHandlerAdapter {
             } else {
                 queue = this.syncMap.get(referenceId);
             }
-        }
         ClientServerResponse response = null;
         if (queue != null) {
             response = queue.poll(timeoutInMS, TimeUnit.MILLISECONDS);
@@ -157,13 +154,10 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 
     public void addSyncRequest(ClientServerMessage request) {
         BlockingQueue<ClientServerResponse> queue = new LinkedBlockingQueue<ClientServerResponse>(1);
-        synchronized (this.syncMap) {
             this.syncMap.put(request.getReferenceId(), queue);
         }
-    }
 
     public void removeSyncRequest(ClientServerMessage request) {
-        synchronized (this.syncMap) {
             if (!this.syncMap.containsKey(request.getReferenceId())) {
                 Exception unreferredSyncResponse = new Exception("[Client-Server communication] ClientSessionHandler.removeSyncRequest: "
                         + "The message to remove from the sync map does not exist. "
@@ -171,7 +165,6 @@ public class ClientSessionHandler extends IoHandlerAdapter {
                 this.callback.syncRequestFailed(unreferredSyncResponse);
             }
             this.syncMap.remove(request.getReferenceId());
-        }
     }
 
     /**

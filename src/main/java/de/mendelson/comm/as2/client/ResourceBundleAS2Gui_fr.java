@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/client/ResourceBundleAS2Gui_fr.java 42    21.08.20 17:59 Heller $
+//$Header: /as2/de/mendelson/comm/as2/client/ResourceBundleAS2Gui_fr.java 44    25.03.21 17:54 Heller $
 package de.mendelson.comm.as2.client;
 
 import de.mendelson.util.MecResourceBundle;
@@ -14,7 +14,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize gui entries
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 42 $
+ * @version $Revision: 44 $
  */
 public class ResourceBundleAS2Gui_fr extends MecResourceBundle {
 
@@ -46,6 +46,7 @@ public class ResourceBundleAS2Gui_fr extends MecResourceBundle {
         {"menu.file.resend", "Envoyer en tant que nouvelle transaction"},
         {"menu.file.resend.multiple", "Envoyer en tant que nouvelles transactions"},
         {"menu.file.migrate.hsqldb", "Migrer de la HSQLDB"},
+        {"menu.file.ha", "Exemples de haute disponibilité"},
         {"menu.help", "Aide"},
         {"menu.help.about", "A propos"},
         {"menu.help.supportrequest", "Demande de soutien"},
@@ -93,6 +94,8 @@ public class ResourceBundleAS2Gui_fr extends MecResourceBundle {
         {"dialog.resend.title", "Transaction renvoyer"},        
         {"logputput.disabled", "** La sortie dans le journal a été désactivé **"},
         {"logputput.enabled", "** La sortie du journal a été activé **"},
-        {"resend.failed.nopayload", "Renvoi en cas d'échec d'une nouvelle transaction: La transaction sélectionnée {0} n'a pas de données utilisateur." },
+        {"resend.failed.nopayload", "Renvoi en cas d''échec d''une nouvelle transaction: La transaction sélectionnée {0} n''a pas de données utilisateur." },
+        {"server.answer.timeout.title", "Timeout dans la connexion client-serveur" },
+        {"server.answer.timeout.details", "Le serveur ne répond pas dans le délai défini - la charge est-elle trop élevée?" },
     };
 }

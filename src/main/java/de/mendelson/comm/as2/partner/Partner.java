@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/Partner.java 81    2.09.20 15:38 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/Partner.java 83    27.07.21 15:33 Heller $
 package de.mendelson.comm.as2.partner;
 
 import de.mendelson.util.security.cert.CertificateManager;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,11 +32,14 @@ import org.w3c.dom.NodeList;
  * Stores all information about a business partner
  *
  * @author S.Heller
- * @version $Revision: 81 $
+ * @version $Revision: 83 $
  */
 public class Partner implements Serializable, Comparable, Cloneable {
 
     public static final long serialVersionUID = 1L;
+    //setup a much longer timeout than the default for the partner sync client-server requests 
+    //- this should be reachable even if the system is under high load
+    public static final long TIMEOUT_PARTNER_REQUEST = TimeUnit.MINUTES.toMillis(5);
     /**
      * Unique id in the database for this partner
      */
@@ -751,7 +755,7 @@ public class Partner implements Serializable, Comparable, Cloneable {
     }
 
     /**
-     * Adds a cdata indicator to xml data
+     * Adds a CDATA indicator to XML data
      */
     private String toCDATA(String data) {
         return ("<![CDATA[" + data + "]]>");

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/httpconfig/server/ResourceBundleHTTPServerConfigProcessor_fr.java 9     25.06.20 10:36 Heller $
+//$Header: /as2/de/mendelson/util/httpconfig/server/ResourceBundleHTTPServerConfigProcessor_fr.java 10    8.09.21 12:24 Heller $
 package de.mendelson.util.httpconfig.server;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize a mendelson product
  *
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 10 $
  */
 public class ResourceBundleHTTPServerConfigProcessor_fr extends MecResourceBundle {
 
@@ -39,6 +39,9 @@ public class ResourceBundleHTTPServerConfigProcessor_fr extends MecResourceBundl
         {"http.deployedwars", "Fichiers war actuellement déployés dans le serveur HTTP (fonctionnalité Servlet):"},
         {"webapp.as2.war", "mendelson AS2 Servlet de récepteur"},
         {"webapp.as4.war", "mendelson AS4 Servlet de récepteur"},
+        {"webapp.as2api.war", "mendelson AS2 REST API"},
+        {"webapp.as4api.war", "mendelson AS4 REST API"},
+        {"webapp.oftp2api.war", "mendelson OFTP2 REST API"},
         {"webapp.webas2.war", "mendelson AS2 Server Web Monitoring"},
         {"webapp.as2-sample.war", "Exemples d''API AS2 mendelson"},
         {"webapp.as4-sample.war", "Exemples d''API AS4 mendelson"},

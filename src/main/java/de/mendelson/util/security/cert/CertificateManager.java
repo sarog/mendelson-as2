@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/security/cert/CertificateManager.java 43    30.07.19 17:15 Heller $
+//$Header: /as2/de/mendelson/util/security/cert/CertificateManager.java 44    25/01/22 13:17 Heller $
 package de.mendelson.util.security.cert;
 
 import de.mendelson.util.MecResourceBundle;
@@ -35,7 +35,7 @@ import javax.security.auth.x500.X500Principal;
  * Helper class to store
  *
  * @author S.Heller
- * @version $Revision: 43 $
+ * @version $Revision: 44 $
  */
 public class CertificateManager {
 
@@ -318,7 +318,8 @@ public class CertificateManager {
     }
 
     /**
-     * Wrapper function for the underlaying keystore storage implementation
+     * Wrapper function for the underlaying keystore storage implementation. This is one of
+     * BCCryptoHelper.KEYSTORE_JKS or BCCryptoHelper.KEYSTORE_PKCS12
      */
     public String getKeystoreType() {
         return (this.storage.getKeystoreStorageType());

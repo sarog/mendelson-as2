@@ -1,17 +1,15 @@
-//$Header: /as2/de/mendelson/util/clientserver/clients/filesystemview/JTreeRemoteStructure.java 10    29.10.19 11:25 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/clients/filesystemview/JTreeRemoteStructure.java 11    30.11.21 11:08 Heller $
 package de.mendelson.util.clientserver.clients.filesystemview;
 
 import de.mendelson.util.MecResourceBundle;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 
@@ -26,12 +24,12 @@ import javax.swing.tree.TreePath;
  * Tree to display remote file structure
  *
  * @author S.Heller
- * @version $Revision: 10 $
+ * @version $Revision: 11 $
  */
 public class JTreeRemoteStructure extends JTree {
 
     private final DefaultMutableTreeNode root;
-    private final Map<FileObject, DefaultMutableTreeNode> map = Collections.synchronizedMap(new HashMap<FileObject, DefaultMutableTreeNode>());
+    private final Map<FileObject, DefaultMutableTreeNode> map = new ConcurrentHashMap<FileObject, DefaultMutableTreeNode>();
     private boolean directoriesOnly = false;
     private MecResourceBundle rb;
 
@@ -61,11 +59,8 @@ public class JTreeRemoteStructure extends JTree {
     }
 
     public void addRoots(List<FileObjectRoot> roots) {
-        synchronized (this.map) {
             this.map.clear();
             this.root.removeAllChildren();
-        }
-        synchronized (this.map) {
             for (FileObject remoteRoot : roots) {
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(remoteRoot);
                 this.root.add(node);
@@ -73,7 +68,6 @@ public class JTreeRemoteStructure extends JTree {
                 //add a dummy node below - indicates that the roow has not been expanded so far
                 node.add(new DefaultMutableTreeNode(this.rb.getResourceString("wait")));
             }
-        }
         ((DefaultTreeModel) this.getModel()).nodeStructureChanged(this.root);
         this.expand(this.root);
     }
@@ -104,21 +98,16 @@ public class JTreeRemoteStructure extends JTree {
     }
 
     public boolean nodeexists(FileObject node) {
-        synchronized (this.map) {
             DefaultMutableTreeNode parentNode = this.map.get(node);
             return (parentNode != null);
         }
-    }
 
     public void addChildren(FileObject parent, List<FileObject> children) {
         DefaultMutableTreeNode parentNode = null;
-        synchronized (this.map) {
             parentNode = this.map.get(parent);
             //remove dummy node
             parentNode.removeAllChildren();
-        }
         ((DefaultTreeModel) this.getModel()).nodeStructureChanged(parentNode);
-        synchronized (this.map) {            
             for (FileObject child : children) {
                 if (child instanceof FileObjectDir
                         || !this.directoriesOnly) {
@@ -130,7 +119,6 @@ public class JTreeRemoteStructure extends JTree {
                     }
                 }
             }
-        }
         ((DefaultTreeModel) this.getModel()).nodeStructureChanged(parentNode);
         this.expand(parentNode);
         this.setSelectedNode(parent);
@@ -141,9 +129,7 @@ public class JTreeRemoteStructure extends JTree {
      */
     public void setSelectedNode(FileObject selection) {
         DefaultMutableTreeNode selectionNode = null;
-        synchronized (this.map) {
             selectionNode = this.map.get(selection);
-        }
         if (selectionNode != null) {
             TreePath selectionPath = new TreePath(selectionNode.getPath());
             this.scrollPathToVisible(selectionPath);

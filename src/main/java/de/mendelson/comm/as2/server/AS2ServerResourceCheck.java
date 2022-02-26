@@ -1,7 +1,6 @@
-//$Header: /as2/de/mendelson/comm/as2/server/AS2ServerResourceCheck.java 4     10-02-16 10:36a Heller $
+//$Header: /as2/de/mendelson/comm/as2/server/AS2ServerResourceCheck.java 5     23.08.21 13:48 Heller $
 package de.mendelson.comm.as2.server;
 
-import de.mendelson.comm.as2.preferences.PreferencesAS2;
 import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
 import java.io.IOException;
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * Class that checks resources of the host before starting the server
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 5 $
  */
 public class AS2ServerResourceCheck {
 
@@ -39,12 +38,8 @@ public class AS2ServerResourceCheck {
 
     /**Checks if a required port is used by another process*/
     public void performPortCheck() throws Exception {
-        PreferencesAS2 preferences = new PreferencesAS2();
         int[] ports = new int[]{
-            preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT),
-            preferences.getInt(PreferencesAS2.JNDI_PORT),
-            preferences.getInt(PreferencesAS2.MQ_PROXY_PORT),
-            preferences.getInt(PreferencesAS2.SERVER_DB_PORT),
+            AS2Server.CLIENTSERVER_COMM_PORT
         };
         for (int port : ports) {
             this.checkPort(port);

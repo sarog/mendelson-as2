@@ -1,15 +1,13 @@
- //$Header: /mendelson_business_integration/de/mendelson/util/IOFileFilterCreationDate.java 3     11.02.20 9:48 Heller $
+ //$Header: /as2/de/mendelson/util/IOFileFilterCreationDate.java 4     15.01.21 15:11 Heller $
 package de.mendelson.util;
 
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -22,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * File filter that filters the directory entries by their age
  *
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 4 $
  */
 public class IOFileFilterCreationDate implements DirectoryStream.Filter {
 
@@ -31,6 +29,7 @@ public class IOFileFilterCreationDate implements DirectoryStream.Filter {
 
     private int mode = MODE_OLDER_THAN;
     private boolean includeDirecories = false;
+    private boolean includeFiles = true;
     private Instant instantToCompare;
 
     /**
@@ -61,6 +60,11 @@ public class IOFileFilterCreationDate implements DirectoryStream.Filter {
                 return (false);
             }
         }
+        if( !this.includeFiles){
+            if (!Files.isDirectory(path)) {
+                return (false);
+            }
+        }
         try {
             BasicFileAttributes view = Files.getFileAttributeView(path, BasicFileAttributeView.class).readAttributes();
             FileTime fileTime = view.creationTime();
@@ -77,6 +81,7 @@ public class IOFileFilterCreationDate implements DirectoryStream.Filter {
     }
 
     /**
+     * Returns if the filter should return directories that match the condition
      * @return the includeDirecories
      */
     public boolean includesDirecories() {
@@ -84,11 +89,30 @@ public class IOFileFilterCreationDate implements DirectoryStream.Filter {
     }
 
     /**
+     * Sets if the filter should return directories that match the condition
      * @param includeDirecories the includeDirecories to set
      */
     public void setIncludeDirecories(boolean includeDirecories) {
         this.includeDirecories = includeDirecories;
     }
+
+     /**
+      * Returns if the filter should return files that match the condition
+     * @return the includeFiles
+     */
+    public boolean includesFiles() {
+        return includeFiles;
+    }
+
+    /**
+     * Sets if the filter should return files that match the condition
+     * @param includeFiles the includeFiles to set
+     */
+    public void setIncludeFiles(boolean includeFiles) {
+        this.includeFiles = includeFiles;
+    }
+    
+    
 
 //    public static final void main(String[] args) {
 //        IOFileFilterCreationDate fileFilter 

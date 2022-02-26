@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogCertificates.java 89    11.11.20 17:06 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/security/cert/gui/JDialogCertificates.java 90    6.09.21 15:53 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.ColorUtil;
@@ -78,7 +78,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
  * Certificate manager UI
  *
  * @author S.Heller
- * @version $Revision: 89 $
+ * @version $Revision: 90 $
  */
 public class JDialogCertificates extends JDialog implements ListSelectionListener {
 
@@ -149,7 +149,7 @@ public class JDialogCertificates extends JDialog implements ListSelectionListene
         this.jLabelWarnings.setForeground(colorWarning);
         this.setJMenuBar(this.jMenuBar);
         this.getRootPane().setDefaultButton(this.jButtonOk);
-        this.panelCertificates = new JPanelCertificates(this.logger, this, this.guiClient);
+        this.panelCertificates = new JPanelCertificates(this.logger, this, this.guiClient, moduleName);
         this.panelCertificates.setButtons(this.jButtonEditCertificate, this.jButtonDeleteCertificate);
         this.panelCertificates.setMenuItems(this.jMenuItemFileEdit, this.jMenuItemFileDelete);
         //if no certificate is in the keystore a value should be displayed that shows this..

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/webclient2/FilePanel.java 6     4.12.20 9:11 Heller $
+//$Header: /as2/de/mendelson/comm/as2/webclient2/FilePanel.java 8     11.06.21 10:13 Heller $
 package de.mendelson.comm.as2.webclient2;
 
 import com.vaadin.server.Page;
@@ -6,7 +6,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import de.mendelson.comm.as2.message.loggui.JPanelFileDisplay;
 import de.mendelson.util.FileEncodingDetection;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +21,7 @@ import java.nio.file.Path;
  * Dialog that display a file content
  *
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 8 $
  */
 public class FilePanel extends TextArea {
 
@@ -58,9 +57,9 @@ public class FilePanel extends TextArea {
             filename = file.toAbsolutePath().toString();
         } else {
             try {
-                if( detectEncoding ){
+                if (detectEncoding) {
                     this.displayRawTextDetectEncoding(file);
-                }else{
+                } else {
                     this.displayRawTextIgnoreEncoding(file);
                 }
                 filename = file.toAbsolutePath().toString();
@@ -86,6 +85,8 @@ public class FilePanel extends TextArea {
         Charset encoding = detection.guessBestCharset(file);
         byte[] data = Files.readAllBytes(file);
         String dataStr = new String(data, encoding);   
+        //prevent JavaScript
+        dataStr = AS2WebUI.replaceJavaScriptOutput(dataStr);
         this.setValue(dataStr);
     }
 
@@ -95,6 +96,8 @@ public class FilePanel extends TextArea {
     private void displayRawTextIgnoreEncoding(Path file) throws Exception {
         byte[] data = Files.readAllBytes(file);
         String dataStr = new String(data);   
+        //prevent JavaScript
+        dataStr = AS2WebUI.replaceJavaScriptOutput(dataStr);
         this.setValue(dataStr);
     }
     

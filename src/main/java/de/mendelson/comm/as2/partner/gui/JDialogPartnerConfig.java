@@ -1,4 +1,4 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/partner/gui/JDialogPartnerConfig.java 75    18.12.20 14:25 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/JDialogPartnerConfig.java 78    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.partner.gui;
 
 import de.mendelson.comm.as2.client.AS2StatusBar;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +53,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Dialog to configure the partner of the AS2 server
  *
  * @author S.Heller
- * @version $Revision: 75 $
+ * @version $Revision: 78 $
  */
 public class JDialogPartnerConfig extends JDialog {
 
@@ -134,8 +135,8 @@ public class JDialogPartnerConfig extends JDialog {
     }
 
     @Override
-    public void setVisible(boolean flag){
-        if( flag ){
+    public void setVisible(boolean flag) {
+        if (flag) {
             this.displayPartnerValues();
         }
         super.setVisible(flag);
@@ -160,7 +161,7 @@ public class JDialogPartnerConfig extends JDialog {
     private String[] getAbsolutePathOnServerSide(String directory) {
         FileSystemViewRequest request = new FileSystemViewRequest(FileSystemViewRequest.TYPE_GET_ABSOLUTE_PATH_STR);
         request.setRequestFilePath(directory);
-        FileSystemViewResponse response = (FileSystemViewResponse) this.guiClient.getBaseClient().sendSync(request);
+        FileSystemViewResponse response = (FileSystemViewResponse) this.guiClient.getBaseClient().sendSync(request, Partner.TIMEOUT_PARTNER_REQUEST);
         return (new String[]{response.getParameterString(), response.getServerSideFileSeparator()});
     }
 
@@ -246,7 +247,7 @@ public class JDialogPartnerConfig extends JDialog {
                 this.certificateManagerEncSign.getPrivateKeyByFingerprintSHA1(signSerial);
                 this.certificateManagerEncSign.getPrivateKeyByFingerprintSHA1(cryptSerial);
             } catch (Exception e) {
-                e.printStackTrace();
+                UINotification.instance().addNotification(e);
                 return (false);
             }
         }
@@ -259,7 +260,7 @@ public class JDialogPartnerConfig extends JDialog {
      */
     private void handlePartnerNameChange(Partner existingPartner, Partner newPartner) {
         //get the message path from the server
-        PreferencesClient preferences = new PreferencesClient(this.guiClient.getBaseClient());
+        PreferencesClient preferences = new PreferencesClient(this.guiClient.getBaseClient(), Partner.TIMEOUT_PARTNER_REQUEST);
         String messageDir = preferences.get(PreferencesAS2.DIR_MSG);
         String[] serversideInfo = this.getAbsolutePathOnServerSide(messageDir);
         String serverSideMessagePath = serversideInfo[0];
@@ -288,7 +289,7 @@ public class JDialogPartnerConfig extends JDialog {
 
     private void handlePartnerDelete(Partner existingPartner) {
         //get the message path from the server
-        PreferencesClient preferences = new PreferencesClient(this.guiClient.getBaseClient());
+        PreferencesClient preferences = new PreferencesClient(this.guiClient.getBaseClient(), Partner.TIMEOUT_PARTNER_REQUEST);
         String messageDir = preferences.get(PreferencesAS2.DIR_MSG);
         String[] serversideInfo = this.getAbsolutePathOnServerSide(messageDir);
         String serverSideMessagePath = serversideInfo[0];
@@ -369,7 +370,7 @@ public class JDialogPartnerConfig extends JDialog {
                             PartnerListRequest request = new PartnerListRequest(PartnerListRequest.LIST_BY_DB_ID);
                             request.setAdditionalListOptionInt(newPartner.getDBId());
                             List<Partner> checkList = ((PartnerListResponse) JDialogPartnerConfig.this.guiClient.getBaseClient().
-                                    sendSync(request)).getList();
+                                    sendSync(request, Partner.TIMEOUT_PARTNER_REQUEST)).getList();
                             if (checkList != null && !checkList.isEmpty() && !newPartner.getName().equals(checkList.get(0).getName())) {
                                 JDialogPartnerConfig.this.handlePartnerNameChange(checkList.get(0), newPartner);
                             }
@@ -377,7 +378,7 @@ public class JDialogPartnerConfig extends JDialog {
                     }
                     //detect if a partner has been deleted
                     List<Partner> existingPartnerArray = ((PartnerListResponse) JDialogPartnerConfig.this.guiClient.getBaseClient().
-                            sendSync(new PartnerListRequest(PartnerListRequest.LIST_ALL))).getList();
+                            sendSync(new PartnerListRequest(PartnerListRequest.LIST_ALL), Partner.TIMEOUT_PARTNER_REQUEST)).getList();
                     for (Partner existingPartner : existingPartnerArray) {
                         boolean doesStillExist = false;
                         for (Partner newPartner : JDialogPartnerConfig.this.partnerList) {
@@ -396,7 +397,7 @@ public class JDialogPartnerConfig extends JDialog {
                             JDialogPartnerConfig.this.rb.getResourceString("saving"), uniqueId);
                     PartnerModificationRequest modificationRequest = new PartnerModificationRequest();
                     modificationRequest.setData(JDialogPartnerConfig.this.partnerList);
-                    JDialogPartnerConfig.this.guiClient.getBaseClient().sendSync(modificationRequest);
+                    JDialogPartnerConfig.this.guiClient.getBaseClient().sendSync(modificationRequest, Partner.TIMEOUT_PARTNER_REQUEST);
                     //inform the server that the configuration has been changed
                     PartnerConfigurationChanged signal = new PartnerConfigurationChanged();
                     JDialogPartnerConfig.this.guiClient.sendAsync(signal);
@@ -413,7 +414,9 @@ public class JDialogPartnerConfig extends JDialog {
                 }
             }
         };
-        Executors.newSingleThreadExecutor().submit(runnable);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(runnable);
+        executor.shutdown();
     }
 
     /**

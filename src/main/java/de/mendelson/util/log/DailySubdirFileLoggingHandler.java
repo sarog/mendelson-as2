@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/log/DailySubdirFileLoggingHandler.java 12    7.12.18 13:55 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/log/DailySubdirFileLoggingHandler.java 14    3.12.21 14:22 Heller $
 package de.mendelson.util.log;
 
 import java.io.BufferedWriter;
@@ -32,7 +32,7 @@ import java.util.logging.LogRecord;
  * DailySubdirFileLoggingHandler(Paths.get("mylogdir"), "mylogfile.log") );
  *
  * @author S.Heller
- * @version $Revision: 12 $
+ * @version $Revision: 14 $
  */
 public class DailySubdirFileLoggingHandler extends Handler {
 
@@ -178,7 +178,7 @@ public class DailySubdirFileLoggingHandler extends Handler {
         String newLogFilename = this.generateNewLogFileName(fullLogDir);
         //check if the loggers output stream is still valid        
         if (this.writer == null || this.actualLogFilename == null || !newLogFilename.equals(this.actualLogFilename)
-                || !Files.exists( Paths.get(newLogFilename))) {
+                || !Files.exists(Paths.get(newLogFilename))) {
             if (this.writer != null) {
                 try {
                     //close existing writer

@@ -1,8 +1,9 @@
-//$Header: /as2/de/mendelson/comm/as2/AS2Shutdown.java 2     4.05.12 13:45 Heller $
+//$Header: /as2/de/mendelson/comm/as2/AS2Shutdown.java 3     23.08.21 13:48 Heller $
 package de.mendelson.comm.as2;
 
 import de.mendelson.comm.as2.clientserver.message.ServerShutdown;
 import de.mendelson.comm.as2.preferences.PreferencesAS2;
+import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.clientserver.TextClient;
 
 /*
@@ -16,7 +17,7 @@ import de.mendelson.util.clientserver.TextClient;
  * Shutdown the AS2 server
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class AS2Shutdown {
 
@@ -35,7 +36,7 @@ public class AS2Shutdown {
     /**
      * Method to start the server on from the command line
      */
-    public static void main(String[] args) {
+    public static void main(String args[]) {
         String user = "admin";
         String password = "admin";
         int optind;
@@ -58,7 +59,7 @@ public class AS2Shutdown {
         PreferencesAS2 preferences = new PreferencesAS2();
         try {
             TextClient client = new TextClient();
-            client.connectAndLogin("localhost", preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT), 
+            client.connectAndLogin("localhost", AS2Server.CLIENTSERVER_COMM_PORT, 
                     AS2ServerVersion.getFullProductName(), user, password.toCharArray(), 15000);
             client.sendAsync(new ServerShutdown());
             client.logout();

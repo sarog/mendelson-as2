@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/webclient2/TransactionDetailsDialog.java 19    16.12.20 12:52 Heller $
+//$Header: /as2/de/mendelson/comm/as2/webclient2/TransactionDetailsDialog.java 29    27/01/22 17:19 Heller $
 package de.mendelson.comm.as2.webclient2;
 
 import com.vaadin.event.selection.SelectionEvent;
@@ -13,6 +13,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -30,12 +31,14 @@ import de.mendelson.comm.as2.message.AS2MDNInfo;
 import de.mendelson.comm.as2.message.AS2Message;
 import de.mendelson.comm.as2.message.AS2MessageInfo;
 import de.mendelson.comm.as2.message.AS2Payload;
+import de.mendelson.comm.as2.message.MDNAccessDB;
 import de.mendelson.comm.as2.message.MessageAccessDB;
 import de.mendelson.comm.as2.message.ResourceBundleAS2Message;
 import de.mendelson.comm.as2.message.loggui.ResourceBundleMessageDetails;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,17 +69,14 @@ import java.util.logging.Level;
  * The about dialog for the as2 server web ui
  *
  * @author S.Heller
- * @version $Revision: 19 $
+ * @version $Revision: 29 $
  */
 public class TransactionDetailsDialog extends OkDialog {
 
     private final String COLOR_RED = "#e74c3c";
     private final String COLOR_GREEN = "#27ae60";
 
-    private Connection runtimeConnection = null;
-    private Connection configConnection = null;
-    private LogAccessDB logAccess;
-    private MessageAccessDB messageAccess;
+    private IDBDriverManager dbDriverManager = null;
     private FileResource RESOURCE_IMAGE_IN;
     private FileResource RESOURCE_IMAGE_OUT;
     private FileResource RESOURCE_IMAGE_MESSAGE;
@@ -96,36 +96,72 @@ public class TransactionDetailsDialog extends OkDialog {
     private List<AS2Payload> payload = new ArrayList<AS2Payload>();
     private TabSheet tabSheet = null;
     private Grid<GridDetailRow> grid = new Grid<GridDetailRow>();
-    private AS2MessageInfo info;
+    private AS2MessageInfo as2MessageInfo;
+    private AS2MDNInfo as2MDNInfo;
     private Partner sender = null;
     private Partner receiver = null;
     private String timezoneStr;
     private Locale browserLocale;
+    private String dispositionText = "--";
 
     /**
      *
      * @param configConnection
      * @param runtimeConnection
-     * @param info The AS2 message info to display
+     * @param as2MessageInfo The AS2 message info to display
      * @param timezoneStr The timezone string as delivered by the browser/user
      * selection, e.g. "Europe/Berlin" or "America/New_York"
-     * @browserLocale Locale of the browser - to format the date (e.g. 24h format or 12h format)
+     * @browserLocale Locale of the browser - to format the date (e.g. 24h
+     * format or 12h format)
      */
-    public TransactionDetailsDialog(Connection configConnection, Connection runtimeConnection, AS2MessageInfo info,
-            String timezoneStr, Locale browserLocale) {
-        super(1400, 810, "");
-        super.setCaption("&nbsp;Transaction details (<strong>" + info.getMessageId() + "</strong>)");
+    public TransactionDetailsDialog(AS2MessageInfo as2MessageInfo,
+            String timezoneStr, Locale browserLocale, IDBDriverManager dbDriverManager) {
+        super(1400, 815, "");
+        String messageId = as2MessageInfo.getMessageId();
+        //prevent JavaScript
+        String messageIdNoJavaScript = AS2WebUI.replaceJavaScriptOutput(messageId);
+        super.setCaption("&nbsp;Transaction details (<strong>" + messageIdNoJavaScript + "</strong>)");
         super.setCaptionAsHtml(true);
         this.setResizable(true);
         this.setClosable(true);
         this.timezoneStr = timezoneStr;
         this.browserLocale = browserLocale;
-        this.runtimeConnection = runtimeConnection;
-        this.configConnection = configConnection;
-        this.info = info;
-        PartnerAccessDB partnerAccess = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
-        this.sender = partnerAccess.getPartnerByAS2Id(info.getSenderId(), PartnerAccessDB.DATA_COMPLETENESS_NAMES_AS2ID_TYPE);
-        this.receiver = partnerAccess.getPartnerByAS2Id(info.getReceiverId(), PartnerAccessDB.DATA_COMPLETENESS_NAMES_AS2ID_TYPE);
+        this.dbDriverManager = dbDriverManager;
+        this.as2MessageInfo = as2MessageInfo;
+        PartnerAccessDB partnerAccess = new PartnerAccessDB(dbDriverManager);
+        this.sender = partnerAccess.getPartnerByAS2Id(as2MessageInfo.getSenderId(), PartnerAccessDB.DATA_COMPLETENESS_NAMES_AS2ID_TYPE);
+        this.receiver = partnerAccess.getPartnerByAS2Id(as2MessageInfo.getReceiverId(), PartnerAccessDB.DATA_COMPLETENESS_NAMES_AS2ID_TYPE);
+        Connection configConnection = null;
+        Connection runtimeConnection = null;
+        try {
+            configConnection = dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
+            runtimeConnection = dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            MDNAccessDB mdnAccess = new MDNAccessDB(dbDriverManager, configConnection, runtimeConnection);
+            List<AS2MDNInfo> mdnInfoList = mdnAccess.getMDN(messageId);
+            if (!mdnInfoList.isEmpty()) {
+                AS2MDNInfo mdnInfo = mdnInfoList.get(0);
+                if( mdnInfo.getDispositionState() != null ){
+                    this.dispositionText = mdnInfo.getDispositionState();
+                }
+            }
+        }catch (Exception e) {
+            new Notification("Problem", "[" + e.getClass().getSimpleName() + "] " + e.getMessage(),
+                    Notification.Type.WARNING_MESSAGE, true)
+                    .show(Page.getCurrent());
+        } finally {
+            if (configConnection != null) {
+                try {
+                    configConnection.close();
+                } catch (Exception e) {
+                }
+            }
+            if (runtimeConnection != null) {
+                try {
+                    runtimeConnection.close();
+                } catch (Exception e) {
+                }
+            }
+        }
         this.setIcon(new ThemeResource("../mendelson/images/messagedetails_24x24.png"));
         //load resource bundle
         try {
@@ -151,9 +187,32 @@ public class TransactionDetailsDialog extends OkDialog {
         RESOURCE_IMAGE_FINISHED = new FileResource(new File("/VAADIN/theme/mendelson/images/state_finished.svg"));
         RESOURCE_IMAGE_LOCALSTATION = new FileResource(new File("/VAADIN/theme/mendelson/images/localstation.svg"));
         RESOURCE_IMAGE_SINGLEPARTNER = new FileResource(new File("/VAADIN/theme/mendelson/images/singlepartner.svg"));
-        this.logAccess = new LogAccessDB(this.configConnection, this.runtimeConnection);
-        this.messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
-        this.payload = TransactionDetailsDialog.this.messageAccess.getPayload(TransactionDetailsDialog.this.info.getMessageId());
+        Connection configConnection = null;
+        Connection runtimeConnection = null;
+        try {
+            configConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
+            runtimeConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, configConnection, runtimeConnection);
+            this.payload = messageAccess.getPayload(TransactionDetailsDialog.this.as2MessageInfo.getMessageId());
+        } catch (Exception e) {
+            new Notification("Problem", "["
+                    + e.getClass().getSimpleName() + "] " + e.getMessage(),
+                    Notification.Type.ERROR_MESSAGE, true)
+                    .show(Page.getCurrent());
+        } finally {
+            if (configConnection != null) {
+                try {
+                    configConnection.close();
+                } catch (Exception e) {
+                }
+            }
+            if (runtimeConnection != null) {
+                try {
+                    runtimeConnection.close();
+                } catch (Exception e) {
+                }
+            }
+        }
         super.init(displayOkButton);
         this.refreshTableContentAndSelectFirst();
     }
@@ -198,27 +257,32 @@ public class TransactionDetailsDialog extends OkDialog {
      * @return
      */
     private Panel createTransactionStateOverview() {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.setMargin(new MarginInfo(true, false, false, true));
-        layout.setSpacing(true);
+        HorizontalLayout firstLineLayout = new HorizontalLayout();
+        firstLineLayout.setMargin(new MarginInfo(false, false, false, false));
+        firstLineLayout.setSpacing(true);        
+        HorizontalLayout secondLineLayout = new HorizontalLayout();
+        secondLineLayout.setMargin(new MarginInfo(false, false, false, true));
+        secondLineLayout.setSpacing(true);   
+        //first line
         Label transactionStateImage = new Label();
         transactionStateImage.setCaptionAsHtml(true);
         FileResource stateResource = null;
-        if (this.info.getState() == AS2Message.STATE_FINISHED) {
+        if (this.as2MessageInfo.getState() == AS2Message.STATE_FINISHED) {
             stateResource = RESOURCE_IMAGE_FINISHED;
-        } else if (this.info.getState() == AS2Message.STATE_PENDING) {
+        } else if (this.as2MessageInfo.getState() == AS2Message.STATE_PENDING) {
             stateResource = RESOURCE_IMAGE_PENDING;
         } else {
             stateResource = RESOURCE_IMAGE_STOPPED;
         }
         transactionStateImage.setCaption(this.generateImageLabelHTMLText(stateResource, 24, 24));
-        layout.addComponent(transactionStateImage);
+        firstLineLayout.addComponent(transactionStateImage);
+        firstLineLayout.setComponentAlignment(transactionStateImage, Alignment.MIDDLE_LEFT);        
         Label labelSender = new Label();
         labelSender.setCaptionAsHtml(true);
         String senderDisplay = null;
         FileResource resourceSender = RESOURCE_IMAGE_SINGLEPARTNER;
         if (this.sender == null) {
-            senderDisplay = this.info.getSenderId();
+            senderDisplay = this.as2MessageInfo.getSenderId();
         } else {
             senderDisplay = this.sender.getName();
             if (this.sender.isLocalStation()) {
@@ -228,15 +292,17 @@ public class TransactionDetailsDialog extends OkDialog {
         labelSender.setCaption(
                 this.generateImageLabelHTMLTextWithPadding(resourceSender, 20, 20, -6)
                 + "&nbsp;" + senderDisplay);
-        layout.addComponent(labelSender);
+        firstLineLayout.addComponent(labelSender);
+        firstLineLayout.setComponentAlignment(labelSender, Alignment.MIDDLE_LEFT);        
         Label labelArrow = new Label();
         labelArrow.setCaptionAsHtml(true);
         labelArrow.setCaption("&xrarr;");
-        layout.addComponent(labelArrow);
+        firstLineLayout.addComponent(labelArrow);
+        firstLineLayout.setComponentAlignment(labelArrow, Alignment.MIDDLE_LEFT);  
         String receiverDisplay = null;
         FileResource resourceReceiver = RESOURCE_IMAGE_SINGLEPARTNER;
         if (this.receiver == null) {
-            receiverDisplay = this.info.getReceiverId();
+            receiverDisplay = this.as2MessageInfo.getReceiverId();
         } else {
             receiverDisplay = this.receiver.getName();
             if (this.receiver.isLocalStation()) {
@@ -248,30 +314,49 @@ public class TransactionDetailsDialog extends OkDialog {
         labelReceiver.setCaption(
                 this.generateImageLabelHTMLTextWithPadding(
                         resourceReceiver, 20, 20, -6) + receiverDisplay);
-        layout.addComponent(labelReceiver);
+        firstLineLayout.addComponent(labelReceiver);
+        firstLineLayout.setComponentAlignment(labelReceiver, Alignment.MIDDLE_LEFT);   
+        String colorGreen = "<span style=\"color:" + COLOR_GREEN + "\">";
+        String colorRed = "<span style=\"color:" + COLOR_RED + "\">";
+        String color = this.dispositionText.contains("error")?colorRed:colorGreen;
+        Label labelDisposition = new Label();
+        labelDisposition.setCaptionAsHtml(true);
+        labelDisposition.setCaption( "<HTML><strong>" + color + "[" + this.dispositionText + "]</span></strong></HTML>");
+        firstLineLayout.addComponent(labelDisposition);
+        firstLineLayout.setComponentAlignment(labelDisposition, Alignment.MIDDLE_LEFT);        
+        //second line
         Label labelDetails = new Label();
         labelDetails.setCaptionAsHtml(true);
-        if (this.info.getDirection() == AS2MessageInfo.DIRECTION_OUT) {
-            if (this.info.requestsSyncMDN()) {
-                labelDetails.setCaption("<HTML><i>" + this.rbMessageDetails.getResourceString("transactiondetails.outbound.sync") + "</HTML>");
+        if (this.as2MessageInfo.getDirection() == AS2MessageInfo.DIRECTION_OUT) {
+            if (this.as2MessageInfo.requestsSyncMDN()) {
+                labelDetails.setCaption("<HTML>"
+                        + "<i>"
+                        + this.rbMessageDetails.getResourceString("transactiondetails.outbound.sync") + "</HTML>");
             } else {
-                labelDetails.setCaption("<HTML><i>" + this.rbMessageDetails.getResourceString("transactiondetails.outbound.async") + "</HTML>");
+                labelDetails.setCaption("<HTML>"
+                        + "<i>"
+                        + this.rbMessageDetails.getResourceString("transactiondetails.outbound.async") + "</HTML>");
             }
         } else {
-            if (this.info.requestsSyncMDN()) {
-                labelDetails.setCaption("<HTML><i>" + this.rbMessageDetails.getResourceString("transactiondetails.inbound.sync") + "</i></HTML>");
+            if (this.as2MessageInfo.requestsSyncMDN()) {
+                labelDetails.setCaption("<HTML>"
+                        + "<i>"
+                        + this.rbMessageDetails.getResourceString("transactiondetails.inbound.sync") + "</i></HTML>");
             } else {
-                labelDetails.setCaption("<HTML><i>" + this.rbMessageDetails.getResourceString("transactiondetails.inbound.async") + "</i></HTML>");
+                labelDetails.setCaption("<HTML>"
+                        + "<i>"
+                        + this.rbMessageDetails.getResourceString("transactiondetails.inbound.async") + "</i></HTML>");
             }
         }
-        layout.addComponent(labelDetails);
-        layout.setComponentAlignment(labelSender, Alignment.MIDDLE_CENTER);
-        layout.setComponentAlignment(labelReceiver, Alignment.MIDDLE_CENTER);
-        layout.setComponentAlignment(labelArrow, Alignment.MIDDLE_CENTER);
-        layout.setComponentAlignment(transactionStateImage, Alignment.MIDDLE_CENTER);
-        layout.setComponentAlignment(labelDetails, Alignment.MIDDLE_CENTER);
+        secondLineLayout.addComponent(labelDetails);                      
+        secondLineLayout.setComponentAlignment(labelDetails, Alignment.MIDDLE_LEFT);                          
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(new MarginInfo(true, true, true, true));
+        panelLayout.setSpacing(false);  
+        panelLayout.addComponent(firstLineLayout);
+        panelLayout.addComponent(secondLineLayout);
         Panel panel = new Panel();
-        panel.setContent(layout);
+        panel.setContent(panelLayout);
         return (panel);
     }
 
@@ -284,7 +369,7 @@ public class TransactionDetailsDialog extends OkDialog {
         this.rawMessageDecryptedPanel = this.createRawMessageDecryptedPanel();
         tabsheet.addTab(new VerticalLayout(this.rawMessageDecryptedPanel), "Raw message decrypted", null);
         this.messageHeaderPanel = this.createMessageHeaderPanel();
-        tabsheet.addTab(this.messageHeaderPanel, "Message header", null);
+        tabsheet.addTab(new VerticalLayout(this.messageHeaderPanel), "Message header", null);
         this.payloadPanel = this.createPayloadPanel();
         for (int i = 0; i < this.payloadPanel.length; i++) {
             String tabTitle = "Payload";
@@ -294,7 +379,7 @@ public class TransactionDetailsDialog extends OkDialog {
             tabsheet.addTab(new VerticalLayout(this.payloadPanel[i]), tabTitle, null);
         }
         tabsheet.setWidth(100, Unit.PERCENTAGE);
-        tabsheet.setHeight(450, Unit.PIXELS);
+        tabsheet.setHeight(430, Unit.PIXELS);
         return (tabsheet);
     }
 
@@ -304,18 +389,23 @@ public class TransactionDetailsDialog extends OkDialog {
         RichTextArea textArea = new RichTextArea();
         textArea.setWidth(100, Unit.PERCENTAGE);
         textArea.setHeightUndefined();
-        List<LogEntry> entries = this.logAccess.getLog(this.info.getMessageId());
+        Connection runtimeConnection = null;
+        try {
+            runtimeConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            LogAccessDB logAccess = new LogAccessDB(this.dbDriverManager);
+            List<LogEntry> entries = logAccess.getLog(runtimeConnection, this.as2MessageInfo.getMessageId());
         StringBuilder log = new StringBuilder();
         log.append("<HTML>");
         for (LogEntry entry : entries) {
-            Date logDate = this.convertDateToDisplayTimezone( new Date(entry.getMillis()));
+                Date logDate = this.convertDateToDisplayTimezone(new Date(entry.getMillis()));
             log.append("<strong>[").append(format.format(logDate)).append("]</strong> ");
             if (entry.getLevel().equals(Level.SEVERE)) {
                 log.append("<span style=\"color:" + COLOR_RED + "\">");
             } else if (entry.getLevel().intValue() < Level.INFO.intValue()) {
                 log.append("<span style=\"color:" + COLOR_GREEN + "\">");
             }
-            log.append(entry.getMessage());
+                //prevent JavaScript
+                log.append(AS2WebUI.replaceJavaScriptOutput(entry.getMessage()));
             if (entry.getLevel().equals(Level.SEVERE) || entry.getLevel().intValue() < Level.INFO.intValue()) {
                 log.append("</span>");
             }
@@ -324,18 +414,33 @@ public class TransactionDetailsDialog extends OkDialog {
         log.append("</HTML>");
         textArea.setValue(log.toString());
         textArea.setReadOnly(true);
+        } catch (Exception e) {
+            new Notification("Problem", "["
+                    + e.getClass().getSimpleName() + "] " + e.getMessage(),
+                    Notification.Type.ERROR_MESSAGE, true)
+                    .show(Page.getCurrent());
+        } finally {
+            if (runtimeConnection != null) {
+                try {
+                    runtimeConnection.close();
+                } catch (Exception e) {
+                }
+            }
+        }
         return (textArea);
     }
 
     private FilePanel createRawMessageDecryptedPanel() {
         FilePanel panel = new FilePanel();
         panel.setReadOnly(true);
+        panel.setHeightUndefined();
         return (panel);
     }
 
     private FilePanel createMessageHeaderPanel() {
         FilePanel panel = new FilePanel();
         panel.setReadOnly(true);
+        panel.setHeightUndefined();
         return (panel);
     }
 
@@ -344,6 +449,7 @@ public class TransactionDetailsDialog extends OkDialog {
         for (int i = 0; i < panel.length; i++) {
             panel[i] = new FilePanel();
             panel[i].setReadOnly(true);
+            panel[i].setHeightUndefined();
         }
         return (panel);
     }
@@ -419,9 +525,14 @@ public class TransactionDetailsDialog extends OkDialog {
      * the first entry
      */
     private void refreshTableContentAndSelectFirst() {
+        Connection configConnection = null;
+        Connection runtimeConnection = null;
         try {
+            configConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
+            runtimeConnection = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, configConnection, runtimeConnection);
             //add the content
-            List<AS2Info> infoList = this.messageAccess.getMessageDetails(this.info.getMessageId());
+            List<AS2Info> infoList = messageAccess.getMessageDetails(this.as2MessageInfo.getMessageId());
             List<GridDetailRow> displayList = new ArrayList<GridDetailRow>();
             for (AS2Info info : infoList) {
                 displayList.add(new GridDetailRow(info));
@@ -435,6 +546,19 @@ public class TransactionDetailsDialog extends OkDialog {
             new Notification("Problem", "[" + e.getClass().getSimpleName() + "] " + e.getMessage(),
                     Notification.Type.WARNING_MESSAGE, true)
                     .show(Page.getCurrent());
+        } finally {
+            if (configConnection != null) {
+                try {
+                    configConnection.close();
+                } catch (Exception e) {
+                }
+            }
+            if (runtimeConnection != null) {
+                try {
+                    runtimeConnection.close();
+                } catch (Exception e) {
+                }
+            }
         }
     }
 
@@ -507,15 +631,17 @@ public class TransactionDetailsDialog extends OkDialog {
             if (this.as2Info.getSenderHost() != null) {
                 sender = this.as2Info.getSenderHost();
             }
+            sender = AS2WebUI.replaceJavaScriptOutput(sender);
             return (sender);
         }
 
         public String getServer() {
-            String server = "";
+            String serversUserAgent = "";
             if (this.as2Info.getUserAgent() != null) {
-                server = this.as2Info.getUserAgent();
+                serversUserAgent = this.as2Info.getUserAgent();
             }
-            return (server);
+            serversUserAgent = AS2WebUI.replaceJavaScriptOutput(serversUserAgent);
+            return (serversUserAgent);
         }
 
         public AS2Info getAS2Info() {

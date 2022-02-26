@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/cem/CEMReceiptController.java 64    7.12.18 11:54 Heller $
+//$Header: /as2/de/mendelson/comm/as2/cem/CEMReceiptController.java 69    9.03.21 13:30 Heller $
 package de.mendelson.comm.as2.cem;
 
 import de.mendelson.comm.as2.AS2Exception;
@@ -25,11 +25,11 @@ import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.XPathHelper;
 import de.mendelson.util.clientserver.ClientServer;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.KeyStoreUtil;
 import de.mendelson.util.security.cert.KeystoreStorageImplFile;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -67,13 +67,14 @@ import javax.xml.validation.Validator;
  * like
  *
  * @author S.Heller
- * @version $Revision: 64 $
+ * @version $Revision: 69 $
  */
 public class CEMReceiptController {
 
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
     private Connection configConnection;
     private Connection runtimeConnection;
+    private IDBDriverManager dbDriverManager;
     private CertificateManager certificateManagerEncSign;
     private MecResourceBundle rb;
     private PreferencesAS2 preferences = new PreferencesAS2();
@@ -82,7 +83,9 @@ public class CEMReceiptController {
     public static final String KEYSTORE_TYPE_SSL = "SSL";
     public static final String KEYSTORE_TYPE_ENC_SIGN = "ENC_SIGN";
 
-    public CEMReceiptController(ClientServer clientServer, Connection configConnection,
+    public CEMReceiptController(ClientServer clientServer, 
+            IDBDriverManager dbDriverManager,
+            Connection configConnection,
             Connection runtimeConnection,
             CertificateManager certificateManagerEncSign) {
         //load resource bundle
@@ -92,6 +95,7 @@ public class CEMReceiptController {
         } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
+        this.dbDriverManager = dbDriverManager;
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
         this.certificateManagerEncSign = certificateManagerEncSign;
@@ -164,7 +168,9 @@ public class CEMReceiptController {
             } else if (helper.getNodeCount("/x:EDIINTCertificateExchangeResponse") == 1) {
                 this.logger.log(Level.INFO, this.rb.getResourceString("cemtype.response"), info);
                 EDIINTCertificateExchangeResponse response = EDIINTCertificateExchangeResponse.parse(description.getData());
-                CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+                CEMAccessDB cemAccess = new CEMAccessDB(
+                        this.dbDriverManager,
+                        this.configConnection, this.runtimeConnection);
                 if (!cemAccess.requestExists(response.getRequestId())) {
                     //do not loalize, will be returned in an MDN
                     throw new Exception("Related CEM request with requestId " + response.getRequestId() + " does not exist.");
@@ -209,8 +215,7 @@ public class CEMReceiptController {
      */
     private void processInboundCEMRequest(AS2MessageInfo info, List<AS2Payload> payloads, AS2Payload description) throws Throwable {
         PartnerAccessDB partnerAccess
-                = new PartnerAccessDB(this.configConnection,
-                        this.runtimeConnection);
+                = new PartnerAccessDB(this.dbDriverManager);
         Partner initiator = partnerAccess.getPartner(info.getSenderId());
         Partner receiver = partnerAccess.getPartner(info.getReceiverId());
         EDIINTCertificateExchangeRequest request = EDIINTCertificateExchangeRequest.parse(description.getData());
@@ -226,7 +231,9 @@ public class CEMReceiptController {
             response.addTrustResponse(trustResponse);
         }
         //enter the request to the CEM table in the db
-        CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+        CEMAccessDB cemAccess = new CEMAccessDB(
+                this.dbDriverManager,
+                this.configConnection, this.runtimeConnection);
         cemAccess.insertRequest(info, initiator, receiver, request);
         if (this.clientServer != null) {
             this.clientServer.broadcastToClients(new RefreshClientCEMDisplay());
@@ -258,11 +265,12 @@ public class CEMReceiptController {
     private void processInboundCEMResponse(AS2MessageInfo info, AS2Payload description) throws Exception {
         EDIINTCertificateExchangeResponse response = EDIINTCertificateExchangeResponse.parse(description.getData());
         //insert the response into the database
-        CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+        CEMAccessDB cemAccess = new CEMAccessDB(
+                this.dbDriverManager,
+                this.configConnection, this.runtimeConnection);
         //insert the request data into the certificate database
         PartnerAccessDB partnerAccess
-                = new PartnerAccessDB(this.configConnection,
-                        this.runtimeConnection);
+                = new PartnerAccessDB(this.dbDriverManager);
         Partner receiver = partnerAccess.getPartner(info.getSenderId());
         Partner initiator = partnerAccess.getPartner(info.getReceiverId());
         cemAccess.insertResponse(info, initiator, receiver, response);
@@ -276,7 +284,7 @@ public class CEMReceiptController {
      */
     private List<AS2Payload> getPayloads(AS2MessageInfo info) throws Exception {
         MessageAccessDB messageAccess
-                = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+                = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
         List<AS2Payload> payloads = messageAccess.getPayload(info.getMessageId());
         for (AS2Payload payload : payloads) {
             payload.loadDataFromPayloadFile();
@@ -317,7 +325,7 @@ public class CEMReceiptController {
      */
     private void sendResponse(AS2MessageInfo requestInfo, String senderId, String receiverId, EDIINTCertificateExchangeResponse response) throws Exception {
         PartnerAccessDB partnerAccess
-                = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
+                = new PartnerAccessDB(this.dbDriverManager);
         Partner sender = partnerAccess.getPartner(senderId);
         Partner receiver = partnerAccess.getPartner(receiverId);
         AS2MessageCreation creation = new AS2MessageCreation(this.certificateManagerEncSign, this.certificateManagerEncSign);
@@ -346,9 +354,11 @@ public class CEMReceiptController {
         order.setReceiver(receiver);
         order.setMessage(message);
         order.setSender(sender);
-        SendOrderSender orderSender = new SendOrderSender(this.configConnection, this.runtimeConnection);
+        SendOrderSender orderSender = new SendOrderSender(this.dbDriverManager, this.configConnection, this.runtimeConnection);
         orderSender.send(order);
-        CEMAccessDB cemAccess = new CEMAccessDB(this.configConnection, this.runtimeConnection);
+        CEMAccessDB cemAccess = new CEMAccessDB(
+                this.dbDriverManager,
+                this.configConnection, this.runtimeConnection);
         cemAccess.insertResponse((AS2MessageInfo) message.getAS2Info(), receiver, sender, response);
         if (this.clientServer != null) {
             this.clientServer.broadcastToClients(new RefreshClientCEMDisplay());

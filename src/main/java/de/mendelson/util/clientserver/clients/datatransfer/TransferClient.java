@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/clients/datatransfer/TransferClient.java 13    11.03.20 12:55 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/clients/datatransfer/TransferClient.java 15    28.07.21 14:01 Heller $
 package de.mendelson.util.clientserver.clients.datatransfer;
 
 import de.mendelson.util.clientserver.SyncRequestTransportLevelException;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * Requests downloads from and sends new uploads to the server
  *
  * @author S.Heller
- * @version $Revision: 13 $
+ * @version $Revision: 15 $
  */
 public class TransferClient {
 
@@ -83,7 +83,7 @@ public class TransferClient {
                 if (response != null) {
                     targetHash = response.getTargetHash();
                 }
-                //special case: the transfered file has the size 0
+                //special case: the transferred file has the size 0
                 if (data.length == 0) {
                     break;
                 }
@@ -102,8 +102,8 @@ public class TransferClient {
         //WARNING do not use buffered streams here, this is just a chunk that is cut of the stream!
         ByteArrayOutputStream memOut = new ByteArrayOutputStream(minChunkSize);
         //copy the contents to an output stream
-        byte[] buffer = new byte[2048];
-        int read = 2048;
+        int read = 8192;
+        byte[] buffer = new byte[read];
         int actualCount = 0;
         //a read of 0 must be allowed, sometimes it takes time to
         //extract data from the input

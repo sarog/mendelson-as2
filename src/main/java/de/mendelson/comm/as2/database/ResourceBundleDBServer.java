@@ -1,7 +1,8 @@
-//$Header: /as2/de/mendelson/comm/as2/database/ResourceBundleDBServer.java 13    3.09.20 9:38 Heller $
+//$Header: /as2/de/mendelson/comm/as2/database/ResourceBundleDBServer.java 15    12.02.21 14:43 Heller $
 package de.mendelson.comm.as2.database;
 
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -16,7 +17,7 @@ import de.mendelson.util.MecResourceBundle;
  * to localize eagle to your language, please contact us: localize@mendelson.de
  *
  * @author S.Heller
- * @version $Revision: 13 $
+ * @version $Revision: 15 $
  */
 public class ResourceBundleDBServer extends MecResourceBundle {
 
@@ -59,6 +60,7 @@ public class ResourceBundleDBServer extends MecResourceBundle {
         {"info.host", "Host: {0}"},
         {"info.clientdriver", "Client driver: {0}"},
         {"info.user", "User: {0}"},
+        {"update.error.futureversion", "The system encountered a future version of the {0}. The max supported version is {1} but the found database has the version {2}. It is not possible to work with this database nor modifying it."},            
     };
 
 }

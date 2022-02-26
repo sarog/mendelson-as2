@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleImportKeyPEM_fr.java 2     4/06/18 1:35p Heller $
+//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleImportKeyPEM_fr.java 3     23.09.21 12:27 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -16,7 +16,7 @@ import de.mendelson.util.MecResourceBundle;
  *
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class ResourceBundleImportKeyPEM_fr extends MecResourceBundle {
 
@@ -34,10 +34,14 @@ public class ResourceBundleImportKeyPEM_fr extends MecResourceBundle {
         {"button.ok", "Valider"},
         {"button.cancel", "Annuler"},
         {"button.browse", "Parcourir..."},
-        {"label.importkey", "Importer le fichier clef (PEM):"},
-        {"label.importcert", "Importer le fichier certificat:"},
-        {"label.alias", "Nouvel alias à utiliser:"},
-        {"label.keypass", "Mot de passe d'import de la clef:"},
+        {"label.importkey", "Fichier clef (PEM):"},
+        {"label.importkey.hint", "Le contenu du fichier commence par --- BEGIN PRIVATE KEY ---"},
+        {"label.importcert", "Fichier certificat (PEM):"},    
+        {"label.importcert.hint", "Le contenu du fichier commence par --- BEGIN CERTIFICATE ---"},        
+        {"label.alias", "Alias:"},
+        {"label.alias.hint", "Nouvel alias à utiliser pour cette clé"},
+        {"label.keypass", "Mot de passe:"},
+        {"label.keypass.hint", "Mot de passe de la clé privée"},
         {"title", "Importer les clefs (format PEM)"},
         {"filechooser.cert.import", "Merci de sélectionner le fichier de certificat pour l'import"},
         {"filechooser.key.import", "Merci de sélectionner le fichier de clef pour l'import (format PEM)"},

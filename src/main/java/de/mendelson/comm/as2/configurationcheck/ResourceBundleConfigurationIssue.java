@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/configurationcheck/ResourceBundleConfigurationIssue.java 21    8.12.20 11:42 Heller $
+//$Header: /as2/de/mendelson/comm/as2/configurationcheck/ResourceBundleConfigurationIssue.java 22    19/01/22 16:17 Heller $
 package de.mendelson.comm.as2.configurationcheck;
 
 import de.mendelson.util.MecResourceBundle;
@@ -14,7 +14,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize gui entries
  *
  * @author S.Heller
- * @version $Revision: 21 $
+ * @version $Revision: 22 $
  */
 public class ResourceBundleConfigurationIssue extends MecResourceBundle {
 
@@ -127,7 +127,8 @@ public class ResourceBundleConfigurationIssue extends MecResourceBundle {
         {String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS), "Large amount of directory monitoring activities per time interval"},
         {"hint." + String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS),
             "<HTML>You have defined a large number of partner relationships in your system and monitor the corresponding "
-            + "outbound directories in too short time intervals.<br>Currently you defined {0} monitoring activities per minute.<br>"
+            + "outbound directories in too short time intervals.<br>Currently you defined {0} monitoring activities per minute, "
+            + "the system cannot maintain this high rate.<br>"
             + "Please decrease this value by increasing the monitoring intervals of the respective partner directories and "
             + "also disable outbound directory monitoring for partners where this is not required.<br><br>"
             + "For a huge amount of partners it is recommended to disable all directory monitoring processes and create the send orders "

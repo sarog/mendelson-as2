@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/MDNParser.java 28    3.03.20 10:08 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/MDNParser.java 29    3.08.21 17:48 Heller $
 package de.mendelson.comm.as2.message;
 
 import de.mendelson.comm.as2.server.AS2Server;
@@ -38,7 +38,7 @@ import javax.mail.util.ByteArrayDataSource;
  * Parses MDNs, this is NOT thread safe!
  *
  * @author S.Heller
- * @version $Revision: 28 $
+ * @version $Revision: 29 $
  */
 public class MDNParser {
 
@@ -140,7 +140,11 @@ public class MDNParser {
         Object content = body.getContent();
         if (content instanceof InputStream) {
             InputStream inStream = (InputStream) body.getContent();
-            byte[] rawData = inStream.readAllBytes();
+            ByteArrayOutputStream rawDataStreamMem = new ByteArrayOutputStream();
+            inStream.transferTo(rawDataStreamMem);
+            rawDataStreamMem.flush();
+            rawDataStreamMem.close();            
+            byte[] rawData = rawDataStreamMem.toByteArray();
             inStream.close();
             return (this.decodeBodypartContentTransferEncoding(rawData, contentTransferEncoding));
         } else if (content instanceof String) {

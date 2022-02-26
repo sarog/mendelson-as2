@@ -1,7 +1,8 @@
-//$Header: /as2/de/mendelson/util/clientserver/gui/JDialogLogin.java 4     25.10.11 15:19 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/gui/JDialogLogin.java 6     22.09.21 17:47 Heller $
 package de.mendelson.util.clientserver.gui;
 
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.passwordfield.PasswordOverlay;
 import java.awt.Color;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -22,7 +23,7 @@ import javax.swing.JRootPane;
 /**
  * Login dialog for server authentication
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 6 $
  */
 public class JDialogLogin extends JDialog {
 
@@ -43,6 +44,7 @@ public class JDialogLogin extends JDialog {
                     + e.getClassName() + " not found.");
         }        
         initComponents();
+        PasswordOverlay.addTo(this.jPasswordField);
         if (infoText != null) {
             this.jLabelInfo.setText(infoText);
         }
@@ -124,13 +126,13 @@ public class JDialogLogin extends JDialog {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 30);
         jPanelMain.add(jPasswordField, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 30);
         jPanelMain.add(jTextFieldUser, gridBagConstraints);
 
         jLabelUser.setText(this.rb.getResourceString( "label.user" ));
@@ -138,7 +140,7 @@ public class JDialogLogin extends JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 30, 5, 5);
         jPanelMain.add(jLabelUser, gridBagConstraints);
 
         jLabelPasswd.setText(this.rb.getResourceString( "label.passwd" ));
@@ -146,7 +148,7 @@ public class JDialogLogin extends JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 30, 5, 5);
         jPanelMain.add(jLabelPasswd, gridBagConstraints);
 
         jPanelGradient.setLayout(new java.awt.GridBagLayout());
@@ -184,7 +186,9 @@ public class JDialogLogin extends JDialog {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 5);
         jPanelButtons.add(jButtonOk, gridBagConstraints);
 
         jButtonCancel.setText(this.rb.getResourceString( "button.cancel" ));
@@ -194,6 +198,8 @@ public class JDialogLogin extends JDialog {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         jPanelButtons.add(jButtonCancel, gridBagConstraints);
 
@@ -201,12 +207,13 @@ public class JDialogLogin extends JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
         getContentPane().add(jPanelButtons, gridBagConstraints);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-355)/2, (screenSize.height-221)/2, 355, 221);
+        setSize(new java.awt.Dimension(366, 237));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/server/ResourceBundleAS2Server_de.java 16    9.10.18 12:53 Heller $
+//$Header: /as2/de/mendelson/comm/as2/server/ResourceBundleAS2Server_de.java 18    11.02.21 17:28 Heller $
 package de.mendelson.comm.as2.server;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
@@ -14,7 +14,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 16 $
+ * @version $Revision: 18 $
  */
 public class ResourceBundleAS2Server_de extends MecResourceBundle {
 

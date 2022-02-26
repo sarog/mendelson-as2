@@ -1,9 +1,8 @@
-//$Header: /as2/de/mendelson/comm/as2/datasheet/gui/JDialogCreateDataSheet.java 18    13.08.20 16:50 Heller $
+//$Header: /as2/de/mendelson/comm/as2/datasheet/gui/JDialogCreateDataSheet.java 23    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.datasheet.gui;
 
 import de.mendelson.comm.as2.client.AS2StatusBar;
-import de.mendelson.comm.as2.client.ListCellRendererEncryption;
-import de.mendelson.comm.as2.client.ListCellRendererSignature;
+import de.mendelson.util.security.signature.ListCellRendererSignature;
 import de.mendelson.comm.as2.datasheet.DatasheetBuilder;
 import de.mendelson.comm.as2.datasheet.DatasheetInformation;
 import de.mendelson.comm.as2.message.AS2Message;
@@ -20,6 +19,11 @@ import de.mendelson.util.clientserver.BaseClient;
 import de.mendelson.util.clientserver.clients.preferences.PreferencesClient;
 import de.mendelson.util.security.KeyStoreUtil;
 import de.mendelson.util.security.cert.CertificateManager;
+import de.mendelson.util.security.encryption.EncryptionConstantsAS2;
+import de.mendelson.util.security.encryption.EncryptionDisplayImplAS2;
+import de.mendelson.util.security.encryption.ListCellRendererEncryption;
+import de.mendelson.util.security.signature.SignatureConstantsAS2;
+import de.mendelson.util.security.signature.SignatureDisplayImplAS2;
 import java.awt.Desktop;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +31,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -43,7 +48,7 @@ import javax.swing.JFrame;
  * Winzard to create a PDF that contains a data sheet
  *
  * @author S.Heller
- * @version $Revision: 18 $
+ * @version $Revision: 23 $
  */
 public class JDialogCreateDataSheet extends JDialog {
 
@@ -105,43 +110,42 @@ public class JDialogCreateDataSheet extends JDialog {
 
     private void initializeComboboxes() {
         this.jComboBoxEncryptionType.setRenderer(new ListCellRendererEncryption());
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_NONE));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_3DES));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC2_40));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC2_64));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC2_128));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC2_196));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_AES_128));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_AES_192));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_AES_256));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_AES_128_RSAES_AOEP));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_AES_192_RSAES_AOEP));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_AES_256_RSAES_AOEP));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC4_40));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC4_56));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_RC4_128));
-        this.jComboBoxEncryptionType.addItem(Integer.valueOf(AS2Message.ENCRYPTION_DES));
-
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_NONE)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_3DES)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC2_40)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC2_64)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC2_128)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC2_196)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_AES_128)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_AES_192)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_AES_256)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_AES_128_RSAES_AOEP)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_AES_192_RSAES_AOEP)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_AES_256_RSAES_AOEP)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC4_40)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC4_56)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_RC4_128)));
+        this.jComboBoxEncryptionType.addItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_DES)));
+        this.jComboBoxEncryptionType.setSelectedItem(new EncryptionDisplayImplAS2(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_3DES)));
         this.jComboBoxSignType.setRenderer(new ListCellRendererSignature());
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_NONE));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA1));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_MD5));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA256));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA384));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA512));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA256_RSASSA_PSS));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA384_RSASSA_PSS));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA512_RSASSA_PSS));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_224));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_256));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_384));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_512));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_224_RSASSA_PSS));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_256_RSASSA_PSS));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_384_RSASSA_PSS));
-        this.jComboBoxSignType.addItem(Integer.valueOf(AS2Message.SIGNATURE_SHA3_512_RSASSA_PSS));
-        this.jComboBoxEncryptionType.setSelectedItem(Integer.valueOf(AS2Message.ENCRYPTION_3DES));
-        this.jComboBoxSignType.setSelectedItem(Integer.valueOf(AS2Message.SIGNATURE_SHA1));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_NONE)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA1)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_MD5)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA256)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA384)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA512)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA256_RSASSA_PSS)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA384_RSASSA_PSS)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA512_RSASSA_PSS)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_224)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_256)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_384)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_512)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_224_RSASSA_PSS)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_256_RSASSA_PSS)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_384_RSASSA_PSS)));
+        this.jComboBoxSignType.addItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA3_512_RSASSA_PSS)));
+        this.jComboBoxSignType.setSelectedItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA1)));
     }
 
     private void createPDF() {
@@ -162,8 +166,10 @@ public class JDialogCreateDataSheet extends JDialog {
                     }
                     information.setReceiptURL(JDialogCreateDataSheet.this.jTextFieldReceiptURL.getText());
                     information.setComment(JDialogCreateDataSheet.this.jTextAreaComment.getText());
-                    information.setEncryption(((Integer) JDialogCreateDataSheet.this.jComboBoxEncryptionType.getSelectedItem()).intValue());
-                    information.setSignature(((Integer) JDialogCreateDataSheet.this.jComboBoxSignType.getSelectedItem()).intValue());
+                    EncryptionDisplayImplAS2 encryptionDisplay = (EncryptionDisplayImplAS2) JDialogCreateDataSheet.this.jComboBoxEncryptionType.getSelectedItem();
+                    information.setEncryption(((Integer) encryptionDisplay.getWrappedValue()).intValue());
+                    SignatureDisplayImplAS2 signatureDisplay = (SignatureDisplayImplAS2) JDialogCreateDataSheet.this.jComboBoxSignType.getSelectedItem();
+                    information.setSignature(((Integer) signatureDisplay.getWrappedValue()).intValue());
                     information.setRequestSyncMDN(JDialogCreateDataSheet.this.jCheckBoxSyncMDN.isSelected());
                     information.setRequestSignedMDN(JDialogCreateDataSheet.this.jCheckBoxSignedMDN.isSelected());
                     information.setCompression(JDialogCreateDataSheet.this.jCheckBoxCompression.isSelected() ? AS2Message.COMPRESSION_ZLIB : AS2Message.COMPRESSION_NONE);
@@ -205,7 +211,9 @@ public class JDialogCreateDataSheet extends JDialog {
                 }
             }
         };
-        Executors.newSingleThreadExecutor().submit(runnable);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(runnable);
+        executor.shutdown();
     }
 
     /**
@@ -266,6 +274,8 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         jPanelMain.add(jLabelLocalStation, gridBagConstraints);
 
+        jComboBoxLocalPartner.setMinimumSize(new java.awt.Dimension(280, 22));
+        jComboBoxLocalPartner.setPreferredSize(new java.awt.Dimension(280, 22));
         jComboBoxLocalPartner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxLocalPartnerActionPerformed(evt);
@@ -274,7 +284,7 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMain.add(jComboBoxLocalPartner, gridBagConstraints);
@@ -287,6 +297,8 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         jPanelMain.add(jLabelRemotePartner, gridBagConstraints);
 
+        jComboBoxRemotePartner.setMinimumSize(new java.awt.Dimension(280, 22));
+        jComboBoxRemotePartner.setPreferredSize(new java.awt.Dimension(280, 22));
         jComboBoxRemotePartner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxRemotePartnerActionPerformed(evt);
@@ -295,7 +307,7 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMain.add(jComboBoxRemotePartner, gridBagConstraints);
@@ -336,6 +348,8 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 5);
         jPanelMain.add(jLabelReceiptURL, gridBagConstraints);
 
+        jTextFieldReceiptURL.setMinimumSize(new java.awt.Dimension(280, 20));
+        jTextFieldReceiptURL.setPreferredSize(new java.awt.Dimension(280, 20));
         jTextFieldReceiptURL.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextFieldReceiptURLKeyReleased(evt);
@@ -345,8 +359,7 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelMain.add(jTextFieldReceiptURL, gridBagConstraints);
 
@@ -383,16 +396,22 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 10, 5);
         jPanelMain.add(jCheckBoxSignedMDN, gridBagConstraints);
+
+        jComboBoxEncryptionType.setMinimumSize(new java.awt.Dimension(280, 22));
+        jComboBoxEncryptionType.setPreferredSize(new java.awt.Dimension(280, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMain.add(jComboBoxEncryptionType, gridBagConstraints);
+
+        jComboBoxSignType.setMinimumSize(new java.awt.Dimension(280, 22));
+        jComboBoxSignType.setPreferredSize(new java.awt.Dimension(280, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMain.add(jComboBoxSignType, gridBagConstraints);
 
@@ -454,7 +473,7 @@ public class JDialogCreateDataSheet extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(jPanelButton, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(614, 613));
+        setSize(new java.awt.Dimension(544, 659));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -493,9 +512,9 @@ public class JDialogCreateDataSheet extends JDialog {
             this.jCheckBoxSyncMDN.setEnabled(true);
             this.jCheckBoxSyncMDN.setSelected(false);
             this.jComboBoxEncryptionType.setEnabled(true);
-            this.jComboBoxEncryptionType.setSelectedItem(Integer.valueOf(AS2Message.ENCRYPTION_3DES));
+            this.jComboBoxEncryptionType.setSelectedItem(Integer.valueOf(EncryptionConstantsAS2.ENCRYPTION_3DES));
             this.jComboBoxSignType.setEnabled(true);
-            this.jComboBoxSignType.setSelectedItem(Integer.valueOf(AS2Message.SIGNATURE_SHA1));
+            this.jComboBoxSignType.setSelectedItem(new SignatureDisplayImplAS2(Integer.valueOf(SignatureConstantsAS2.SIGNATURE_SHA1)));
         } else {
             Partner remotePartner = (Partner) remoteObject;
             this.jCheckBoxCompression.setEnabled(false);
@@ -507,7 +526,7 @@ public class JDialogCreateDataSheet extends JDialog {
             this.jComboBoxEncryptionType.setEnabled(false);
             this.jComboBoxEncryptionType.setSelectedItem(Integer.valueOf(remotePartner.getEncryptionType()));
             this.jComboBoxSignType.setEnabled(false);
-            this.jComboBoxSignType.setSelectedItem(Integer.valueOf(remotePartner.getSignType()));
+            this.jComboBoxSignType.setSelectedItem(new SignatureDisplayImplAS2(Integer.valueOf(remotePartner.getSignType())));
         }
     }//GEN-LAST:event_jComboBoxRemotePartnerActionPerformed
 

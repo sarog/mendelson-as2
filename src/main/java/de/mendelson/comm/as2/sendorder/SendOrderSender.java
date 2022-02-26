@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/sendorder/SendOrderSender.java 19    11.06.20 10:21 Heller $
+//$Header: /as2/de/mendelson/comm/as2/sendorder/SendOrderSender.java 22    26.02.21 17:34 Heller $
 package de.mendelson.comm.as2.sendorder;
 
 import de.mendelson.comm.as2.message.AS2Message;
@@ -7,6 +7,7 @@ import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  * Sender class that enqueues send orders
  *
  * @author S.Heller
- * @version $Revision: 19 $
+ * @version $Revision: 22 $
  */
 public class SendOrderSender {
 
@@ -38,8 +39,9 @@ public class SendOrderSender {
     private Connection configConnection;
     private Connection runtimeConnection;
     private SendOrderAccessDB sendOrderAccess;
+    private IDBDriverManager dbDriverManager;
 
-    public SendOrderSender(Connection configConnection, Connection runtimeConnection) {
+    public SendOrderSender(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         //Load default resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
@@ -50,8 +52,10 @@ public class SendOrderSender {
         }
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
-        this.sendOrderAccess = new SendOrderAccessDB(this.configConnection, this.runtimeConnection);
-
+        this.dbDriverManager = dbDriverManager;
+        this.sendOrderAccess = new SendOrderAccessDB(
+                dbDriverManager,
+                this.configConnection, this.runtimeConnection);
     }
 
     /**
@@ -64,7 +68,7 @@ public class SendOrderSender {
             long startProcessTime = System.currentTimeMillis();
             AS2MessageCreation messageCreation = new AS2MessageCreation(certificateManager, certificateManager);
             messageCreation.setLogger(this.logger);
-            messageCreation.setServerResources(this.configConnection, this.runtimeConnection);            
+            messageCreation.setServerResources(this.dbDriverManager, this.configConnection, this.runtimeConnection);
             AS2Message message = messageCreation.createMessage(sender, receiver, 
                     files, originalFilenames, userdefinedId, subject, payloadContentTypes);
             StringBuilder filenames = new StringBuilder();
@@ -81,7 +85,7 @@ public class SendOrderSender {
                                 receiver.getName(),
                                 AS2Tools.getDataSizeDisplay(message.getRawDataSize()),
                                 AS2Tools.getTimeDisplay(System.currentTimeMillis() - startProcessTime),
-                                (userdefinedId==null?"--":userdefinedId)
+                                (userdefinedId == null ? "--" : userdefinedId)
                             }),
                     message.getAS2Info());
             SendOrder order = new SendOrder();
@@ -92,7 +96,7 @@ public class SendOrderSender {
             this.send(order);
             return (message);
         } catch (Throwable e) {
-            logger.severe( rb.getResourceString("sendoder.sendfailed",
+            logger.severe(rb.getResourceString("sendoder.sendfailed",
                     new Object[]{ 
                         e.getClass().getSimpleName(),
                         e.getMessage()
@@ -118,17 +122,21 @@ public class SendOrderSender {
      * the optional profile MA - multiple attachments.
      *
      * 
-     * between https://tools.ietf.org/html/draft-meadors-multiple-attachments-ediint-10
-     * and https://tools.ietf.org/html/draft-meadors-multiple-attachments-ediint-11 the "MUST" 
-     * changed to "SHOULD" - which means that batch EDI data processing is possible since then
+     * between
+     * https://tools.ietf.org/html/draft-meadors-multiple-attachments-ediint-10
+     * and
+     * https://tools.ietf.org/html/draft-meadors-multiple-attachments-ediint-11
+     * the "MUST" changed to "SHOULD" - which means that batch EDI data
+     * processing is possible since then
      *
-     * @param payloadContentTypes May be null - then the payload content type defined in the receiver is taken
+     * @param payloadContentTypes May be null - then the payload content type
+     * defined in the receiver is taken
      * @return NULL in the case of an error
      */
     public AS2Message send(CertificateManager certificateManager, Partner sender,
             Partner receiver, File file, String userdefinedId, String subject, String[] payloadContentTypes) {
         return (this.send(certificateManager, sender, receiver, new Path[]{file.toPath()}, null, userdefinedId,
-                subject, payloadContentTypes ));
+                subject, payloadContentTypes));
     }
 
     /**

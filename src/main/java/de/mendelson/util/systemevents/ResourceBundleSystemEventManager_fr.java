@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/systemevents/ResourceBundleSystemEventManager_fr.java 4     9.06.20 10:11 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/systemevents/ResourceBundleSystemEventManager_fr.java 5     1.09.21 11:28 Heller $
 package de.mendelson.util.systemevents;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 5 $
  */
 public class ResourceBundleSystemEventManager_fr extends MecResourceBundle {
 
@@ -38,6 +38,7 @@ public class ResourceBundleSystemEventManager_fr extends MecResourceBundle {
         {"label.subject.login.success", "Connexion de l''utilisateur réussie [{0}]"},
         {"label.subject.login.failed", "Échec de la connexion de l''utilisateur [{0}]"},
         {"label.subject.logoff", "Déconnexion de l''utilisateur [{0}]"},
+        {"label.error.clientserver", "Problème dans la connexion client-serveur" },
         {"label.body.tlsprotocol", "Protocole TLS: {0}" },
         {"label.body.tlsciphersuite", "Chiffre TLS: {0}" },        
     };

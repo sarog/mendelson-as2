@@ -1,9 +1,10 @@
-//$Header: /as2/de/mendelson/util/systemevents/notification/NotificationImplAS2.java 21    22.08.19 10:26 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/notification/NotificationImplAS2.java 22    26.08.21 14:00 Heller $
 package de.mendelson.util.systemevents.notification;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManager;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
  * Performs the notification for an event
  *
  * @author S.Heller
- * @version $Revision: 21 $
+ * @version $Revision: 22 $
  */
 public class NotificationImplAS2 extends Notification {
 
@@ -40,8 +41,10 @@ public class NotificationImplAS2 extends Notification {
      * Will not perform a lookup in the db but take the passed notification data
      * object
      */
-    public NotificationImplAS2(NotificationData notificationData, Connection configConnection, Connection runtimeConnection) {
-        super(notificationData, new NotificationAccessDBImplAS2(configConnection, runtimeConnection));
+    public NotificationImplAS2(NotificationData notificationData, 
+            IDBDriverManager dbDriverManager, 
+            Connection configConnection, Connection runtimeConnection) {
+        super(notificationData, new NotificationAccessDBImplAS2(dbDriverManager, configConnection, runtimeConnection));
         //Load resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
@@ -55,8 +58,8 @@ public class NotificationImplAS2 extends Notification {
     /**
      * Constructor without notification data, will perform a lookup in the db
      */
-    public NotificationImplAS2(Connection configConnection, Connection runtimeConnection) {
-        super(new NotificationAccessDBImplAS2(configConnection, runtimeConnection));
+    public NotificationImplAS2(IDBDriverManager dbDriverManager,Connection configConnection, Connection runtimeConnection) {
+        super(new NotificationAccessDBImplAS2(dbDriverManager, configConnection, runtimeConnection));
         //Load resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(

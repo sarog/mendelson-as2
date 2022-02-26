@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleImportKeyPKCS12_fr.java 2     4/06/18 1:35p Heller $
+//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleImportKeyPKCS12_fr.java 3     23.09.21 12:27 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -16,7 +16,7 @@ import de.mendelson.util.MecResourceBundle;
  *
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class ResourceBundleImportKeyPKCS12_fr extends MecResourceBundle {
 
@@ -35,15 +35,17 @@ public class ResourceBundleImportKeyPKCS12_fr extends MecResourceBundle {
         {"button.cancel", "Annuler"},
         {"button.browse", "Parcourir..."},
         {"keystore.contains.nokeys", "Ce porte-clef ne contient aucune clef privée."},
-        {"label.importkey", "Importer le fichier porte-clef (PKCS#12):"},
-        {"label.keypass", "Mot de passe d'import de la clef:"},
+        {"label.importkey", "Nom du fichier:"},
+        {"label.importkey.hint", "Fichier Keystore à importer (PKCS#12)"},
+        {"label.keypass", "Mot de passe:"},
+        {"label.keypass.hint", "Mot de passe du Keystore (PKCS#12)"},
         {"title", "Importer les clefs du porte-clef (PKCS#12 format)"},
-        {"filechooser.key.import", "Merci de sélectionner le fichier porte-clef PKCS#12 pour l'import"},
+        {"filechooser.key.import", "Merci de sélectionner le fichier porte-clef PKCS#12 pour l''import"},
         {"multiple.keys.message", "Merci de sélectionner la clef à importer"},
         {"multiple.keys.title", "Le porte-clef contient plusieurs clefs"},
         {"key.import.success.message", "La clef a été importée avec succès."},
         {"key.import.success.title", "Succès"},
-        {"key.import.error.message", "Une erreur a eu lieu lors du processus d'import.\n{0}"},
+        {"key.import.error.message", "Une erreur a eu lieu lors du processus d''import.\n{0}"},
         {"key.import.error.title", "Erreur"},};
 
 }

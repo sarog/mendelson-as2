@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/preferences/PreferencesPanelSystemMaintenance.java 18    23.04.20 11:31 Heller $
+//$Header: /as2/de/mendelson/comm/as2/preferences/PreferencesPanelSystemMaintenance.java 20    22.09.21 14:39 Heller $
 package de.mendelson.comm.as2.preferences;
 
 import de.mendelson.util.MecResourceBundle;
@@ -20,22 +20,29 @@ import javax.swing.ImageIcon;
  * Other product and brand names are trademarks of their respective owners.
  */
 /**
- *Panel to define the inbox settings
+ * Panel to define the inbox settings
+ *
  * @author S.Heller
- * @version: $Revision: 18 $
+ * @version: $Revision: 20 $
  */
 public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
 
     private final static MendelsonMultiResolutionImage ICON_MAINTENANCE
-            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/maintenance.svg", 
-                    JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/maintenance.svg",
+                    JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT * 2);
     
-    /**Localize the GUI*/
+    /**
+     * Localize the GUI
+     */
     private static MecResourceBundle rb = null;
-    /**GUI prefs*/
+    /**
+     * GUI prefs
+     */
     private PreferencesClient preferences;
 
-    /** Creates new form PreferencesPanelDirectories */
+    /**
+     * Creates new form PreferencesPanelDirectories
+     */
     public PreferencesPanelSystemMaintenance(BaseClient baseClient) {
         //load resource bundle
         try {
@@ -55,13 +62,16 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         this.jComboBoxTimeUnit.addItem(new TimeUnitMaintenance(TimeUnitMaintenance.MULTIPLIER_DAY));
         this.jComboBoxTimeUnit.addItem(new TimeUnitMaintenance(TimeUnitMaintenance.MULTIPLIER_HOUR));
         this.jComboBoxTimeUnit.addItem(new TimeUnitMaintenance(TimeUnitMaintenance.MULTIPLIER_MINUTE));        
-        this.jLabelHint.setText( this.rb.getResourceString( "systemmaintenance.hint"));
+        this.jLabelHintDeleteOldTransactions.setText(this.rb.getResourceString("systemmaintenance.hint.deleteoldtransactions"));
+        this.jLabelHintDeleteStatisticData.setText(this.rb.getResourceString("systemmaintenance.hint.deleteoldstatistic"));
+        this.jLabelHintDeleteLogDir.setText(this.rb.getResourceString("systemmaintenance.hint.deleteoldlogdirs"));
     }
 
-    /**Sets new preferences to this panel to changes/modify
+    /**
+     * Sets new preferences to this panel to changes/modify
      */
     @Override
-    public void loadPreferences(){
+    public void loadPreferences() {
         this.jCheckBoxDeleteMsgOlderThan.setSelected(this.preferences.getBoolean(PreferencesAS2.AUTO_MSG_DELETE));
         this.jTextFieldDeleteMsgOlderThan.setText(String.valueOf(this.preferences.getInt(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN)));
         this.jComboBoxTimeUnit.setSelectedItem(new TimeUnitMaintenance(this.preferences.getInt(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN_MULTIPLIER_S)));
@@ -69,6 +79,8 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
             this.jCheckBoxDeleteStatsOlderThan.setSelected(this.preferences.getBoolean(PreferencesAS2.AUTO_STATS_DELETE));
             this.jTextFieldDeleteStatsOlderThan.setText(String.valueOf(this.preferences.getInt(PreferencesAS2.AUTO_STATS_DELETE_OLDERTHAN)));
         }
+        this.jCheckBoxDeleteLogDirOlderThan.setSelected(this.preferences.getBoolean(PreferencesAS2.AUTO_LOGDIR_DELETE));
+        this.jTextFieldDeleteLogDirOlderThan.setText(String.valueOf(this.preferences.getInt(PreferencesAS2.AUTO_LOGDIR_DELETE_OLDERTHAN)));
         this.jComboBoxTimeUnit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -77,19 +89,20 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         });
     }
 
-    /**Stores the GUI settings in the preferences
+    /**
+     * Stores the GUI settings in the preferences
      */
     @Override
     public void savePreferences() {
         try {
-            int olderThanFiles = Integer.valueOf(this.jTextFieldDeleteMsgOlderThan.getText()).intValue();
+            int olderThantransactions = Integer.valueOf(this.jTextFieldDeleteMsgOlderThan.getText()).intValue();
             //do not allow negative values or the 0
-            if (olderThanFiles <= 0) {
-                olderThanFiles = Integer.getInteger(this.preferences.getDefaultValue(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN)).intValue();
+            if (olderThantransactions <= 0) {
+                olderThantransactions = Integer.getInteger(this.preferences.getDefaultValue(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN)).intValue();
             }
-            this.preferences.putInt(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN, olderThanFiles);
+            this.preferences.putInt(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN, olderThantransactions);
             this.preferences.putInt(PreferencesAS2.AUTO_MSG_DELETE_OLDERTHAN_MULTIPLIER_S, 
-                    (int)((TimeUnitMaintenance)this.jComboBoxTimeUnit.getSelectedItem()).getMultiplier());
+                    (int) ((TimeUnitMaintenance) this.jComboBoxTimeUnit.getSelectedItem()).getMultiplier());
             this.preferences.putBoolean(PreferencesAS2.AUTO_MSG_DELETE, this.jCheckBoxDeleteMsgOlderThan.isSelected());
             //stats auto delete capabilites
             if (!this.preferences.getBoolean(PreferencesAS2.COMMUNITY_EDITION)) {
@@ -100,14 +113,22 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
                 this.preferences.putInt(PreferencesAS2.AUTO_STATS_DELETE_OLDERTHAN, olderThanStats);
                 this.preferences.putBoolean(PreferencesAS2.AUTO_STATS_DELETE, this.jCheckBoxDeleteStatsOlderThan.isSelected());
             }
+            //log dir delete settings
+            int olderThanLogDir = Integer.valueOf(this.jTextFieldDeleteLogDirOlderThan.getText()).intValue();
+            //do not allow negative values or the 0
+            if (olderThanLogDir <= 0) {
+                olderThanLogDir = Integer.getInteger(this.preferences.getDefaultValue(PreferencesAS2.AUTO_LOGDIR_DELETE_OLDERTHAN)).intValue();
+            }
+            this.preferences.putInt(PreferencesAS2.AUTO_LOGDIR_DELETE_OLDERTHAN, olderThanLogDir);
+            this.preferences.putBoolean(PreferencesAS2.AUTO_LOGDIR_DELETE, this.jCheckBoxDeleteLogDirOlderThan.isSelected());
         } catch (Exception nop) {
         }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -121,19 +142,25 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         jTextFieldDeleteStatsOlderThan = new javax.swing.JTextField();
         jLabelDays2 = new javax.swing.JLabel();
         jComboBoxTimeUnit = new javax.swing.JComboBox();
-        jLabelHint = new javax.swing.JLabel();
+        jLabelHintDeleteOldTransactions = new javax.swing.JLabel();
+        jLabelHintDeleteStatisticData = new javax.swing.JLabel();
+        jCheckBoxDeleteLogDirOlderThan = new javax.swing.JCheckBox();
+        jTextFieldDeleteLogDirOlderThan = new javax.swing.JTextField();
+        jLabelDays1 = new javax.swing.JLabel();
+        jLabelHintDeleteLogDir = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
         jPanelMargin.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 19;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanelMargin.add(jPanelSpace, gridBagConstraints);
 
         jCheckBoxDeleteMsgOlderThan.setText(this.rb.getResourceString( "label.deletemsgolderthan"));
@@ -144,13 +171,13 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
         jPanelMargin.add(jCheckBoxDeleteMsgOlderThan, gridBagConstraints);
 
-        jTextFieldDeleteMsgOlderThan.setMinimumSize(new java.awt.Dimension(100, 20));
-        jTextFieldDeleteMsgOlderThan.setPreferredSize(new java.awt.Dimension(100, 20));
+        jTextFieldDeleteMsgOlderThan.setMinimumSize(new java.awt.Dimension(50, 20));
+        jTextFieldDeleteMsgOlderThan.setPreferredSize(new java.awt.Dimension(50, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(20, 0, 5, 0);
         jPanelMargin.add(jTextFieldDeleteMsgOlderThan, gridBagConstraints);
 
         jCheckBoxDeleteStatsOlderThan.setText(this.rb.getResourceString( "label.deletestatsolderthan"));
@@ -161,13 +188,13 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMargin.add(jCheckBoxDeleteStatsOlderThan, gridBagConstraints);
 
-        jTextFieldDeleteStatsOlderThan.setMinimumSize(new java.awt.Dimension(100, 20));
-        jTextFieldDeleteStatsOlderThan.setPreferredSize(new java.awt.Dimension(100, 20));
+        jTextFieldDeleteStatsOlderThan.setMinimumSize(new java.awt.Dimension(50, 20));
+        jTextFieldDeleteStatsOlderThan.setPreferredSize(new java.awt.Dimension(50, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanelMargin.add(jTextFieldDeleteStatsOlderThan, gridBagConstraints);
 
         jLabelDays2.setText(this.rb.getResourceString( "label.days" ));
@@ -187,16 +214,60 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
         jPanelMargin.add(jComboBoxTimeUnit, gridBagConstraints);
 
-        jLabelHint.setText("<hint>");
+        jLabelHintDeleteOldTransactions.setText("<del old transactions hint>");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(20, 10, 5, 5);
-        jPanelMargin.add(jLabelHint, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 35, 5);
+        jPanelMargin.add(jLabelHintDeleteOldTransactions, gridBagConstraints);
+
+        jLabelHintDeleteStatisticData.setText("<del old statistic data hint>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 35, 5);
+        jPanelMargin.add(jLabelHintDeleteStatisticData, gridBagConstraints);
+
+        jCheckBoxDeleteLogDirOlderThan.setText(this.rb.getResourceString( "label.deletelogdirolderthan"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanelMargin.add(jCheckBoxDeleteLogDirOlderThan, gridBagConstraints);
+
+        jTextFieldDeleteLogDirOlderThan.setMinimumSize(new java.awt.Dimension(50, 20));
+        jTextFieldDeleteLogDirOlderThan.setPreferredSize(new java.awt.Dimension(50, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        jPanelMargin.add(jTextFieldDeleteLogDirOlderThan, gridBagConstraints);
+
+        jLabelDays1.setText(this.rb.getResourceString( "label.days" ));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanelMargin.add(jLabelDays1, gridBagConstraints);
+
+        jLabelHintDeleteLogDir.setText("<del old log dir hint>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 35, 5);
+        jPanelMargin.add(jLabelHintDeleteLogDir, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -208,20 +279,25 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxDeleteLogDirOlderThan;
     private javax.swing.JCheckBox jCheckBoxDeleteMsgOlderThan;
     private javax.swing.JCheckBox jCheckBoxDeleteStatsOlderThan;
     private javax.swing.JComboBox jComboBoxTimeUnit;
+    private javax.swing.JLabel jLabelDays1;
     private javax.swing.JLabel jLabelDays2;
-    private javax.swing.JLabel jLabelHint;
+    private javax.swing.JLabel jLabelHintDeleteLogDir;
+    private javax.swing.JLabel jLabelHintDeleteOldTransactions;
+    private javax.swing.JLabel jLabelHintDeleteStatisticData;
     private javax.swing.JPanel jPanelMargin;
     private javax.swing.JPanel jPanelSpace;
+    private javax.swing.JTextField jTextFieldDeleteLogDirOlderThan;
     private javax.swing.JTextField jTextFieldDeleteMsgOlderThan;
     private javax.swing.JTextField jTextFieldDeleteStatsOlderThan;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public ImageIcon getIcon() {
-        return (new ImageIcon( ICON_MAINTENANCE ));
+        return (new ImageIcon(ICON_MAINTENANCE));
     }
 
     @Override
@@ -229,7 +305,7 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         return ("tab.maintenance");
     }
     
-    public static class TimeUnitMaintenance{
+    public static class TimeUnitMaintenance {
         
         public static final long MULTIPLIER_DAY = TimeUnit.DAYS.toSeconds(1);
         public static final long MULTIPLIER_HOUR = TimeUnit.HOURS.toSeconds(1);
@@ -237,19 +313,21 @@ public class PreferencesPanelSystemMaintenance extends PreferencesPanel {
         
         private final long MULTIPLIER;
         
-        public TimeUnitMaintenance( final long MULTIPLIER ){
+        public TimeUnitMaintenance(final long MULTIPLIER) {
             this.MULTIPLIER = MULTIPLIER;
         }
         
         @Override
-        public String toString(){
-            if( this.getMultiplier() == MULTIPLIER_DAY){
-                return( rb.getResourceString("maintenancemultiplier.day"));
-            }else if( this.getMultiplier() == MULTIPLIER_HOUR){
-                return( rb.getResourceString("maintenancemultiplier.hour"));
-            }else if( this.getMultiplier() == MULTIPLIER_MINUTE){
-                return( rb.getResourceString("maintenancemultiplier.minute"));
-            }else return( "Unknown value " + this.getMultiplier());
+        public String toString() {
+            if (this.getMultiplier() == MULTIPLIER_DAY) {
+                return (rb.getResourceString("maintenancemultiplier.day"));
+            } else if (this.getMultiplier() == MULTIPLIER_HOUR) {
+                return (rb.getResourceString("maintenancemultiplier.hour"));
+            } else if (this.getMultiplier() == MULTIPLIER_MINUTE) {
+                return (rb.getResourceString("maintenancemultiplier.minute"));
+            } else {
+                return ("Unknown value " + this.getMultiplier());
+            }
         }
         
         /**

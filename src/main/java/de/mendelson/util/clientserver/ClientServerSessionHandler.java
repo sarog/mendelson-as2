@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/ClientServerSessionHandler.java 42    9.06.20 10:11 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/ClientServerSessionHandler.java 44    17.09.21 15:36 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.messages.ClientServerMessage;
@@ -34,7 +34,7 @@ import org.apache.mina.filter.ssl.SslFilter;
  * Session handler for the server implementation
  *
  * @author S.Heller
- * @version $Revision: 42 $
+ * @version $Revision: 44 $
  */
 public class ClientServerSessionHandler extends IoHandlerAdapter {
 
@@ -84,11 +84,11 @@ public class ClientServerSessionHandler extends IoHandlerAdapter {
      * Get all available sessions
      */
     public List<IoSession> getSessions() {
-        synchronized (this.sessions) {
             List<IoSession> sessionList = new ArrayList<IoSession>();
+        synchronized (this.sessions) {
             sessionList.addAll(this.sessions);
-            return (Collections.unmodifiableList(sessionList));
         }
+        return (Collections.unmodifiableList(sessionList));
     }
 
     /**
@@ -134,6 +134,20 @@ public class ClientServerSessionHandler extends IoHandlerAdapter {
             //as session parameter
             String clientIP = (String) session.getAttribute(SESSION_ATTRIB_CLIENT_IP);
             this.eventManager.newEventClientLogoff(clientIP, userName, remoteProcessId,
+                    String.valueOf(session.getId()), message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void throwEventExceptionInClientServerProcess(IoSession session, String message) {
+        try {
+            String remoteProcessId = (String) session.getAttribute(SESSION_ATTRIB_CLIENT_PID);
+            String userName = (String) session.getAttribute(SESSION_ATTRIB_USER);
+            //this is tricky - if the session is closed it has no longer a remote IP - that is why it is stored
+            //as session parameter
+            String clientIP = (String) session.getAttribute(SESSION_ATTRIB_CLIENT_IP);
+            this.eventManager.newEventExceptionInClientServerProcess(clientIP, userName, remoteProcessId,
                     String.valueOf(session.getId()), message);
         } catch (Exception e) {
             e.printStackTrace();
@@ -277,17 +291,17 @@ public class ClientServerSessionHandler extends IoHandlerAdapter {
      * User defined extensions for the server processing
      */
     private void performUserDefinedProcessing(IoSession session, ClientServerMessage message) {
-        synchronized (this.processingList) {
             boolean processed = false;
+        synchronized (this.processingList) {
             for (int i = 0; i < this.processingList.size(); i++) {
                 processed |= this.processingList.get(i).process(session, message);
             }
+        }
             if (!processed) {
                 this.log(Level.WARNING, "performUserDefinedProcessing: inbound message of class ["
                         + message.getClass().getName() + "] has not been processed.");
             }
         }
-    }
 
     /**
      * User defined actions for messages sent by any client. The user may extend
@@ -357,7 +371,14 @@ public class ClientServerSessionHandler extends IoHandlerAdapter {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) {
-        this.throwEventLogoff(session, "Exception caught in client-server interface: " + cause.getMessage());
+        StringBuilder builder = new StringBuilder();
+        builder.append("Exception caught in client-server interface.").append("\n");
+        builder.append("[" + cause.getClass().getSimpleName() + "]: " + cause.getMessage()).append("\n\n");
+        StackTraceElement[] stackTrace = cause.getStackTrace();
+        for (StackTraceElement element : stackTrace) {
+            builder.append(element.getClassName() + ": " + element.getMethodName() + "\n");
+        }
+        this.throwEventExceptionInClientServerProcess(session, builder.toString());
         // Close connection when unexpected exception is caught.
         session.closeNow();
         if (this.callback != null) {

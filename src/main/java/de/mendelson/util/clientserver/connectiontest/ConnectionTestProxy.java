@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/connectiontest/ConnectionTestProxy.java 2     10.12.18 12:46 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/connectiontest/ConnectionTestProxy.java 3     19.11.21 10:35 Heller $
 package de.mendelson.util.clientserver.connectiontest;
 
 import java.io.Serializable;
@@ -6,6 +6,7 @@ import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.SocketAddress;
 
 /*
@@ -20,7 +21,7 @@ import java.net.SocketAddress;
  * for the real connection should be used.
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class ConnectionTestProxy implements Serializable {
 
@@ -35,12 +36,20 @@ public class ConnectionTestProxy implements Serializable {
     public ConnectionTestProxy() {
     }
 
-    public Proxy asProxy() {
+    
+    /**Generates a proxy object*/
+    public Proxy asProxy( int testType ) {
+        Type proxyType = null;
+        if( testType == ConnectionTest.CONNECTION_TEST_AS2){
+            proxyType = Proxy.Type.HTTP;
+        }else if( testType == ConnectionTest.CONNECTION_TEST_AS4){
+            proxyType = Proxy.Type.HTTP;
+        }else if( testType == ConnectionTest.CONNECTION_TEST_OFTP2){
+            proxyType = Proxy.Type.SOCKS;
+        }        
         SocketAddress socketAddress = new InetSocketAddress(this.getAddress(), this.getPort());
-        Proxy proxy = new Proxy(Proxy.Type.SOCKS, socketAddress);
+        Proxy proxy = new Proxy(proxyType, socketAddress);
         if( this.usesAuthentication()){
-            System.setProperty("java.net.socks.username", this.getUserName());
-            System.setProperty("java.net.socks.password", this.getPassword());
             Authenticator authenticator = new Authenticator(){                
                 @Override
                 public PasswordAuthentication getPasswordAuthentication() {

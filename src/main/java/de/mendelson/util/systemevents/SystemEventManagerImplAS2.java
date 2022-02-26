@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/systemevents/SystemEventManagerImplAS2.java 12    10.09.20 12:57 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/SystemEventManagerImplAS2.java 20    26.08.21 14:00 Heller $
 package de.mendelson.util.systemevents;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
@@ -17,11 +17,11 @@ import de.mendelson.comm.as2.statistic.QuotaAccessDB;
 import de.mendelson.comm.as2.statistic.StatisticOverviewEntry;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.database.DebuggablePreparedStatement;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.security.cert.KeystoreCertificate;
 import de.mendelson.util.systemevents.notification.ResourceBundleNotification;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -44,7 +44,7 @@ import java.util.ResourceBundle;
  * Performs the notification for an event
  *
  * @author S.Heller
- * @version $Revision: 12 $
+ * @version $Revision: 20 $
  */
 public class SystemEventManagerImplAS2 extends SystemEventManager {
 
@@ -180,9 +180,10 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      * @param partner
      */
     public void newEventPartnerSendQuotaExceededCheck(Partner localStation, Partner partner,
+            IDBDriverManager dbDriverManager, 
             Connection configConnection, Connection runtimeConnection) {
         StatisticOverviewEntry entry = null;
-        QuotaAccessDB access = new QuotaAccessDB(configConnection, runtimeConnection);
+        QuotaAccessDB access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
         entry = access.getStatisticOverview(
                 localStation.getAS2Identification(), partner.getAS2Identification());
         if (partner.isNotifySendEnabled() && partner.getNotifySend() == entry.getSendMessageCount()) {
@@ -209,9 +210,9 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      * @param partner
      */
     public void newEventPartnerReceiveQuotaExceededCheck(Partner localStation, Partner partner,
-            Connection configConnection, Connection runtimeConnection) {
+            IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         StatisticOverviewEntry entry = null;
-        QuotaAccessDB access = new QuotaAccessDB(configConnection, runtimeConnection);
+        QuotaAccessDB access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
         entry = access.getStatisticOverview(
                 localStation.getAS2Identification(), partner.getAS2Identification());
         if (partner.isNotifyReceiveEnabled() && partner.getNotifyReceive() == entry.getReceivedMessageCount()) {
@@ -345,9 +346,9 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      * @param partner
      */
     public void newEventPartnerSendReceiveQuotaExceededCheck(Partner localStation, Partner partner,
-            Connection configConnection, Connection runtimeConnection) {
+            IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         StatisticOverviewEntry entry = null;
-        QuotaAccessDB access = new QuotaAccessDB(configConnection, runtimeConnection);
+        QuotaAccessDB access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
         entry = access.getStatisticOverview(
                 localStation.getAS2Identification(), partner.getAS2Identification());
         if (partner.isNotifySendReceiveEnabled() && partner.getNotifySendReceive() == entry.getSendMessageCount() + entry.getReceivedMessageCount()) {
@@ -448,8 +449,9 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
     /**
      * Returns the message info object a a passed message id from the database
      */
-    private AS2MessageInfo lookupMessageInfo(String messageId, Connection configConnection, Connection runtimeConnection) throws Exception {
-        MessageAccessDB messageAccess = new MessageAccessDB(configConnection, runtimeConnection);
+    private AS2MessageInfo lookupMessageInfo(String messageId, IDBDriverManager dbDriverManager, 
+            Connection configConnection, Connection runtimeConnection) throws Exception {
+        MessageAccessDB messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
         AS2MessageInfo info = messageAccess.getLastMessageEntry(messageId);
         if (info == null) {
             throw new Exception("No message entry found for " + messageId);
@@ -460,15 +462,16 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
     /**
      * Sends an email that an error occurred in a transaction
      */
-    public void newEventTransactionError(String messageId, Connection configConnection, Connection runtimeConnection) {
+    public void newEventTransactionError(String messageId, IDBDriverManager dbDriverManager, 
+            Connection configConnection, Connection runtimeConnection) {
         AS2MessageInfo info = null;
         try {
             //get additional properties for the notification eMail
             String senderName = "Unknown";
             String receiverName = "Unknown";
-            info = this.lookupMessageInfo(messageId, configConnection, runtimeConnection);
+            info = this.lookupMessageInfo(messageId, dbDriverManager, configConnection, runtimeConnection);
             //lookup partner            
-            PartnerAccessDB partnerAccess = new PartnerAccessDB(configConnection, runtimeConnection);
+            PartnerAccessDB partnerAccess = new PartnerAccessDB(dbDriverManager);
             if (info.getSenderId() != null) {
                 Partner sender = partnerAccess.getPartner(info.getSenderId());
                 if (sender != null) {
@@ -481,9 +484,9 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
                     receiverName = receiver.getName();
                 }
             }
-            LogAccessDB logAccess = new LogAccessDB(configConnection, runtimeConnection);
+            LogAccessDB logAccess = new LogAccessDB(dbDriverManager);
             StringBuilder log = new StringBuilder();
-            List<LogEntry> entries = logAccess.getLog(messageId);
+            List<LogEntry> entries = logAccess.getLog(runtimeConnection, messageId);
             DateFormat format = DateFormat.getDateTimeInstance();
             for (LogEntry entry : entries) {
                 if (log.length() > 0) {
@@ -515,8 +518,7 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
 
     @Override
     public Path getStorageMainDir() {
-        Path storageDir = Paths.get(this.preferences.get(PreferencesAS2.DIR_LOG));
-        return (storageDir);
+        return (AS2Server.LOG_DIR);
     }
 
 }

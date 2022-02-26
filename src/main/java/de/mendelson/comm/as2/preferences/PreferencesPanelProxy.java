@@ -1,10 +1,14 @@
-//$Header: /as2/de/mendelson/comm/as2/preferences/PreferencesPanelProxy.java 16    5.11.19 10:45 Heller $
+//$Header: /as2/de/mendelson/comm/as2/preferences/PreferencesPanelProxy.java 21    23.09.21 13:58 Heller $
 package de.mendelson.comm.as2.preferences;
 
-import java.util.*;
-import de.mendelson.util.*;
+import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.MendelsonMultiResolutionImage;
+import de.mendelson.util.TextOverlay;
 import de.mendelson.util.clientserver.BaseClient;
 import de.mendelson.util.clientserver.clients.preferences.PreferencesClient;
+import de.mendelson.util.passwordfield.PasswordOverlay;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 
 /*
@@ -18,7 +22,7 @@ import javax.swing.ImageIcon;
  * Panel to define the proxy settings
  *
  * @author S.Heller
- * @version: $Revision: 16 $
+ * @version: $Revision: 21 $
  */
 public class PreferencesPanelProxy extends PreferencesPanel {
 
@@ -27,12 +31,9 @@ public class PreferencesPanelProxy extends PreferencesPanel {
      */
     private MecResourceBundle rb = null;
 
-    /**
-     * GUI prefs
-     */
     private PreferencesClient preferences;
 
-    private final MendelsonMultiResolutionImage ICON_PROXY
+    private final MendelsonMultiResolutionImage IMAGE_PROXY
             = MendelsonMultiResolutionImage.fromSVG("/comm/as2/preferences/proxy.svg", 
                     JDialogPreferences.IMAGE_HEIGHT, JDialogPreferences.IMAGE_HEIGHT*2);
 
@@ -50,6 +51,10 @@ public class PreferencesPanelProxy extends PreferencesPanel {
         }
         this.preferences = new PreferencesClient(baseClient);
         this.initComponents();
+        TextOverlay.addTo( this.jTextFieldProxyPort, this.rb.getResourceString( "label.proxy.port.hint"));
+        TextOverlay.addTo( this.jTextFieldProxyURL, this.rb.getResourceString( "label.proxy.url.hint"));
+        TextOverlay.addTo( this.jTextFieldProxyUser, this.rb.getResourceString( "label.proxy.user.hint"));
+        PasswordOverlay.addTo(this.jPasswordFieldProxyPass, this.rb.getResourceString( "label.proxy.pass.hint"));
     }
 
     private void setButtonState() {
@@ -127,7 +132,7 @@ public class PreferencesPanelProxy extends PreferencesPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 30, 5, 5);
         jPanelMargin.add(jLabelProxyUser, gridBagConstraints);
 
         jLabelProxyPass.setText(this.rb.getResourceString( "label.proxy.pass"));
@@ -135,7 +140,7 @@ public class PreferencesPanelProxy extends PreferencesPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 30, 5, 5);
         jPanelMargin.add(jLabelProxyPass, gridBagConstraints);
 
         jPasswordFieldProxyPass.setPreferredSize(new java.awt.Dimension(200, 20));
@@ -153,10 +158,12 @@ public class PreferencesPanelProxy extends PreferencesPanel {
         jPanelMargin.add(jPasswordFieldProxyPass, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanelMargin.add(jPanelSpace, gridBagConstraints);
 
         jLabelProxyURL.setText(this.rb.getResourceString( "label.proxy.url"));
@@ -189,7 +196,7 @@ public class PreferencesPanelProxy extends PreferencesPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
         jPanelMargin.add(jCheckBoxUseProxy, gridBagConstraints);
@@ -242,7 +249,7 @@ public class PreferencesPanelProxy extends PreferencesPanel {
             int proxyPort = Integer.valueOf(this.jTextFieldProxyPort.getText().trim()).intValue();
             this.preferences.putInt(PreferencesAS2.PROXY_PORT, proxyPort);
         } catch (Exception e) {
-            this.jTextFieldProxyPort.setText(this.preferences.get(PreferencesAS2.PROXY_PORT));
+            //just ignore this - the formerly value will be kept and the user will see this one he opens the preferences again
         }
     }//GEN-LAST:event_jTextFieldProxyPortKeyReleased
 
@@ -291,7 +298,7 @@ public class PreferencesPanelProxy extends PreferencesPanel {
 
     @Override
     public ImageIcon getIcon() {
-        return (new ImageIcon( ICON_PROXY ));
+        return (new ImageIcon( IMAGE_PROXY ));
     }
 
     @Override

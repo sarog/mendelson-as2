@@ -1,4 +1,4 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/partner/gui/JPanelPartner.java 149   18.12.20 14:25 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/JPanelPartner.java 151   16.03.21 9:53 Heller $
 package de.mendelson.comm.as2.partner.gui;
 
 import de.mendelson.comm.as2.client.AS2Gui;
@@ -18,6 +18,7 @@ import de.mendelson.comm.as2.partner.gui.event.JDialogConfigureEventShell;
 import de.mendelson.comm.as2.partner.gui.event.ResourceBundlePartnerEvent;
 import de.mendelson.comm.as2.preferences.PreferencesAS2;
 import de.mendelson.comm.as2.send.HttpConnectionParameter;
+import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
 import de.mendelson.util.clientserver.BaseClient;
@@ -74,7 +75,7 @@ import javax.swing.text.AbstractDocument;
  * Panel to edit a single partner
  *
  * @author S.Heller
- * @version $Revision: 149 $
+ * @version $Revision: 151 $
  */
 public class JPanelPartner extends JPanel {
 
@@ -146,6 +147,9 @@ public class JPanelPartner extends JPanel {
         }
         this.preferences = new PreferencesClient(baseClient);
         this.initComponents();
+        //always display the Basic Authentication passwords - there is no need to hide them
+        this.jPasswordFieldHttpPass.setEchoChar((char) 0);
+        this.jPasswordFieldHttpPassAsyncMDN.setEchoChar((char) 0);
         this.setMultiresolutionIcons();
         this.buttonOk.initialize(tree, this.jTextFieldName, this.jTextFieldId, this.jTextFieldURL, this.jTextFieldMDNURL,
                 changesAllowed);
@@ -213,7 +217,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setComment(jTextPanePartnerComment.getText());
+                    String text = jTextPanePartnerComment.getText();
+                    partner.setComment(text);
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -222,7 +227,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void removeUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setComment(jTextPanePartnerComment.getText());
+                    String text = jTextPanePartnerComment.getText();
+                    partner.setComment( text );
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -231,7 +237,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setComment(jTextPanePartnerComment.getText());
+                    String text = jTextPanePartnerComment.getText();
+                    partner.setComment( text );
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -241,7 +248,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setContactAS2(jTextPanePartnerContact.getText());
+                    String text = jTextPanePartnerContact.getText();
+                    partner.setContactAS2(text );
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -250,7 +258,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void removeUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setContactAS2(jTextPanePartnerContact.getText());
+                    String text = jTextPanePartnerContact.getText();
+                    partner.setContactAS2(text );
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -259,7 +268,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setContactAS2(jTextPanePartnerContact.getText());
+                    String text = jTextPanePartnerContact.getText();
+                    partner.setContactAS2(text );
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -269,7 +279,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setContactCompany(jTextPanePartnerAddress.getText());
+                    String text = jTextPanePartnerAddress.getText();
+                    partner.setContactCompany(text);
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -278,7 +289,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void removeUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setContactCompany(jTextPanePartnerAddress.getText());
+                    String text = jTextPanePartnerAddress.getText();
+                    partner.setContactCompany(text);                    
                     informTreeModelNodeChanged();
                 }
                 setButtonState();
@@ -287,7 +299,8 @@ public class JPanelPartner extends JPanel {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 if (partner != null) {
-                    partner.setContactCompany(jTextPanePartnerAddress.getText());
+                    String text = jTextPanePartnerAddress.getText();
+                    partner.setContactCompany(text);           
                     informTreeModelNodeChanged();
                 }
                 setButtonState();

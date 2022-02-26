@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/BaseClient.java 44    18.02.20 14:37 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/clientserver/BaseClient.java 49    28.10.21 11:46 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.codec.ClientServerCodecFactory;
@@ -39,7 +39,7 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
  * Abstract client for a user
  *
  * @author S.Heller
- * @version $Revision: 44 $
+ * @version $Revision: 49 $
  */
 public class BaseClient {
 
@@ -53,8 +53,8 @@ public class BaseClient {
     /**
      * Set default timeout for sync requests to 30s
      */
-    public static final long TIMEOUT_SYNC_RECEIVE = TimeUnit.SECONDS.toMillis(30);
-    public static final long TIMEOUT_SYNC_SEND = TimeUnit.SECONDS.toMillis(30);
+    public static final long TIMEOUT_SYNC_RECEIVE = TimeUnit.SECONDS.toMillis(60);
+    public static final long TIMEOUT_SYNC_SEND = TimeUnit.SECONDS.toMillis(60);
 
     /**
      * User that is connected
@@ -113,7 +113,7 @@ public class BaseClient {
         login.setUserName(user);
         login.setClientId(clientId);
         LoginState state = (LoginState) this.sendSync(login);
-        if( state.getState() == LoginState.STATE_INCOMPATIBLE_CLIENT){
+        if (state.getState() == LoginState.STATE_INCOMPATIBLE_CLIENT) {
             this.clientSessionHandler.getCallback().clientIsIncompatible(state.getStateDetails());
         }
         return (state);
@@ -171,8 +171,8 @@ public class BaseClient {
     }
 
     /**
-     * Instanciate a SSL context. This client trust all server certificates and
-     * it is therefor not ensured that the server is really the server you
+     * Create a SSL context instance. This client trust all server certificates
+     * and it is therefor not ensured that the server is really the server you
      * expect.
      */
     private SSLContext createSSLContextClient() throws Exception {
@@ -192,7 +192,7 @@ public class BaseClient {
                 return new X509Certificate[0];
             }
         };
-        SSLContext context = SSLContext.getInstance("TLSv1");
+        SSLContext context = SSLContext.getInstance("TLSv1.2");
         context.init(null, new TrustManager[]{trustManagerTrustAll}, null);
         return context;
     }
@@ -246,9 +246,9 @@ public class BaseClient {
             WriteFuture writeFuture = this.session.write(request);
             boolean isSent = writeFuture.await(TIMEOUT_SYNC_SEND, TimeUnit.MILLISECONDS);
             if (!isSent) {
-                StringBuilder message = new StringBuilder("[Client-Server communication]");
-                message.append( "(" ).append( request.toString() ).append( ") ");
-                message.append( "Send timeout - Could not send sync request to server after " + TIMEOUT_SYNC_SEND + "ms" );
+                StringBuilder message = new StringBuilder("[Client-Server communication]")
+                        .append("(").append(request.toString()).append(") ");
+                message.append("Send timeout - Could not send sync request to server after " + TIMEOUT_SYNC_SEND + "ms");
                 throw new TimeoutException(message.toString());
             }
             if (writeFuture.getException() != null) {
@@ -267,7 +267,8 @@ public class BaseClient {
     /**
      * Sends a sync message and throws a timeout exception if the client does
      * not answer in a proper time. The passed timeout is not the connection
-     * timeout (this is set to 5s by default - it is the sync wait timeout)
+     * timeout (this is set to TIMEOUT_SYNC_SEND [in ms] by default - it is the
+     * sync wait timeout)
      *
      * @param message
      */
@@ -283,10 +284,13 @@ public class BaseClient {
             WriteFuture writeFuture = this.session.write(request);
             boolean isSent = writeFuture.await(TIMEOUT_SYNC_SEND, TimeUnit.MILLISECONDS);
             if (!isSent) {
-                StringBuilder message = new StringBuilder("[Client-Server communication]");
-                message.append( "(" ).append( request.toString() ).append( ") ");
-                message.append( "Send timeout - Could not send sync request to server after " + TIMEOUT_SYNC_SEND + "ms" );
-                throw new TimeoutException(message.toString());
+                StringBuilder message = new StringBuilder("[Client-Server communication]")
+                        .append("(").append(request.toString()).append(") ")
+                        .append("Send timeout - Could not send sync request to server after " + TIMEOUT_SYNC_SEND + "ms");
+                SyncRequestTimeoutException exception = new SyncRequestTimeoutException(
+                        SyncRequestTimeoutException.TIMEOUT_TYPE_SEND,
+                        message.toString(), request, TIMEOUT_SYNC_SEND);
+                throw exception;
             }
             if (writeFuture.getException() != null) {
                 throw (writeFuture.getException());
@@ -294,10 +298,13 @@ public class BaseClient {
             response = this.clientSessionHandler.waitForSyncAnswer(request.getReferenceId(), timeout);
             if (response == null) {
                 StringBuilder message = new StringBuilder("[Client-Server communication]");
-                message.append( "(" ).append( request.toString() ).append( ") ");
-                message.append( "Receipt timeout - Could not receive the sync response after " + timeout + "ms [");
-                message.append( request.getClass().getSimpleName() ).append( "]");                
-                throw new TimeoutException(message.toString());
+                message.append("(").append(request.toString()).append(") ")
+                        .append("Receipt timeout - Could not receive the sync response after " + timeout + "ms [");
+                message.append(request.getClass().getSimpleName()).append("]");
+                SyncRequestTimeoutException exception = new SyncRequestTimeoutException(
+                        SyncRequestTimeoutException.TIMEOUT_TYPE_RECEIVE,
+                        message.toString(), request, timeout);
+                throw exception;
             }
         } catch (Throwable throwable) {
             this.clientSessionHandler.syncRequestFailed(throwable);
@@ -358,6 +365,22 @@ public class BaseClient {
      */
     public User getUser() {
         return (this.user);
+    }
+
+    /**
+     * Returns the host address if the server is connected and the client is
+     * logged in- else null
+     *
+     * @return null if the client is not connected or not logged in to the
+     * server
+     */
+    public InetAddress getHostAddress() {
+        if (this.isConnectedAndLoggedIn()) {
+            InetAddress serviceAddress = ((InetSocketAddress) this.session.getServiceAddress()).getAddress();
+            return (serviceAddress);
+        } else {
+            return (null);
+        }
     }
 
 }

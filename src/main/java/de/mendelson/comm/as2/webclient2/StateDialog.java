@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/webclient2/StateDialog.java 14    4.12.20 9:11 Heller $
+//$Header: /as2/de/mendelson/comm/as2/webclient2/StateDialog.java 16    21.12.21 16:11 Heller $
 package de.mendelson.comm.as2.webclient2;
 
 import com.vaadin.shared.ui.ContentMode;
@@ -8,7 +8,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import de.mendelson.util.clientserver.about.ServerInfoRequest;
 import de.mendelson.util.clientserver.about.ServerInfoResponse;
-import de.mendelson.comm.as2.preferences.PreferencesAS2;
+import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.clientserver.AnonymousTextClient;
 import java.text.DateFormat;
 
@@ -24,7 +24,7 @@ import java.text.DateFormat;
  * Displays the state of the receipt unit
  *
  * @author S.Heller
- * @version $Revision: 14 $
+ * @version $Revision: 16 $
  */
 public class StateDialog extends OkDialog {
 
@@ -48,8 +48,8 @@ public class StateDialog extends OkDialog {
         AnonymousTextClient client = null;
         try {
             client = new AnonymousTextClient();
-            PreferencesAS2 preferences = new PreferencesAS2();
-            client.connect("localhost", preferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT), 30000);
+            client.setDisplayServerLogMessages(false);
+            client.connect("localhost", AS2Server.CLIENTSERVER_COMM_PORT, 30000);
             ServerInfoResponse response = (ServerInfoResponse) client.sendSync(new ServerInfoRequest(), 30000);
             long startTime = Long.valueOf(response.getProperties().getProperty(ServerInfoResponse.SERVER_START_TIME)).longValue();
             sourceBuffer.append("<p>The AS2 processing unit <strong>"

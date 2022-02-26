@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/preferences/ResourceBundlePreferences_fr.java 40    11.12.20 11:56 Heller $
+//$Header: /as2/de/mendelson/comm/as2/preferences/ResourceBundlePreferences_fr.java 45    19.11.21 10:35 Heller $
 package de.mendelson.comm.as2.preferences;
 
 import de.mendelson.util.MecResourceBundle;
@@ -16,7 +16,7 @@ import de.mendelson.util.MecResourceBundle;
  *
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 40 $
+ * @version $Revision: 45 $
  */
 public class ResourceBundlePreferences_fr extends MecResourceBundle {
 
@@ -32,7 +32,6 @@ public class ResourceBundlePreferences_fr extends MecResourceBundle {
      */
     static final Object[][] CONTENTS = {
         //preferences localized
-        {PreferencesAS2.SERVER_HOST, "Hôte serveur"},
         {PreferencesAS2.DIR_MSG, "Archivage message"},
         {"button.ok", "Valider"},
         {"button.cancel", "Annuler"},
@@ -56,15 +55,20 @@ public class ResourceBundlePreferences_fr extends MecResourceBundle {
         {"label.keystore.https", "Porte-clef (envoi https):"},
         {"label.keystore.encryptionsign", "Porte-clef (enc, sign):"},
         {"label.proxy.url", "URL du proxy:"},
-        {"label.proxy.user", "Login utilisateur du proxy:"},
-        {"label.proxy.pass", "Mot de passe utilisateur du proxy:"},
-        {"label.proxy.use", "Utiliser un proxy pour les connexions sortante HTTP/HTTPs"},
+        {"label.proxy.url.hint", "IP ou domaine du proxy"},
+        {"label.proxy.port.hint", "Port"},
+        {"label.proxy.user", "Utilisateur:"},
+        {"label.proxy.user.hint", "Login utilisateur du proxy"},        
+        {"label.proxy.pass", "Mot de passe:"},
+        {"label.proxy.pass.hint", "Mot de passe utilisateur du proxy"},
+        {"label.proxy.use", "Utiliser un proxy HTTP pour les connexions sortante HTTP/HTTPs"},
         {"label.proxy.useauthentification", "Utiliser l''authentification auprès du proxy"},
         {"filechooser.keystore", "Merci de sélectionner le fichier porte-clef (format jks)."},
         {"label.days", "jours"},
         {"label.deletemsgolderthan", "Supprimer automatiquement les messages plus vieux que"},
         {"label.deletemsglog", "Tenir informer dans le log à propos des messages automatiquement supprimés"},
         {"label.deletestatsolderthan", "Supprimer automatiquement les statistiques qui sont plus vieux que"},
+        {"label.deletelogdirolderthan", "Suppression automatique des données de journal plus anciennes que"},
         {"label.asyncmdn.timeout", "Temps d''attente maximal pour un MDN asynchrone:"},
         {"label.httpsend.timeout", "Timeout sur envoi HTTP(s):"},
         {"label.min", "min"},
@@ -79,14 +83,18 @@ public class ResourceBundlePreferences_fr extends MecResourceBundle {
         {"checkbox.notifypostprocessing", "Problèmes lors du post-traitement"},
         {"button.testmail", "Envoyer un e-mail de test"},
         {"label.mailhost", "Hôte du serveur de mail (SMTP):"},
+        {"label.mailhost.hint", "IP ou domaine du serveur"},
         {"label.mailport", "Port:"},
+        {"label.mailport.hint", "Port"},
         {"label.mailaccount", "Compte sur le serveur de mail:"},
         {"label.mailpass", "Mot de passe sur le serveur de mail:"},
         {"label.notificationmail", "Adresse de notification du destinataire:"},
         {"label.replyto", "Adresse de réponse (Replyto):"},
         {"label.smtpauthentication", "Authentification d''utilisation SMTP"},
-        {"label.smtpauthentication.user", "Nom d'utilisateur:"},
+        {"label.smtpauthentication.user", "Utilisateur:"},
+        {"label.smtpauthentication.user.hint", "Nom d''utilisateur du serveur SMTP"},
         {"label.smtpauthentication.pass", "Mot de passe:"},
+        {"label.smtpauthentication.pass.hint", "Mot de passe du serveur SMTP"},
         {"label.security", "Sécurité de connexion:"},
         {"testmail.message.success", "E-mail de test envoyé avec succés."},
         {"testmail.message.error", "Erreur lors de l''envoi de l''e-mail de test:\n{0}"},
@@ -118,7 +126,9 @@ public class ResourceBundlePreferences_fr extends MecResourceBundle {
         {"event.notificationdata.modified.subject", "Les paramètres de notification ont été modifiés."},
         {"event.notificationdata.modified.body", "Les données d''avis sont passées de\n\n{0}\n\nà\n\n{1}"},
         {"label.maxmailspermin", "Nombre maximum de notifications/min:"},
-        {"systemmaintenance.hint", "<HTML>Ce paramètre définit la période pendant laquelle les transactions et les données associées restent dans le système et doivent être affichées dans l''aperçu des transactions.<br>Ces paramètres n''affectent pas vos données/fichiers reçus, ils ne sont pas affectés.<br>Même pour les transactions supprimées, le journal des transactions est toujours disponible via la fonction recherche log.<HTML>"},
+        {"systemmaintenance.hint.deleteoldtransactions", "<HTML>Ce paramètre définit la période pendant laquelle les transactions et les données associées (par exemple, les fichiers temporaires) restent dans le système et doivent être affichées dans l''aperçu des transactions.<br>Ces paramètres n''affectent pas vos données/fichiers reçus, ils ne sont pas affectés.<br>Même pour les transactions supprimées, le journal des transactions est toujours disponible via la fonction recherche log.<HTML>"},
+        {"systemmaintenance.hint.deleteoldstatistic", "<HTML>Le système collecte les données de compatibilité des systèmes partenaires et peut les afficher sous forme de statistiques. Cela détermine la période pendant laquelle ces données sont conservées.</HTML>" },
+        {"systemmaintenance.hint.deleteoldlogdirs", "<HTML>Même si les anciennes transactions ont été supprimées, les opérations peuvent toujours être retracées grâce aux fichiers journaux existants. Ce paramètre permet de supprimer ces fichiers journaux ainsi que tous les fichiers relatifs aux événements du système qui tombent dans la même période.</HTML>" },
         {"label.colorblindness", "Support pour le daltonisme" },
         {"warning.clientrestart.required", "Les paramètres du client ont été modifiés - veuillez redémarrer le client pour les rendre valides" },
         

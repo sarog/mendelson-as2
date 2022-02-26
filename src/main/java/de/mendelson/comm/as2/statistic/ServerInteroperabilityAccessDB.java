@@ -1,7 +1,6 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/statistic/ServerInteroperabilityAccessDB.java 3     8.01.19 9:48 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/statistic/ServerInteroperabilityAccessDB.java 4     2/02/22 15:24 Heller $
 package de.mendelson.comm.as2.statistic;
 
-import java.sql.Connection;
 import java.util.List;
 
 /*
@@ -13,14 +12,14 @@ import java.util.List;
  */
 /**
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 4 $
  */
 public class ServerInteroperabilityAccessDB {
 
-    public ServerInteroperabilityAccessDB(Connection configConnection, Connection runtimeConnection) {
+    public ServerInteroperabilityAccessDB(Object a, Object b, Object c) {
     }
 
-    public void addEntry(String messageId) {
+    public void addEntry(Object a) {
     }
 
     public List<ServerInteroperabilityContainer> getServer() {

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/gui/ResourceBundlePartnerPanel_de.java 62    30.12.20 11:23 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/ResourceBundlePartnerPanel_de.java 63    22.09.21 14:39 Heller $
 package de.mendelson.comm.as2.partner.gui;
 import de.mendelson.util.MecResourceBundle;
 /*
@@ -12,7 +12,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 62 $
+ * @version $Revision: 63 $
  */
 public class ResourceBundlePartnerPanel_de extends MecResourceBundle{
     
@@ -27,7 +27,9 @@ public class ResourceBundlePartnerPanel_de extends MecResourceBundle{
     static final Object[][] CONTENTS = {
         {"title", "Partnerkonfiguration" },
         {"label.name", "Name:" },
+        {"label.name.hint", "Interner Partnernname"},
         {"label.id", "AS2 id:" },
+        {"label.id.hint", "Partneridentifikation (AS2 Protokoll)"},
         {"label.partnercomment", "Kommentar:" },
         {"label.url", "Empfangs-URL:" },
         {"label.mdnurl", "MDN URL:" },
@@ -38,6 +40,7 @@ public class ResourceBundlePartnerPanel_de extends MecResourceBundle{
         {"label.signtype", "Digitale Signatur:" },
         {"label.encryptiontype", "Nachrichtenverschlüsselung:" },
         {"label.email", "Mail Adresse:" },
+        {"label.email.hint", "Im AS2 Protokoll nicht verwendet oder validiert"},
         {"label.localstation", "Lokale Station" },       
         {"label.compression", "Ausgehende Nachrichten komprimieren (benötigt AS2 1.1 Gegenstelle)" }, 
         {"label.usecommandonreceipt", "Nach Empfang:" },
@@ -65,7 +68,8 @@ public class ResourceBundlePartnerPanel_de extends MecResourceBundle{
         {"label.polldir", "Überwachtes Verzeichnis:" },
         {"label.pollinterval", "Abholintervall:" },
         {"label.pollignore", "Abholen ignorieren für:" },        
-        {"label.maxpollfiles", "Maximale Dateianzahl pro Abholvorgang:"},
+        {"label.pollignore.hint", "Liste der Dateien, die ignoriert werden sollen, kommagetrennt (Wildcards erlaubt)."},
+        {"label.maxpollfiles", "Max Dateianzahl/Abholvorgang:"},
         {"label.usehttpauth", "Benutze HTTP Authentifizierung beim Senden von AS2 Nachrichten" },
         {"label.usehttpauth.user", "Benutzername:" },
         {"label.usehttpauth.pass", "Passwort:" },

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/client/ResourceBundleAS2Gui_de.java 51    21.08.20 17:59 Heller $
+//$Header: /as2/de/mendelson/comm/as2/client/ResourceBundleAS2Gui_de.java 53    25.03.21 17:54 Heller $
 package de.mendelson.comm.as2.client;
 
 import de.mendelson.util.MecResourceBundle;
@@ -13,7 +13,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize gui entries
  * @author S.Heller
- * @version $Revision: 51 $
+ * @version $Revision: 53 $
  */
 public class ResourceBundleAS2Gui_de extends MecResourceBundle {
 
@@ -40,6 +40,7 @@ public class ResourceBundleAS2Gui_de extends MecResourceBundle {
         {"menu.file.resend", "Als neue Transaktion versenden"},
         {"menu.file.resend.multiple", "Als neue Transaktionen versenden"},
         {"menu.file.migrate.hsqldb", "Von HSQLDB migrieren"},
+        {"menu.file.ha", "Instanzen der Hochverfügbarkeit"},
         {"menu.file.statistic", "Statistik"},
         {"menu.file.quota", "Kontingente"},
         {"menu.file.serverinfo", "HTTP Server Konfiguration anzeigen"},
@@ -93,5 +94,7 @@ public class ResourceBundleAS2Gui_de extends MecResourceBundle {
         {"logputput.disabled", "** Die Protokollausgabe wurde unterdrückt **"},
         {"logputput.enabled", "** Die Protokollausgabe wurde aktiviert **"},
         {"resend.failed.nopayload", "Erneuter Versand als neue Transaktion ist fehlgeschlagen: Die selektierte Transaktion {0} hat keine Nutzdaten." },
+        {"server.answer.timeout.title", "Zeitüberschreitung in der Client-Server Anbindung" },
+        {"server.answer.timeout.details", "Der Server antwortet nicht im definierten Zeitrahmen - ist die Last zu hoch?" },
     };
 }

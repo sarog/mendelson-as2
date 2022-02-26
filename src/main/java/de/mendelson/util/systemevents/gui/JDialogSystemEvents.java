@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/systemevents/gui/JDialogSystemEvents.java 30    23.01.20 9:27 Heller $
+//$Header: /oftp2/de/mendelson/util/systemevents/gui/JDialogSystemEvents.java 32    27/01/22 10:23 Heller $
 package de.mendelson.util.systemevents.gui;
 
 import com.toedter.calendar.JDateChooser;
@@ -7,6 +7,7 @@ import de.mendelson.util.IStatusBar;
 import de.mendelson.util.LockingGlassPane;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
+import de.mendelson.util.TextOverlay;
 import de.mendelson.util.clientserver.BaseClient;
 import de.mendelson.util.systemevents.ResourceBundleSystemEvent;
 import de.mendelson.util.systemevents.SystemEvent;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.swing.ImageIcon;
@@ -52,9 +54,9 @@ import javax.swing.table.TableColumn;
 public class JDialogSystemEvents extends JDialog implements ListSelectionListener {
 
     private static final MendelsonMultiResolutionImage IMAGE_MAGNIFYING_GLASS
-            = MendelsonMultiResolutionImage.fromSVG( "/util/systemevents/gui/magnifying_glass.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/util/systemevents/gui/magnifying_glass.svg", 24, 48);
     private static final MendelsonMultiResolutionImage IMAGE_RESET_FILTER
-            = MendelsonMultiResolutionImage.fromSVG( "/util/systemevents/gui/refresh.svg", 24, 48);
+            = MendelsonMultiResolutionImage.fromSVG("/util/systemevents/gui/refresh.svg", 24, 48);
     private BaseClient baseClient;
     private Date currentStartDate = new Date();
     private Date currentEndDate = new Date();
@@ -80,6 +82,8 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         this.statusBar = statusBar;
         this.baseClient = baseClient;
         initComponents();
+        TextOverlay.addTo(this.jTextFieldFreeTextSearch,
+                this.rb.getResourceString("label.freetext.hint"));
         this.setTitle(this.rb.getResourceString("title"));
         this.jTableSystemEvents.setRowHeight(TableModelSystemEvents.ROW_HEIGHT);
         this.jTableSystemEvents.getSelectionModel().addListSelectionListener(this);
@@ -90,10 +94,10 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         this.jTableSystemEvents.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //icon columns
         TableColumn column = this.jTableSystemEvents.getColumnModel().getColumn(0);
-        column.setMaxWidth(TableModelSystemEvents.ROW_HEIGHT + this.jTableSystemEvents.getRowMargin()*2);
+        column.setMaxWidth(TableModelSystemEvents.ROW_HEIGHT + this.jTableSystemEvents.getRowMargin() * 2);
         column.setResizable(false);
         column = this.jTableSystemEvents.getColumnModel().getColumn(1);
-        column.setMaxWidth(TableModelSystemEvents.ROW_HEIGHT + this.jTableSystemEvents.getRowMargin()*2);
+        column.setMaxWidth(TableModelSystemEvents.ROW_HEIGHT + this.jTableSystemEvents.getRowMargin() * 2);
         column.setResizable(false);
         this.setupDateChooser();
         this.setMultiresolutionIcons();                
@@ -133,8 +137,10 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         this.jLabelOriginUser.setIcon(new ImageIcon(SystemEvent.ICON_ORIGIN_USER_MULTIRESOLUTION.toMinResolution(18)));
     }        
     
-    /**Resets the filter to the default values*/
-    private void resetFilter(){        
+    /**
+     * Resets the filter to the default values
+     */
+    private void resetFilter() {
         this.currentStartDate = new Date();
         this.jDateChooserStartDate.setDate(this.currentStartDate);
         this.currentEndDate = new Date();
@@ -145,11 +151,13 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         this.jCheckBoxSeverityError.setSelected(true);
         this.jCheckBoxSeverityInfo.setSelected(true);
         this.jCheckBoxSeverityWarning.setSelected(true);
-        this.jTextFieldFreeTextSearch.setText( "" );
+        this.jTextFieldFreeTextSearch.setText("");
         this.jComboBoxCategory.setSelectedIndex(0);
     }
     
-    /**Defines the date chooser and the used colors*/
+    /**
+     * Defines the date chooser and the used colors
+     */
     private void setupDateChooser() {
         this.jDateChooserStartDate.setUI(new DateChooserUI());            
         this.jDateChooserStartDate.setLocale(Locale.getDefault());
@@ -283,7 +291,9 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
                 }
             }
         };
-        Executors.newSingleThreadExecutor().submit(runnable);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(runnable);
+        executor.shutdown();
     }
 
     /**
@@ -334,7 +344,6 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         jPanelSearchTextCategory = new javax.swing.JPanel();
         jLabelCategory = new javax.swing.JLabel();
         jLabelFreeText = new javax.swing.JLabel();
-        jLabelSearchHint = new javax.swing.JLabel();
         jTextFieldFreeTextSearch = new javax.swing.JTextField();
         jComboBoxCategory = new javax.swing.JComboBox<>();
         jPanelButtons = new javax.swing.JPanel();
@@ -491,17 +500,6 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
         jPanelSearchTextCategory.add(jLabelFreeText, gridBagConstraints);
-
-        jLabelSearchHint.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabelSearchHint.setText(this.rb.getResourceString( "label.freetext.hint"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        jPanelSearchTextCategory.add(jLabelSearchHint, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -876,7 +874,6 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
     private javax.swing.JLabel jLabelOriginSystem;
     private javax.swing.JLabel jLabelOriginTransaction;
     private javax.swing.JLabel jLabelOriginUser;
-    private javax.swing.JLabel jLabelSearchHint;
     private javax.swing.JLabel jLabelSeverityError;
     private javax.swing.JLabel jLabelSeverityInfo;
     private javax.swing.JLabel jLabelSeverityWarning;

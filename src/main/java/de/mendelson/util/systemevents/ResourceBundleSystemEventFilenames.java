@@ -1,4 +1,4 @@
-//$Header: /oftp2/de/mendelson/util/systemevents/ResourceBundleSystemEventFilenames.java 23    20.09.19 10:32 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/ResourceBundleSystemEventFilenames.java 24    26.01.21 15:20 Heller $
 package de.mendelson.util.systemevents;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 23 $
+ * @version $Revision: 24 $
  */
 public class ResourceBundleSystemEventFilenames extends MecResourceBundle {
 
@@ -83,7 +83,7 @@ public class ResourceBundleSystemEventFilenames extends MecResourceBundle {
         {"type." + SystemEvent.TYPE_PROCESSING_ANY, "Data processing"},
         {"type." + SystemEvent.TYPE_PRE_PROCESSING, "Preprocessing"},
         {"type." + SystemEvent.TYPE_POST_PROCESSING, "Postprocessing"},
-        {"type." + SystemEvent.TYPE_ACTIVATION_ANY, "Activation"},
+        {"type." + SystemEvent.TYPE_LICENSE_ANY, "License"},
         {"type." + SystemEvent.TYPE_FILE_OPERATION_ANY, "File operation"},
         {"type." + SystemEvent.TYPE_FILE_DELETE, "File (delete)"},
         {"type." + SystemEvent.TYPE_FILE_MOVE, "File (move)"},

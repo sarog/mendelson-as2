@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/httpconfig/gui/JDialogDisplayHTTPConfiguration.java 11    25.02.20 14:20 Heller $
+//$Header: /as2/de/mendelson/util/httpconfig/gui/JDialogDisplayHTTPConfiguration.java 13    27/01/22 11:34 Heller $
 package de.mendelson.util.httpconfig.gui;
 
 import de.mendelson.util.IStatusBar;
@@ -11,11 +11,11 @@ import de.mendelson.util.httpconfig.clientserver.DisplayHTTPServerConfigurationR
 import de.mendelson.util.uinotification.UINotification;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -28,7 +28,7 @@ import javax.swing.SwingUtilities;
  * Dialog to send a file to a single partner
  *
  * @author S.Heller
- * @version $Revision: 11 $
+ * @version $Revision: 13 $
  */
 public class JDialogDisplayHTTPConfiguration extends JDialog {
 
@@ -97,11 +97,19 @@ public class JDialogDisplayHTTPConfiguration extends JDialog {
                     DisplayHTTPServerConfigurationResponse response
                             = (DisplayHTTPServerConfigurationResponse) JDialogDisplayHTTPConfiguration.this.baseClient.sendSyncWaitInfinite(new DisplayHTTPServerConfigurationRequest());
                     JDialogDisplayHTTPConfiguration.this.jTextAreaMisc.setText(response.getMiscConfigurationText());
+                    String embeddedJettyServerVersion = response.getEmbeddedJettyServerVersion();
+                    if (embeddedJettyServerVersion == null) {
+                        embeddedJettyServerVersion = "--";
+                    }
+                    String httpServerConfigFile = response.getHttpServerConfigFile();
+                    if (httpServerConfigFile == null) {
+                        httpServerConfigFile = "--";
+                    }
                     JDialogDisplayHTTPConfiguration.this.jLabelConfigFileInfo.setText("<HTML>"
                             + JDialogDisplayHTTPConfiguration.this.rb.getResourceString("label.info.configfile",
                                     new Object[]{
-                                        "<strong>" + response.getHttpServerConfigFile() + "</strong>",
-                                        response.getEmbeddedJettyServerVersion()})
+                                        "<strong>" + httpServerConfigFile + "</strong>",
+                                        embeddedJettyServerVersion})
                             + "</HTML>");
                     if (!response.isEmbeddedHTTPServerStarted()) {
                         JDialogDisplayHTTPConfiguration.this.jTextAreaMisc.setText(
@@ -131,7 +139,9 @@ public class JDialogDisplayHTTPConfiguration extends JDialog {
                 }
             }
         };
-        Executors.newSingleThreadExecutor().submit(runnable);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(runnable);
+        executor.shutdown();
     }
 
     /**

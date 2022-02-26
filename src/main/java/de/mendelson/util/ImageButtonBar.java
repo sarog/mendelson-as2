@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/ImageButtonBar.java 12    9.12.19 10:34 Heller $
+//$Header: /as2/de/mendelson/util/ImageButtonBar.java 13    29.11.21 16:35 Heller $
 package de.mendelson.util;
 
 import com.l2fprod.common.swing.JButtonBar;
@@ -8,9 +8,9 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -33,7 +33,7 @@ import javax.swing.SwingConstants;
  * the following way: 1.initialize it 2.Add panels to it by addButton()
  *
  * @author S.Heller
- * @version $Revision: 12 $
+ * @version $Revision: 13 $
  */
 public class ImageButtonBar extends JPanel {
 
@@ -43,7 +43,7 @@ public class ImageButtonBar extends JPanel {
     private final List<ImageButtonComponent> componentsList
             = Collections.synchronizedList(new ArrayList<ImageButtonComponent>());
     private final Map<String, JToggleButton> internalButtonMap
-            = Collections.synchronizedMap(new HashMap<String, JToggleButton>());
+            = new ConcurrentHashMap<String, JToggleButton>();
 
     private int preferredButtonWidth = -1;
     private int preferredButtonHeight = -1;
@@ -61,17 +61,17 @@ public class ImageButtonBar extends JPanel {
         this.preferredButtonWidth = width;
     }
 
-    /**Allows to select a button of the button bar that has been given an internal name before. If the
-     * button with the name does not exist nothing happens
+    /**
+     * Allows to select a button of the button bar that has been given an
+     * internal name before. If the button with the name does not exist nothing
+     * happens
      */
-    public void setSelectedButton( String internalButtonName ){
-        synchronized( this.internalButtonMap ){
-            if( this.internalButtonMap.containsKey(internalButtonName)){
+    public void setSelectedButton(String internalButtonName) {
+        if (this.internalButtonMap.containsKey(internalButtonName)) {
                 JToggleButton button = this.internalButtonMap.get(internalButtonName);
                 button.doClick();
             }
         }
-    }
     
     /**
      * Add a panel that is controlled by the passed icon
@@ -157,9 +157,7 @@ public class ImageButtonBar extends JPanel {
                 button.setSelected(imageButtonComponent.getInitialSelected());
                 //allow to select the component by name
                 if (imageButtonComponent.getInternalName() != null) {
-                    synchronized (this.internalButtonMap) {
-                        this.internalButtonMap.put( imageButtonComponent.getInternalName(), button);
-                    }
+                    this.internalButtonMap.put(imageButtonComponent.getInternalName(), button);
                 }
             }
         }

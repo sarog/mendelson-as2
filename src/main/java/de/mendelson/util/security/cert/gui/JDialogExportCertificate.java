@@ -1,8 +1,9 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogExportCertificate.java 16    11.11.20 17:06 Heller $
+//$Header: /oftp2/de/mendelson/util/security/cert/gui/JDialogExportCertificate.java 20    27/01/22 9:23 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.MecFileChooser;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.TextOverlay;
 import de.mendelson.util.security.KeyStoreUtil;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.security.cert.KeystoreCertificate;
@@ -20,14 +21,13 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
  * Dialog to configure a single partner
  *
  * @author S.Heller
- * @version $Revision: 16 $
+ * @version $Revision: 20 $
  */
 public class JDialogExportCertificate extends JDialog {
 
@@ -58,6 +58,8 @@ public class JDialogExportCertificate extends JDialog {
         }
         this.setTitle(this.rb.getResourceString("title"));
         initComponents();
+        TextOverlay.addTo(jTextFieldExportFile, 
+                this.rb.getResourceString( "label.exportfile.hint"));
         this.jLabelIcon.setIcon(new ImageIcon(JDialogCertificates.IMAGE_EXPORT_MULTIRESOLUTION.toMinResolution(32)));
         this.manager = manager;
         this.getRootPane().setDefaultButton(this.jButtonOk);
@@ -71,6 +73,7 @@ public class JDialogExportCertificate extends JDialog {
             this.jComboBoxAlias.addItem(cert.getAlias());
         }
         this.jComboBoxAlias.setSelectedItem(selectedAlias);
+        this.setButtonState();
     }
 
     /**
@@ -204,7 +207,7 @@ public class JDialogExportCertificate extends JDialog {
         jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);
         jPanelEdit.add(jLabelIcon, gridBagConstraints);
 
         jLabelExportFile.setText(this.rb.getResourceString( "label.exportfile"));
@@ -228,7 +231,7 @@ public class JDialogExportCertificate extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jTextFieldExportFile, gridBagConstraints);
 
-        jLabelExportEncoding.setText(this.rb.getResourceString( "label.encoding"));
+        jLabelExportEncoding.setText(this.rb.getResourceString( "label.exportformat"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -246,7 +249,7 @@ public class JDialogExportCertificate extends JDialog {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jComboBoxExportFormat, gridBagConstraints);
 
         jLabelAlias.setText(this.rb.getResourceString( "label.alias"));
@@ -261,7 +264,7 @@ public class JDialogExportCertificate extends JDialog {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jComboBoxAlias, gridBagConstraints);
 
         jButtonBrowse.setText("..");
@@ -275,7 +278,7 @@ public class JDialogExportCertificate extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jButtonBrowse, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -315,7 +318,7 @@ public class JDialogExportCertificate extends JDialog {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanelButtons, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(430, 271));
+        setSize(new java.awt.Dimension(445, 278));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -323,6 +326,7 @@ public class JDialogExportCertificate extends JDialog {
         JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
         MecFileChooser chooser = new MecFileChooser(parent, this.rb.getResourceString("filechooser.certificate.export"));
         chooser.browseFilename(this.jTextFieldExportFile);
+        this.setButtonState();
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jTextFieldExportFileKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldExportFileKeyReleased

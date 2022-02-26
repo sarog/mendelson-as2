@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/systemevents/SystemEventManager.java 15    9.06.20 10:11 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/systemevents/SystemEventManager.java 16    1.09.21 11:28 Heller $
 package de.mendelson.util.systemevents;
 
 import de.mendelson.util.MecResourceBundle;
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  * Performs the notification for an event
  *
  * @author S.Heller
- * @version $Revision: 15 $
+ * @version $Revision: 16 $
  */
 public abstract class SystemEventManager {
 
@@ -142,6 +142,28 @@ public abstract class SystemEventManager {
         }
         event.setBody(builder.toString());        
         event.setSubject(this.rb.getResourceString("label.subject.logoff", userName));
+        try {
+            this.storeEventToFile(event);
+        } catch (Exception e) {
+            return;
+        }
+    }
+    
+    /**
+     * Throws a new system event that a problem occurred in the client-server interface
+     */
+    public void newEventExceptionInClientServerProcess( String remoteIP, String userName, String processId, String sessionId, 
+            String message ) {
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_ERROR, SystemEvent.ORIGIN_SYSTEM,
+                SystemEvent.TYPE_CLIENT_ANY);
+        StringBuilder builder = new StringBuilder();
+        builder.append( this.rb.getResourceString("label.body.clientip", remoteIP)).append( "\n");   
+        builder.append( this.rb.getResourceString("label.body.processid", processId)).append( "\n\n");  
+        if( message != null && message.trim().length() > 0 ){
+            builder.append( this.rb.getResourceString("label.body.details", message)).append( "\n"); 
+        }
+        event.setBody(builder.toString());        
+        event.setSubject(this.rb.getResourceString("label.error.clientserver"));
         try {
             this.storeEventToFile(event);
         } catch (Exception e) {

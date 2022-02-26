@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2MDNInfo.java 6     22.08.19 10:26 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2MDNInfo.java 7     27/01/22 17:19 Heller $
 package de.mendelson.comm.as2.message;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
@@ -15,7 +15,7 @@ import java.util.Properties;
 /**
  * Stores all information about a as2 message
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 7 $
  */
 public class AS2MDNInfo implements AS2Info {
 
@@ -281,14 +281,14 @@ public class AS2MDNInfo implements AS2Info {
     }
 
     /**
-     * @return the dispositionState
+     * @return the dispositionState, e.g. "processed/error: unknown-trading-partner"
      */
     public String getDispositionState() {
         return dispositionState;
     }
 
     /**
-     * @param dispositionState the dispositionState to set
+     * @param dispositionState the dispositionState to set, e.g. "processed/error: unknown-trading-partner"
      */
     public void setDispositionState(String dispositionState) {
         this.dispositionState = dispositionState;

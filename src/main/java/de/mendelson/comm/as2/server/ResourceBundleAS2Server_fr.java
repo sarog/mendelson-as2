@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/server/ResourceBundleAS2Server_fr.java 15    9.10.18 12:53 Heller $
+//$Header: /as2/de/mendelson/comm/as2/server/ResourceBundleAS2Server_fr.java 16    25.01.21 14:51 Heller $
 package de.mendelson.comm.as2.server;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 15 $
+ * @version $Revision: 16 $
  */
 public class ResourceBundleAS2Server_fr extends MecResourceBundle {
 
@@ -40,5 +40,7 @@ public class ResourceBundleAS2Server_fr extends MecResourceBundle {
         {"httpserver.running", "Serveur HTTP en cours d''exécution ({0})" },
          {"server.started.issues", "Avertissement: Des problèmes de configuration ont été trouvés {0} lors du démarrage du serveur." },
         {"server.started.issue", "Avertissement: Un problème de configuration a été détecté lors du démarrage du serveur." },
+        {"ha.notavailable.subject", "Le mode haute disponibilité n''est pas autorisé" },
+        {"ha.notavailable.body", "Veuillez obtenir une licence pour le plugin HA (haute disponibilité) pour utiliser cette fonctionnalité." },
     };
 }

@@ -1,9 +1,11 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogExportKeyPKCS12.java 12    11.11.20 17:06 Heller $
+//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogExportKeyPKCS12.java 17    4.10.21 11:57 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.MecFileChooser;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.TextOverlay;
+import de.mendelson.util.passwordfield.PasswordOverlay;
 import de.mendelson.util.security.BCCryptoHelper;
 import de.mendelson.util.security.JKSKeys2PKCS12;
 import de.mendelson.util.security.KeyStoreUtil;
@@ -18,7 +20,6 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -34,7 +35,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * Export a private key into a pkcs#12 keystore
  *
  * @author S.Heller
- * @version $Revision: 12 $
+ * @version $Revision: 17 $
  */
 public class JDialogExportKeyPKCS12 extends JDialog {
 
@@ -64,10 +65,13 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         this.logger = logger;
         this.setTitle(this.rb.getResourceString("title"));
         initComponents();
+        PasswordOverlay.addTo(this.jPasswordFieldPassphrase, this.rb.getResourceString("label.keypass.hint"));
+        TextOverlay.addTo(this.jTextFieldExportPKCS12File, this.rb.getResourceString("label.exportkey.hint"));
         this.jLabelIcon.setIcon(new ImageIcon(JDialogCertificates.IMAGE_EXPORT_MULTIRESOLUTION.toMinResolution(32)));
         this.manager = manager;
         this.populateAliasList(selectedAlias);
         this.getRootPane().setDefaultButton(this.jButtonOk);
+        this.setButtonState();
     }
 
     private void populateAliasList(String preselection) throws Exception {
@@ -172,7 +176,7 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);
         jPanelEdit.add(jLabelIcon, gridBagConstraints);
 
         jLabelExportPKCS12File.setText(this.rb.getResourceString( "label.exportkey"));
@@ -192,6 +196,7 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jTextFieldExportPKCS12File, gridBagConstraints);
@@ -213,7 +218,7 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jButtonBrowseExportFile, gridBagConstraints);
 
         jLabelPassphrase.setText(this.rb.getResourceString( "label.keypass"));
@@ -224,6 +229,8 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelPassphrase, gridBagConstraints);
 
+        jPasswordFieldPassphrase.setMinimumSize(new java.awt.Dimension(150, 20));
+        jPasswordFieldPassphrase.setPreferredSize(new java.awt.Dimension(150, 20));
         jPasswordFieldPassphrase.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jPasswordFieldPassphraseKeyReleased(evt);
@@ -232,12 +239,9 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jPasswordFieldPassphrase, gridBagConstraints);
-
-        jComboBoxAlias.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -290,7 +294,7 @@ public class JDialogExportKeyPKCS12 extends JDialog {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanelButtons, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(466, 287));
+        setSize(new java.awt.Dimension(466, 296));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -1,4 +1,4 @@
-//$Header: /converteride/de/mendelson/util/Splash.java 49    27.02.20 13:27 Heller $
+//$Header: /converteride/de/mendelson/util/Splash.java 52    24.11.21 16:28 Heller $
 package de.mendelson.util;
 
 import java.awt.BorderLayout;
@@ -9,12 +9,8 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.font.FontRenderContext;
@@ -44,7 +40,7 @@ import javax.swing.SwingConstants;
  * Splash window to been shown while one of the mendelson products load
  *
  * @author S.Heller
- * @version $Revision: 49 $
+ * @version $Revision: 52 $
  */
 public class Splash extends JWindow implements SwingConstants {
 
@@ -77,12 +73,7 @@ public class Splash extends JWindow implements SwingConstants {
      * @param imageHeight Scaling height of the splash - only valid if this is a SVG, else the image size is taken
      */
     public Splash(String imageResource, int imageHeight) {
-        /*The scaling factor of the UI (e.g. windows: scale UI by 120% etc).*/
-        float scalingFactor = 1.0f;
-        if (imageResource.endsWith( ".svg")) {
-            scalingFactor = (float)getScalingFactor();
-        }
-        this.splashImage = this.loadImage(imageResource, (int)(imageHeight*scalingFactor));                
+        this.splashImage = this.loadImage(imageResource, imageHeight);                
         float width = (float)this.splashImage.getWidth(this);
         float height = (float)this.splashImage.getHeight(this);
         this.getContentPane().setLayout(new BorderLayout());        
@@ -95,15 +86,6 @@ public class Splash extends JWindow implements SwingConstants {
     public Splash(String imageResource) {
         this( imageResource, 330);
     }
-    
-    /**Returns the current UI scaling factor of the OS*/
-    protected static double getScalingFactor(){
-        GraphicsEnvironment localEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice defaultScreen = localEnvironment.getDefaultScreenDevice();
-        GraphicsConfiguration defaultScreenConfiguration = defaultScreen.getDefaultConfiguration();
-        return( defaultScreenConfiguration.getDefaultTransform().getScaleX());
-    }
-    
     
     /**
      * Adds a static display string to the splash, this is always painted using
@@ -349,19 +331,6 @@ public class Splash extends JWindow implements SwingConstants {
                 offScreenImage.getHeight(this), this);
     }
 
-    /**
-     * Captures the current background of the splash to realize opacity
-     */
-    private BufferedImage captureBackground() {
-        try {
-            Robot robot = new Robot();
-            Rectangle captureSize = this.getBounds();
-            return (robot.createScreenCapture(captureSize));
-        } catch (Throwable e) {
-            //ignore, something happened
-        }
-        return (null);
-    }
     
     /**
      * Loads the image and tracks it
@@ -369,15 +338,19 @@ public class Splash extends JWindow implements SwingConstants {
      * @param resource image resource to load the image
      */
     private BufferedImage loadImage(String resource, int imageHeight) {
-        if (resource.endsWith(".svg")) {
+        if( resource.endsWith(".svg")){
           MendelsonMultiResolutionImage image = MendelsonMultiResolutionImage.fromSVG(resource, imageHeight, imageHeight, 
                   MendelsonMultiResolutionImage.SVGScalingOption.KEEP_HEIGHT);
-          return image.getResolutionVariant(imageHeight, imageHeight);
+          return( image.getResolutionVariant(imageHeight, imageHeight));
         }
-        else return this.loadImageBitmap(resource);
+        else{
+            BufferedImage image = this.loadImageAsBitmap(resource);
+            return( image );
     }
+    }
+
     
-    private BufferedImage loadImageBitmap(String resource) {
+    private BufferedImage loadImageAsBitmap(String resource) {
         BufferedImage bufferedImage = null;
         try {
             //get an input stream from the resource
@@ -571,11 +544,10 @@ public class Splash extends JWindow implements SwingConstants {
          */
         public Progress(JWindow parent, int x, int y, int height, int width,
                 Color foregroundColor, Color backgroundColor, Color borderColor, boolean showPercent) {
-            float scalingFactor = (float)Splash.getScalingFactor();
-            this.x = (int)(x*scalingFactor);
-            this.y = (int)(y*scalingFactor);
-            this.height = (int)(height*scalingFactor);
-            this.width = (int)(width*scalingFactor);
+            this.x = x;
+            this.y = y;
+            this.height = height;
+            this.width = width;
             this.foregroundColor = foregroundColor;
             this.backgroundColor = backgroundColor;
             this.borderColor = borderColor;
@@ -711,10 +683,9 @@ public class Splash extends JWindow implements SwingConstants {
          */
         public DisplayString(Font font, float x, float y, String text, Color color,
                 AffineTransform fontTransform) {
-            float scalingFactor = (float)Splash.getScalingFactor();
-            this.font = font.deriveFont((float)(scalingFactor*font.getSize()));
-            this.x = x*scalingFactor;
-            this.y = y*scalingFactor;
+            this.font = font;
+            this.x = x;
+            this.y = y;
             this.text = text;
             this.color = color;
             this.fontTransform = fontTransform;

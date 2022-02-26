@@ -1,7 +1,5 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/timing/StatisticDeleteController.java 3     17.04.12 11:32 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/timing/StatisticDeleteController.java 4     2/02/22 15:29 Heller $
 package de.mendelson.comm.as2.timing;
-
-import java.sql.Connection;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -12,11 +10,11 @@ import java.sql.Connection;
  */
 /**
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 4 $
  */
 public class StatisticDeleteController {
 
-    public StatisticDeleteController(Connection configConnection, Connection runtimeConnection) {
+    public StatisticDeleteController(Object a, Object b) {
     }
 
     public void startAutoDeleteControl() {

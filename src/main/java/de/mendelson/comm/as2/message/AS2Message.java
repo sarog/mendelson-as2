@@ -1,14 +1,14 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2Message.java 59    19.03.20 18:51 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2Message.java 63    16.09.21 15:30 Heller $
 package de.mendelson.comm.as2.message;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
+import de.mendelson.util.security.encryption.EncryptionConstantsAS2;
+import de.mendelson.util.security.signature.SignatureConstantsAS2;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -17,53 +17,53 @@ import java.util.Properties;
  * Stores a AS2 message
  *
  * @author S.Heller
- * @version $Revision: 59 $
+ * @version $Revision: 63 $
  */
 public class AS2Message implements Serializable {
 
     public static final long serialVersionUID = 1L;
     
-    public static final int ENCRYPTION_UNKNOWN = 0;
-    public static final int ENCRYPTION_NONE = 1;
-    public static final int ENCRYPTION_3DES = 2;
-    public static final int ENCRYPTION_RC2_40 = 3;
-    public static final int ENCRYPTION_RC2_64 = 4;
-    public static final int ENCRYPTION_RC2_128 = 5;
-    public static final int ENCRYPTION_RC2_196 = 6;
-    public static final int ENCRYPTION_RC2_UNKNOWN = 7;
-    public static final int ENCRYPTION_AES_128 = 8;    
-    public static final int ENCRYPTION_AES_192 = 9;    
-    public static final int ENCRYPTION_AES_256 = 10;    
-    public static final int ENCRYPTION_RC4_40 = 11;
-    public static final int ENCRYPTION_RC4_56 = 12;
-    public static final int ENCRYPTION_RC4_128 = 13;
-    public static final int ENCRYPTION_RC4_UNKNOWN = 14;
-    public static final int ENCRYPTION_DES = 15;
-    public static final int ENCRYPTION_AES_128_RSAES_AOEP = 16;
-    public static final int ENCRYPTION_AES_192_RSAES_AOEP = 17;
-    public static final int ENCRYPTION_AES_256_RSAES_AOEP = 18;
-    public static final int ENCRYPTION_UNKNOWN_ALGORITHM = 99;
-    public static final int SIGNATURE_UNKNOWN = 0;
-    public static final int SIGNATURE_NONE = 1;
-    public static final int SIGNATURE_SHA1 = 2;
-    public static final int SIGNATURE_MD5 = 3;
-    public static final int SIGNATURE_SHA224 = 4;
-    public static final int SIGNATURE_SHA256 = 5;
-    public static final int SIGNATURE_SHA384 = 6;
-    public static final int SIGNATURE_SHA512 = 7;
-    public static final int SIGNATURE_SHA1_RSASSA_PSS = 8;
-    public static final int SIGNATURE_SHA224_RSASSA_PSS = 9;
-    public static final int SIGNATURE_SHA256_RSASSA_PSS = 10;
-    public static final int SIGNATURE_SHA384_RSASSA_PSS = 11;
-    public static final int SIGNATURE_SHA512_RSASSA_PSS = 12;
-    public static final int SIGNATURE_SHA3_224 = 13;
-    public static final int SIGNATURE_SHA3_256 = 14;
-    public static final int SIGNATURE_SHA3_384 = 15;
-    public static final int SIGNATURE_SHA3_512 = 16;    
-    public static final int SIGNATURE_SHA3_224_RSASSA_PSS = 17;
-    public static final int SIGNATURE_SHA3_256_RSASSA_PSS = 18;
-    public static final int SIGNATURE_SHA3_384_RSASSA_PSS = 19;
-    public static final int SIGNATURE_SHA3_512_RSASSA_PSS = 20;    
+    public static final int ENCRYPTION_UNKNOWN = EncryptionConstantsAS2.ENCRYPTION_UNKNOWN;
+    public static final int ENCRYPTION_NONE = EncryptionConstantsAS2.ENCRYPTION_NONE;
+    public static final int ENCRYPTION_3DES = EncryptionConstantsAS2.ENCRYPTION_3DES;
+    public static final int ENCRYPTION_RC2_40 = EncryptionConstantsAS2.ENCRYPTION_RC2_40;
+    public static final int ENCRYPTION_RC2_64 = EncryptionConstantsAS2.ENCRYPTION_RC2_64;
+    public static final int ENCRYPTION_RC2_128 = EncryptionConstantsAS2.ENCRYPTION_RC2_128;
+    public static final int ENCRYPTION_RC2_196 = EncryptionConstantsAS2.ENCRYPTION_RC2_196;
+    public static final int ENCRYPTION_RC2_UNKNOWN = EncryptionConstantsAS2.ENCRYPTION_RC2_UNKNOWN;
+    public static final int ENCRYPTION_AES_128 = EncryptionConstantsAS2.ENCRYPTION_AES_128;
+    public static final int ENCRYPTION_AES_192 = EncryptionConstantsAS2.ENCRYPTION_AES_192;
+    public static final int ENCRYPTION_AES_256 = EncryptionConstantsAS2.ENCRYPTION_AES_256;
+    public static final int ENCRYPTION_RC4_40 = EncryptionConstantsAS2.ENCRYPTION_RC4_40;
+    public static final int ENCRYPTION_RC4_56 = EncryptionConstantsAS2.ENCRYPTION_RC4_56;
+    public static final int ENCRYPTION_RC4_128 = EncryptionConstantsAS2.ENCRYPTION_RC4_128;
+    public static final int ENCRYPTION_RC4_UNKNOWN = EncryptionConstantsAS2.ENCRYPTION_RC4_UNKNOWN;
+    public static final int ENCRYPTION_DES = EncryptionConstantsAS2.ENCRYPTION_DES;
+    public static final int ENCRYPTION_AES_128_RSAES_AOEP = EncryptionConstantsAS2.ENCRYPTION_AES_128_RSAES_AOEP;
+    public static final int ENCRYPTION_AES_192_RSAES_AOEP = EncryptionConstantsAS2.ENCRYPTION_AES_192_RSAES_AOEP;
+    public static final int ENCRYPTION_AES_256_RSAES_AOEP = EncryptionConstantsAS2.ENCRYPTION_AES_256_RSAES_AOEP;
+    public static final int ENCRYPTION_UNKNOWN_ALGORITHM = EncryptionConstantsAS2.ENCRYPTION_UNKNOWN_ALGORITHM;
+    public static final int SIGNATURE_UNKNOWN = SignatureConstantsAS2.SIGNATURE_UNKNOWN;
+    public static final int SIGNATURE_NONE = SignatureConstantsAS2.SIGNATURE_NONE;
+    public static final int SIGNATURE_SHA1 = SignatureConstantsAS2.SIGNATURE_SHA1;
+    public static final int SIGNATURE_MD5 = SignatureConstantsAS2.SIGNATURE_MD5;
+    public static final int SIGNATURE_SHA224 = SignatureConstantsAS2.SIGNATURE_SHA224;
+    public static final int SIGNATURE_SHA256 = SignatureConstantsAS2.SIGNATURE_SHA256;
+    public static final int SIGNATURE_SHA384 = SignatureConstantsAS2.SIGNATURE_SHA384;
+    public static final int SIGNATURE_SHA512 = SignatureConstantsAS2.SIGNATURE_SHA512;
+    public static final int SIGNATURE_SHA1_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA1_RSASSA_PSS;
+    public static final int SIGNATURE_SHA224_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA224_RSASSA_PSS;
+    public static final int SIGNATURE_SHA256_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA256_RSASSA_PSS;
+    public static final int SIGNATURE_SHA384_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA384_RSASSA_PSS;
+    public static final int SIGNATURE_SHA512_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA512_RSASSA_PSS;
+    public static final int SIGNATURE_SHA3_224 = SignatureConstantsAS2.SIGNATURE_SHA3_224;
+    public static final int SIGNATURE_SHA3_256 = SignatureConstantsAS2.SIGNATURE_SHA3_256;
+    public static final int SIGNATURE_SHA3_384 = SignatureConstantsAS2.SIGNATURE_SHA3_384;
+    public static final int SIGNATURE_SHA3_512 = SignatureConstantsAS2.SIGNATURE_SHA3_512;    
+    public static final int SIGNATURE_SHA3_224_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA3_224_RSASSA_PSS;
+    public static final int SIGNATURE_SHA3_256_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA3_256_RSASSA_PSS;
+    public static final int SIGNATURE_SHA3_384_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA3_384_RSASSA_PSS;
+    public static final int SIGNATURE_SHA3_512_RSASSA_PSS = SignatureConstantsAS2.SIGNATURE_SHA3_512_RSASSA_PSS;    
     public static final int COMPRESSION_UNKNOWN = 0;
     public static final int COMPRESSION_NONE = 1;
     public static final int COMPRESSION_ZLIB = 2;
@@ -141,26 +141,6 @@ public class AS2Message implements Serializable {
      */
     public int getPayloadCount() {
         return (this.payload.size());
-    }
-
-    /**
-     * Copies all data from one stream to another
-     */
-    private void copyStreams(InputStream in, OutputStream out) throws IOException {
-        BufferedInputStream inStream = new BufferedInputStream(in);
-        BufferedOutputStream outStream = new BufferedOutputStream(out);
-        //copy the contents to an output stream
-        byte[] buffer = new byte[2048];
-        int read = 2048;
-        //a read of 0 must be allowed, sometimes it takes time to
-        //extract data from the input
-        while (read != -1) {
-            read = inStream.read(buffer);
-            if (read > 0) {
-                outStream.write(buffer, 0, read);
-            }
-        }
-        outStream.flush();
     }
 
     /**
@@ -244,13 +224,17 @@ public class AS2Message implements Serializable {
     /**
      * Writes the payload to the message to the passed file
      */
-    public void writeRawDecryptedTo(File file) throws Exception {
+    public void writeRawDecryptedTo(Path file) throws Exception {
         OutputStream outStream = null;
         InputStream inStream = null;
         try {
-            outStream = Files.newOutputStream(file.toPath());
+            outStream = Files.newOutputStream(file, 
+                    StandardOpenOption.SYNC, 
+                    StandardOpenOption.CREATE, 
+                    StandardOpenOption.TRUNCATE_EXISTING, 
+                    StandardOpenOption.WRITE);
             inStream = this.decryptedRawData.getInputStream();
-            this.copyStreams(inStream, outStream);
+            inStream.transferTo(outStream);
         } finally {
             if (outStream != null) {
                 outStream.flush();

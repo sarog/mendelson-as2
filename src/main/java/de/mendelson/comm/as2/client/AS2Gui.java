@@ -1,4 +1,4 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/client/AS2Gui.java 41    11.01.21 10:55 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/client/AS2Gui.java 42    2/02/22 16:22 Heller $
 package de.mendelson.comm.as2.client;
 
 import de.mendelson.util.httpconfig.gui.JDialogDisplayHTTPConfiguration;
@@ -42,6 +42,7 @@ import de.mendelson.comm.as2.preferences.PreferencesPanelNotification;
 import de.mendelson.comm.as2.preferences.PreferencesPanelProxy;
 import de.mendelson.comm.as2.preferences.PreferencesPanelSecurity;
 import de.mendelson.comm.as2.preferences.PreferencesPanelSystemMaintenance;
+import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.AS2Tools;
 import de.mendelson.util.ColorUtil;
 import de.mendelson.util.DateChooserUI;
@@ -49,6 +50,7 @@ import de.mendelson.util.LayoutManagerJToolbar;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
 import de.mendelson.util.MendelsonMultiResolutionImage.SVGScalingOption;
+import de.mendelson.util.NamedThreadFactory;
 import de.mendelson.util.Splash;
 import de.mendelson.util.clientserver.ClientsideMessageProcessor;
 import de.mendelson.util.clientserver.GUIClient;
@@ -159,7 +161,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * Main GUI for the control of the mendelson AS2 server
  *
  * @author S.Heller
- * @version $Revision: 41 $
+ * @version $Revision: 42 $
  */
 public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorterListener,
         ClientsideMessageProcessor, MouseListener, PopupMenuListener, ModuleStarter,
@@ -222,16 +224,13 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
             = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/logo_open_source.svg",
                     16, 128);
     private static final MendelsonMultiResolutionImage ICON_PENDING
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/message/loggui/state_pending.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/message/loggui/state_pending.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_STOPPED
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/message/loggui/state_stopped.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/message/loggui/state_stopped.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private static final MendelsonMultiResolutionImage ICON_FINISHED
-            = MendelsonMultiResolutionImage.fromSVG(
-                    "/comm/as2/message/loggui/state_finished.svg",
+            = MendelsonMultiResolutionImage.fromSVG("/comm/as2/message/loggui/state_finished.svg",
                     IMAGE_SIZE_MENU_ITEM, IMAGE_SIZE_MENU_ITEM * 2);
     private final static MendelsonMultiResolutionImage ICON_HIDE
             = MendelsonMultiResolutionImage.fromSVG("/comm/as2/client/hide.svg",
@@ -292,7 +291,8 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
     private Date filterEndDate = new Date();
     private Color COLOR_RED = Color.RED.darker();
     private String downloadURLNewVersion = "http://mendelson-e-c.com/as2";
-    private final ScheduledExecutorService scheduledExecutorUpdateCheck = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(2,
+            new NamedThreadFactory("client-refresh-update"));
 
     /**
      * Creates new form NewJFrame
@@ -416,7 +416,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         super.addMessageProcessor(this);
         //perform the connection to the server
         //warning! this works for localhost only so far
-        int clientServerCommPort = this.clientPreferences.getInt(PreferencesAS2.CLIENTSERVER_COMM_PORT);
+        int clientServerCommPort = AS2Server.CLIENTSERVER_COMM_PORT;
         this.configureHideableColumns();
         this.jToolBar.setLayout(new LayoutManagerJToolbar());
         this.setupDateChooser();
@@ -503,7 +503,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
             }
         };
         //check once a day for an update
-        this.scheduledExecutorUpdateCheck.scheduleAtFixedRate(updateCheckThread, 1, 60 * 24, TimeUnit.MINUTES);
+        this.scheduledExecutor.scheduleAtFixedRate(updateCheckThread, 1, 60 * 24, TimeUnit.MINUTES);
     }
 
     private void setMultiresolutionIcons() {
@@ -713,7 +713,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
         super.performLogin(this.username, this.password.toCharArray(), AS2ServerVersion.getFullProductName());
         this.as2StatusBar.setConnectedHost(this.host);
         //start the table update thread
-        Executors.newSingleThreadExecutor().submit(this.refreshThread);
+        this.scheduledExecutor.scheduleWithFixedDelay(this.refreshThread, 3000, 3000, TimeUnit.MILLISECONDS);
         this.as2StatusBar.initialize(this.getBaseClient(), this);
         this.as2StatusBar.startConfigurationChecker();
     }
@@ -1095,7 +1095,7 @@ public class AS2Gui extends GUIClient implements ListSelectionListener, RowSorte
                                 }
                                 ManualSendResponse response
                                         = dialog.performResend(info.getMessageId(),
-                                                sender, receiver, tempFile, originalFilename);
+                                                sender, receiver, tempFile, originalFilename, info.getSubject());
                                 String newMessageId = "--";
                                 if (response != null) {
                                     newMessageId = response.getAS2Info().getMessageId();
@@ -2466,11 +2466,11 @@ private void jMenuItemPopupSendAgainActionPerformed(java.awt.event.ActionEvent e
         private boolean overviewRefreshRequested = true;
         private boolean partnerRefreshRequested = true;
         private LazyLoaderThread lazyLoader = null;
+        private boolean firstStart = true;
 
         @Override
         public void run() {
-            boolean firstStart = true;
-            while (true) {
+            try {
                 if (this.overviewRefreshRequested) {
                     this.overviewRefreshRequested = false;
                     this.refreshMessageOverviewList();
@@ -2479,14 +2479,13 @@ private void jMenuItemPopupSendAgainActionPerformed(java.awt.event.ActionEvent e
                     this.partnerRefreshRequested = false;
                     this.refreshTablePartnerData();
                 }
-                if (firstStart) {
-                    firstStart = false;
+                //resize the columns on the first start
+                if (this.firstStart) {
+                    this.firstStart = false;
                     JTableColumnResizer.adjustColumnWidthByContent(AS2Gui.this.jTableMessageOverview);
                 }
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (Exception e) {
-                }
+            } catch (Throwable e) {
+                //nop
             }
         }
 

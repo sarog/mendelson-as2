@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/ClientServer.java 27    18.02.20 14:37 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/ClientServer.java 29    21.09.21 14:13 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.codec.ClientServerCodecFactory;
@@ -14,7 +14,6 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -42,7 +41,7 @@ import org.bouncycastle.asn1.x509.KeyPurposeId;
  * Server root for the mendelson client/server architecture
  *
  * @author S.Heller
- * @version $Revision: 27 $
+ * @version $Revision: 29 $
  */
 public class ClientServer {
 
@@ -121,12 +120,12 @@ public class ClientServer {
         //finally bind the protocol handler to the port
         acceptor.bind(new InetSocketAddress(this.port));
         this.logger.log(Level.INFO, this.productName + " client-server interface started.");
-        this.startTime = new Date().getTime();
+        this.startTime = System.currentTimeMillis();
     }
 
     /**
      * Instanciate a SSL/TLS context. This creates an SSL key on the server and uses
-     * it for the SSL secured client-server communication. The TLS (TSLv1.2)
+     * it for the SSL secured client-server communication. The TLS
      * between client and server only delivers weak security as the client
      * trusts any key from the server (client and server certificates are not
      * exchanged using an other communication channel, there is no additional
@@ -136,12 +135,12 @@ public class ClientServer {
      */
     private SSLContext createSSLContext() throws Exception {
         BCCryptoHelper helper = new BCCryptoHelper();
-        SSLContext sslContext = SSLContext.getInstance("TLSv1");
+        SSLContext sslContext = SSLContext.getInstance(SERVERSIDE_ACCEPTED_TLS_PROTOCOLS[0]);
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         KeyStore keystore = helper.createKeyStoreInstance(BCCryptoHelper.KEYSTORE_PKCS12);
         //initialize keystore
         keystore.load(null, "dummy".toCharArray());
-        KeyGenerationResult result = this.generateSSLKey();
+        KeyGenerationResult result = this.generateTLSKey();
         keystore.setKeyEntry("key", result.getKeyPair().getPrivate(), "dummy".toCharArray(), new Certificate[]{result.getCertificate()});
         keyManagerFactory.init(keystore, "dummy".toCharArray());
         KeyManager[] defaultKeymanager = keyManagerFactory.getKeyManagers();
@@ -152,7 +151,7 @@ public class ClientServer {
     /**
      * Generates the SSL key for the client-server connection
      */
-    private KeyGenerationResult generateSSLKey() throws Exception {
+    private KeyGenerationResult generateTLSKey() throws Exception {
         KeyGenerator generator = new KeyGenerator();
         KeyGenerationValues parameter = new KeyGenerationValues();
         //generating a longer key takes some time.
@@ -171,6 +170,8 @@ public class ClientServer {
         }
         parameter.setEmailAddress("nomail@nomail.to");
         parameter.setLocalityName(Locale.getDefault().getDisplayLanguage());
+        parameter.setCountryCode(Locale.getDefault().getCountry());
+        parameter.setStateName(Locale.getDefault().getDisplayCountry());
         //add SSL extended key usage
         KeyPurposeId[] extKeyUsage = new KeyPurposeId[2];
         extKeyUsage[0] = KeyPurposeId.id_kp_serverAuth;

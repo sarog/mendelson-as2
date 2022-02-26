@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/configurationcheck/ConfigurationCheckController.java 24    7.12.20 14:29 Heller $
+//$Header: /as2/de/mendelson/comm/as2/configurationcheck/ConfigurationCheckController.java 33    27/01/22 11:34 Heller $
 package de.mendelson.comm.as2.configurationcheck;
 
 import de.mendelson.comm.as2.preferences.PreferencesAS2;
@@ -8,6 +8,8 @@ import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.send.DirPollManager;
 import de.mendelson.util.AS2Tools;
+import de.mendelson.util.NamedThreadFactory;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.httpconfig.server.HTTPServerConfigInfo;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.security.cert.KeystoreCertificate;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * Checks several issues of the configuration
  *
  * @author S.Heller
- * @version $Revision: 24 $
+ * @version $Revision: 33 $
  */
 public class ConfigurationCheckController {
 
@@ -43,15 +46,20 @@ public class ConfigurationCheckController {
     private PreferencesAS2 preferences = new PreferencesAS2();
     private HTTPServerConfigInfo httpServerConfigInfo;
     private DirPollManager pollManager;
+    private final ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+        new NamedThreadFactory("configuration-check"));
+    private IDBDriverManager dbDriverManager;
 
     public ConfigurationCheckController(CertificateManager managerEncSign, CertificateManager managerSSL, Connection configConnection,
-            Connection runtimeConnection, HTTPServerConfigInfo httpServerConfigInfo, DirPollManager pollManager) {
+            Connection runtimeConnection, HTTPServerConfigInfo httpServerConfigInfo, DirPollManager pollManager,
+            IDBDriverManager dbDriverManager) {
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
         this.managerEncSign = managerEncSign;
         this.managerSSL = managerSSL;
         this.httpServerConfigInfo = httpServerConfigInfo;
         this.pollManager = pollManager;
+        this.dbDriverManager = dbDriverManager;
     }
 
     /**
@@ -67,7 +75,7 @@ public class ConfigurationCheckController {
     public List<ConfigurationIssue> runOnce() {
         ConfigurationCheckThread testThread = new ConfigurationCheckThread(this.configConnection, this.runtimeConnection);
         testThread.runAllChecks();
-        return (this.getIssues());
+        return (testThread.getIssues());
     }
 
     /**
@@ -75,7 +83,9 @@ public class ConfigurationCheckController {
      */
     public void start() {
         this.checkThread = new ConfigurationCheckThread(this.configConnection, this.runtimeConnection);
-        Executors.newSingleThreadExecutor().submit(this.checkThread);
+        int initialDelay = 1;
+        int delay = 30;
+        this.scheduledExecutor.scheduleWithFixedDelay(this.checkThread, initialDelay, delay, TimeUnit.SECONDS);
     }
 
     public class ConfigurationCheckThread implements Runnable {
@@ -83,9 +93,6 @@ public class ConfigurationCheckController {
         private final List<ConfigurationIssue> issueList = Collections.synchronizedList(new ArrayList<ConfigurationIssue>());
         private Connection configConnection;
         private Connection runtimeConnection;
-        private boolean stopRequested = false;
-        //wait this time between checks
-        private final long WAIT_TIME = TimeUnit.SECONDS.toMillis(30);
 
         public ConfigurationCheckThread(Connection configConnection, Connection runtimeConnection) {
             this.configConnection = configConnection;
@@ -94,18 +101,10 @@ public class ConfigurationCheckController {
 
         @Override
         public void run() {
-            Thread.currentThread().setName("Configuration check thread");
-            while (!stopRequested) {
                 synchronized (this.issueList) {
                     this.issueList.clear();
                     this.runAllChecks();
                 }
-                try {
-                    Thread.sleep(WAIT_TIME);
-                } catch (InterruptedException e) {
-                    //nop
-                }
-            }
         }
 
         public List<ConfigurationIssue> getIssues() {
@@ -118,7 +117,7 @@ public class ConfigurationCheckController {
 
         public void runAllChecks() {
             this.checkCertificatesExpired();
-            this.checkSSLKeystore();
+            this.checkTLSKeystore();
             this.checkAutoDelete();
             this.checkCPUCores();
             this.checkHeapMemory();
@@ -136,8 +135,8 @@ public class ConfigurationCheckController {
          *
          */
         private void checkAllPartnersCertificatesAvailable() {
-            PartnerAccessDB partnerAccess = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
-            List<Partner> partnerList = partnerAccess.getPartner();
+            PartnerAccessDB partnerAccess = new PartnerAccessDB(dbDriverManager);
+            List<Partner> partnerList = partnerAccess.getAllPartner();
             for (Partner partner : partnerList) {
                 String cryptFingerprint = partner.getCryptFingerprintSHA1();
                 String signFingerprint = partner.getSignFingerprintSHA1();
@@ -150,8 +149,8 @@ public class ConfigurationCheckController {
                         issue = new ConfigurationIssue(ConfigurationIssue.CERTIFICATE_MISSING_ENC_REMOTE_PARTNER);
                     }
                     issue.setDetails(partner.getName());
-                    synchronized (issueList) {
-                        issueList.add(issue);
+                    synchronized (this.issueList) {
+                        this.issueList.add(issue);
                     }
                 }
                 KeystoreCertificate certSign = managerEncSign.getKeystoreCertificateByFingerprintSHA1(signFingerprint);
@@ -235,10 +234,10 @@ public class ConfigurationCheckController {
         }
 
         /**
-         * Finds out some issues that could occure in the SSL configuration: no
+         * Finds out some issues that could occur in the SSL configuration: no
          * SSL key set, multiple SSL keys, use of public test keys as SSL key
          */
-        private void checkSSLKeystore() {
+        private void checkTLSKeystore() {
             List<KeystoreCertificate> sslList = managerSSL.getKeyStoreCertificateList();
             StringBuilder aliasList = new StringBuilder();
             int keyCount = 0;
@@ -281,7 +280,7 @@ public class ConfigurationCheckController {
 
         private void checkAutoDelete() {
             if (!preferences.getBoolean(PreferencesAS2.AUTO_MSG_DELETE)) {
-                MessageAccessDB messageAccess = new MessageAccessDB(configConnection, runtimeConnection);
+                MessageAccessDB messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
                 int transmissionCount = messageAccess.getMessageCount();
                 if (transmissionCount > 30000) {
                     ConfigurationIssue issue = new ConfigurationIssue(ConfigurationIssue.HUGE_AMOUNT_OF_TRANSACTIONS_NO_AUTO_DELETE);
@@ -318,12 +317,17 @@ public class ConfigurationCheckController {
 
         /**
          * Checks if the underlaying http server uses the same keystore as
-         * defined in the settings
+         * defined in the settings. This check makes just sense if a TLS receipt
+         * handler is defined in the system
          *
          */
         private void checkTLSKeystoreSettings() {
             //its possible to start the system without the http server. In this case there are some values missing
-            if (httpServerConfigInfo == null || httpServerConfigInfo.getKeystorePath() == null) {
+            if (httpServerConfigInfo == null
+                    || httpServerConfigInfo.getKeystorePath() == null) {
+                return;
+            }
+            if ((!httpServerConfigInfo.isEmbeddedHTTPServerStarted()) || (!httpServerConfigInfo.isSSLEnabled())) {
                 return;
             }
             String httpsKeystorePath = Paths.get(httpServerConfigInfo.getKeystorePath()).normalize().toAbsolutePath().toString();

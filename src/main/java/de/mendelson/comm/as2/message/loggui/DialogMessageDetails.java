@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/loggui/DialogMessageDetails.java 56    11.12.20 14:57 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/loggui/DialogMessageDetails.java 57    27.01.21 15:12 Heller $
 package de.mendelson.comm.as2.message.loggui;
 
 import de.mendelson.comm.as2.AS2Exception;
@@ -52,7 +52,7 @@ import javax.swing.text.StyledDocument;
  * Dialog to show the details of a transaction
  *
  * @author S.Heller
- * @version $Revision: 56 $
+ * @version $Revision: 57 $
  */
 public class DialogMessageDetails extends JDialog implements ListSelectionListener {
 
@@ -704,6 +704,8 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelMain.add(jPanelInfo, gridBagConstraints);
 
+        jPanelButton.setLayout(new java.awt.GridBagLayout());
+
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOk.setText(this.rb.getResourceString( "button.ok" ));
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
@@ -711,7 +713,9 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
                 jButtonOkActionPerformed(evt);
             }
         });
-        jPanelButton.add(jButtonOk);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 10, 10);
+        jPanelButton.add(jButtonOk, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

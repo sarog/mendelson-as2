@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/uinotification/NotificationWindow.java 13    9.09.20 9:26 Heller $package de.mendelson.util.uinotification;
+//$Header: /oftp2/de/mendelson/util/uinotification/NotificationWindow.java 15    27/01/22 10:23 Heller $package de.mendelson.util.uinotification;
 package de.mendelson.util.uinotification;
 
 import de.mendelson.util.MendelsonMultiResolutionImage;
@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -35,7 +36,7 @@ import javax.swing.event.MouseInputListener;
  * Single notification panel
  *
  * @author S.Heller
- * @version $Revision: 13 $
+ * @version $Revision: 15 $
  */
 public class NotificationWindow extends JWindow implements MouseInputListener {
 
@@ -82,7 +83,7 @@ public class NotificationWindow extends JWindow implements MouseInputListener {
             long notificationDisplayTimeFadeout
     ) {
         //do not block this window by any other window that is modal
-        this.setModalExclusionType(Dialog.ModalExclusionType.TOOLKIT_EXCLUDE);
+        this.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         this.anchorFrame = anchorFrame;
         //make this component invisible for the mouse
         this.addMouseListener(this);
@@ -126,13 +127,13 @@ public class NotificationWindow extends JWindow implements MouseInputListener {
             @Override
             public void mouseEntered(MouseEvent e) {
                 NotificationWindow.this.closeCrossLabel.setIcon(
-                        new ImageIcon( UINotification.IMAGE_CROSS_MOUSEOVER.toMinResolution(NotificationPanel.CLOSE_CROSS_SIZE)));
+                        new ImageIcon(UINotification.IMAGE_CROSS_MOUSEOVER.toMinResolution(NotificationPanel.CLOSE_CROSS_SIZE)));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 NotificationWindow.this.closeCrossLabel.setIcon(
-                        new ImageIcon( UINotification.IMAGE_CROSS.toMinResolution(NotificationPanel.CLOSE_CROSS_SIZE)));
+                        new ImageIcon(UINotification.IMAGE_CROSS.toMinResolution(NotificationPanel.CLOSE_CROSS_SIZE)));
             }
         });
         this.add(this.notificationPanel, BorderLayout.CENTER);
@@ -144,7 +145,7 @@ public class NotificationWindow extends JWindow implements MouseInputListener {
             float fadeoutStepCount = (float) notificationDisplayTimeFadeout / (float) THREAD_WAIT_TIME_STEPS_IN_MS;
             float opacityLossPerStep = fullOpacityLoss / fadeoutStepCount;
             float fadeInStepCount = (float) notificationDisplayTimeFadeIn / (float) THREAD_WAIT_TIME_STEPS_IN_MS;
-            float opacityGainPerStep = (1f-(float)(VISIBLE_OPACITY_THRESHOLD)) / fadeInStepCount;
+            float opacityGainPerStep = (1f - (float) (VISIBLE_OPACITY_THRESHOLD)) / fadeInStepCount;
 
             @Override
             public void run() {
@@ -216,7 +217,7 @@ public class NotificationWindow extends JWindow implements MouseInputListener {
      */
     public NotificationWindow setBackgroundColors(Color backgroundSuccess, Color backgroundWarning, Color backgroundError, Color backgroundInformation) {
         this.notificationPanel.setBackgroundColors(backgroundSuccess, backgroundWarning, backgroundError, backgroundInformation);
-        return( this );
+        return (this);
     }
     
      /**
@@ -224,7 +225,7 @@ public class NotificationWindow extends JWindow implements MouseInputListener {
      */
     public NotificationWindow setForegroundColors(Color foregroundTitle, Color foregroundDetails) {        
         this.notificationPanel.setForegroundColors(foregroundTitle, foregroundDetails);
-        return( this );
+        return (this);
     }
     
 
@@ -244,7 +245,9 @@ public class NotificationWindow extends JWindow implements MouseInputListener {
     public void setVisible(boolean flag) {
         super.setVisible(flag);
         if (flag) {
-            Executors.newSingleThreadExecutor().submit(this.fadeout);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(this.fadeout);
+            executor.shutdown();
         }
     }
 

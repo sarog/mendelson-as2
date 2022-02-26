@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/CertificateUsedByPartnerChecker.java 4     18.09.12 11:29 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/CertificateUsedByPartnerChecker.java 5     27.07.21 15:33 Heller $
 package de.mendelson.comm.as2.partner;
 
 import de.mendelson.comm.as2.partner.clientserver.PartnerListRequest;
@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  * Checks if a certificate is in use by a partner
  *
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 5 $
  */
 public class CertificateUsedByPartnerChecker implements CertificateInUseChecker {
 
@@ -45,7 +45,8 @@ public class CertificateUsedByPartnerChecker implements CertificateInUseChecker 
     @Override
     public List<CertificateInUseInfo> checkUsed(KeystoreCertificate cert) {
         List<CertificateInUseInfo> list = new ArrayList<CertificateInUseInfo>();
-        PartnerListResponse response = (PartnerListResponse) this.baseClient.sendSync(new PartnerListRequest(PartnerListRequest.LIST_ALL));
+        PartnerListResponse response = (PartnerListResponse) this.baseClient.sendSync(
+                new PartnerListRequest(PartnerListRequest.LIST_ALL), Partner.TIMEOUT_PARTNER_REQUEST);
         List<Partner> partnerList = response.getList();
         for (Partner singlePartner : partnerList) {
             String cryptFingerprint = singlePartner.getCryptFingerprintSHA1();

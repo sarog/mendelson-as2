@@ -1,14 +1,16 @@
-//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ProcessingEventAccessDB.java 4     4.09.20 13:16 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ProcessingEventAccessDB.java 9     26.08.21 14:00 Heller $
 package de.mendelson.comm.as2.message.postprocessingevent;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import de.mendelson.comm.as2.server.AS2Server;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.Base64;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.nio.charset.StandardCharsets;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +29,7 @@ import org.hsqldb.types.Types;
  * Access the event queue for the partner related event processing (post processing)
  *
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 9 $
  */
 public class ProcessingEventAccessDB {
 
@@ -40,15 +42,17 @@ public class ProcessingEventAccessDB {
      */
     private Connection runtimeConnection = null;
     private Connection configConnection = null;
+    private IDBDriverManager dbDriverManager = null;
 
     /**
      * Creates new message I/O log and connects to localhost
      *
      * @param host host to connect to
      */
-    public ProcessingEventAccessDB(Connection configConnection, Connection runtimeConnection) {
+    public ProcessingEventAccessDB(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         this.runtimeConnection = runtimeConnection;
         this.configConnection = configConnection;
+        this.dbDriverManager = dbDriverManager;
     }
 
     /**
@@ -56,14 +60,21 @@ public class ProcessingEventAccessDB {
      * NULL if none exists
      * If an event is returned it is deleted in the queue
      */
-    public ProcessingEvent getNextEventToExecute() {
+    public ProcessingEvent getNextEventToExecuteAsTransaction(Connection runtimeConnectionNoAutoCommit) {
         ResultSet result = null;
         PreparedStatement statementSelect = null;
         PreparedStatement statementDelete = null;
         PreparedStatement debugStatement = null;
         ProcessingEvent event = null;
+        Statement transactionStatement = null;
+        String transactionName = "ProcessingEvent_next";
         try {
-            statementSelect = this.runtimeConnection.prepareStatement("SELECT * FROM processingeventqueue WHERE initdate < ? ORDER BY initdate ASC");
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            //begin transaction - lock database table
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
+            this.dbDriverManager.setTableLockExclusive(transactionStatement, new String[]{"processingeventqueue"});
+            statementSelect = runtimeConnectionNoAutoCommit.prepareStatement(
+                    "SELECT * FROM processingeventqueue WHERE initdate < ? ORDER BY initdate ASC");
             statementSelect.setLong(1, System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15));
             debugStatement = statementSelect;
             result = statementSelect.executeQuery();
@@ -78,13 +89,22 @@ public class ProcessingEventAccessDB {
                     relatedMDNId = null;
                 }
                 event = new ProcessingEvent(eventType, processType, relatedMessageId, relatedMDNId, parameter, initDate);
-                statementDelete = this.runtimeConnection.prepareStatement("DELETE FROM processingeventqueue WHERE messageid=?");
+                statementDelete = runtimeConnectionNoAutoCommit.prepareStatement("DELETE FROM processingeventqueue WHERE messageid=?");
                 debugStatement = statementDelete;
                 statementDelete.setString(1, relatedMessageId);
                 statementDelete.executeUpdate();
             }
+            //all ok - finish transaction
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
             return (event);
         } catch (Exception e) {
+            try {
+                //cancel transaction - something went wrong
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                this.logger.severe("ProcessingEventAccessDB.getNext: " + ex.getMessage());
+                SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe("ProcessingEventAccessDB.getNextEventToExecute: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, debugStatement);
             return (null);
@@ -110,6 +130,13 @@ public class ProcessingEventAccessDB {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statementDelete);
                 }
             }
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
         }
     }
 
@@ -117,9 +144,16 @@ public class ProcessingEventAccessDB {
      * Adds an Event to the database
      */
     public void addEventToExecute(ProcessingEvent event) {
+        Connection runtimeConnectionNoAutoCommit = null;
+        String transactionName = "PostProcessing_addEvent";
         PreparedStatement statement = null;
+        Statement transactionStatement = null;
         try {
-            statement = this.runtimeConnection.prepareStatement(
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = runtimeConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(
                     "INSERT INTO processingeventqueue("
                     + "eventtype,processtype,initdate,parameterlist,messageid,mdnid)"
                     + "VALUES(?,?,?,?,?,?)");
@@ -134,7 +168,13 @@ public class ProcessingEventAccessDB {
                 statement.setString(6, event.getMDNId());
             }
             statement.executeUpdate();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             this.logger.severe("ProcessingEventAccessDB.addEventToExecute: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
@@ -144,6 +184,20 @@ public class ProcessingEventAccessDB {
                 } catch (Exception e) {
                     this.logger.severe("ProcessingEventAccessDB.addEventToExecute: " + e.getMessage());
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
+                }
+            }
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
             }
         }

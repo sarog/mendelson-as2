@@ -1,15 +1,7 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/api/server/ServersideAPICommandProcessing.java 2     8.01.19 9:48 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/api/server/ServersideAPICommandProcessing.java 3     2/02/22 15:58 Heller $
 package de.mendelson.comm.as2.api.server;
 
-import de.mendelson.comm.as2.api.message.CommandRequest;
 import de.mendelson.comm.as2.api.message.CommandResponse;
-import de.mendelson.util.modulelock.LockClientInformation;
-import de.mendelson.comm.as2.send.DirPollManager;
-import de.mendelson.util.clientserver.ClientServer;
-import de.mendelson.util.security.cert.CertificateManager;
-import java.nio.file.Path;
-import java.sql.Connection;
-import java.util.logging.Logger;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -21,21 +13,15 @@ import java.util.logging.Logger;
 /**
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class ServersideAPICommandProcessing {
 
-    public ServersideAPICommandProcessing(Logger logger, Connection configConnection,
-            Connection runtimeConnection,
-            CertificateManager certManagerEncSign,
-            CertificateManager certManagerSSL,
-            DirPollManager dirPollManager, ClientServer clientserver) {
+    public ServersideAPICommandProcessing(Object a,
+                Object b, Object c, Object d,
+                Object e, Object f, Object g, Object h){        
     }
-
-    /**
-     * Processes a command request on the server
-     */
-    public CommandResponse processRequest(CommandRequest request, Path requestFile, LockClientInformation clientInformation) {        
+    public CommandResponse processRequest(Object a, Object b, Object c) {        
         throw new IllegalArgumentException("Not implemented in the community edition" );
     }
 }

@@ -1,4 +1,4 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/server/ServerPlugins.java 2     17.12.20 9:41 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/server/ServerPlugins.java 3     2/02/22 14:35 Heller $
 package de.mendelson.comm.as2.server;
 
 import java.io.Serializable;
@@ -16,12 +16,16 @@ import java.util.logging.Logger;
  * Stores information about the activation state of the plugins
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class ServerPlugins implements Serializable {
 
     public static final long serialVersionUID = 1L;
-    public static final String PLUGIN_POSTGRESQL = "dummy";
+    public static final String PLUGIN_POSTGRESQL = "PostgreSQL";
+    public static final String PLUGIN_HA = "HA";
+    public static final String PLUGIN_JAVA_API = "Java_API";
+    public static final String PLUGIN_MYSQL = "MySQL";
+    public static final String PLUGIN_REST_API = "REST_API";
 
     public ServerPlugins() {
     }
@@ -47,4 +51,18 @@ public class ServerPlugins implements Serializable {
         return ("--");
     }
 
+    /**
+     * @return the licensee
+     */
+    public String getLicensee() {
+        return( "Community edition");
+    }
+
+    /**
+     * @return the licenseEndDate
+     */
+    public String getLicenseExpireDate() {
+        return "00";
+    }
+    
 }

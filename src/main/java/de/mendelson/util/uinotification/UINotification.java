@@ -1,4 +1,4 @@
-//$Header: /converteride/de/mendelson/util/uinotification/UINotification.java 17    2.07.20 9:22 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/uinotification/UINotification.java 21    28.10.21 14:57 Heller $
 package de.mendelson.util.uinotification;
 
 import de.mendelson.util.MecResourceBundle;
@@ -8,6 +8,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -28,7 +31,7 @@ import javax.swing.JOptionPane;
  * Main UI Notification
  *
  * @author S.Heller
- * @version $Revision: 17 $
+ * @version $Revision: 21 $
  */
 public class UINotification implements INotificationHandler {
 
@@ -131,7 +134,7 @@ public class UINotification implements INotificationHandler {
     /**
      * Singleton for the whole application
      */
-    public static UINotification instance() {
+    public static synchronized UINotification instance() {
         if (instance == null) {
             instance = new UINotification();
         }
@@ -159,6 +162,39 @@ public class UINotification implements INotificationHandler {
             @Override
             public void componentMoved(ComponentEvent e) {
                 UINotification.this.notificationPositionsHaveChanged();
+            }
+        });
+        this.anchorFrame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowIconified(WindowEvent e) {
+                UINotification.this.anchorWindowIconified();
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                UINotification.this.anchorWindowDeIconified();
+            }
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+                UINotification.this.anchorApplicationActivated();
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                UINotification.this.anchorApplicationDeActivated();
             }
         });
         return (this);
@@ -262,6 +298,44 @@ public class UINotification implements INotificationHandler {
     public void addNotification(MendelsonMultiResolutionImage image,
             final int NOTIFICATION_TYPE,
             String notificationTitle,
+            String notificationDetails) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    _addNotification(image, NOTIFICATION_TYPE, notificationTitle, notificationDetails);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Adds a new notification to the UI notification system. This is a new
+     * panel that contains an image and a text and will disappear after some
+     * time - notifications are stacked
+     *
+     * @param image The image to display. If this is null a default image for
+     * the notification type is displayed (warning, error, ok)
+     * @param NOTIFICATION_TYPE One of the notification types that are defined
+     * in this class. The background color of the notification depends on the
+     * type (green/yellow/red..). One of UINotification.TYPE_OK,
+     * UINotification.TYPE_WARNING, UINotification.TYPE_ERROR,
+     * UINotification.TYPE_INFORMATION
+     * @param notificationDetails The text that is displayed. It is folded
+     * automatically
+     * @param notificationTitle The title of the notification - not folded -
+     * means you have to ensure a short title. If this is null, the type OK,
+     * WARNING, ERROR is displayed in the localized language of the current
+     * locale
+     * @throws IllegalArgumentException This exception is thrown if the
+     * notification system is not initialized using
+     * UINotification().instance().setAnchor( JFrame frame )
+     */
+    private void _addNotification(MendelsonMultiResolutionImage image,
+            final int NOTIFICATION_TYPE,
+            String notificationTitle,
             String notificationDetails) throws IllegalArgumentException {
         //check if the notifcation system has been already initialized
         if (this.anchorFrame == null) {
@@ -344,6 +418,56 @@ public class UINotification implements INotificationHandler {
             for (NotificationWindow frame : this.notificationList) {
                 Point newPosition = this.computeNotificationPosition(frame);
                 frame.setLocation(newPosition);
+            }
+        }
+    }
+
+    /**
+     * The anchor turned to iconified state - the notifications should be
+     * hidden, too
+     *
+     */
+    private void anchorWindowIconified() {
+        synchronized (this.notificationList) {
+            for (NotificationWindow frame : this.notificationList) {
+                frame.setVisible(false);
+            }
+        }
+    }
+
+    /**
+     * The anchor turned to iconified state - the notifications should be
+     * visible again, too
+     *
+     */
+    private void anchorWindowDeIconified() {
+        synchronized (this.notificationList) {
+            for (NotificationWindow frame : this.notificationList) {
+                frame.setVisible(true);
+            }
+        }
+    }
+
+    /**
+     * The anchor application has been activated
+     *
+     */
+    private void anchorApplicationActivated() {
+        synchronized (this.notificationList) {
+            for (NotificationWindow frame : this.notificationList) {
+                frame.setVisible(true);
+            }
+        }
+    }
+
+    /**
+     * The anchor window has been deactivated
+     *
+     */
+    private void anchorApplicationDeActivated() {
+        synchronized (this.notificationList) {
+            for (NotificationWindow frame : this.notificationList) {
+                frame.setVisible(false);
             }
         }
     }

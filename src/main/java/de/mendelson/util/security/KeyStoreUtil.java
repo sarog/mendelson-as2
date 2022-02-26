@@ -1,9 +1,7 @@
-//$Header: /as2/de/mendelson/util/security/KeyStoreUtil.java 56    3.03.20 10:08 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/security/KeyStoreUtil.java 61    3.12.21 14:22 Heller $
 package de.mendelson.util.security;
 
 import de.mendelson.util.MecResourceBundle;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -14,6 +12,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.cert.Certificate;
@@ -57,7 +56,7 @@ import org.bouncycastle.util.io.pem.PemObject;
  * Utility class to handle java keyStore issues
  *
  * @author S.Heller
- * @version $Revision: 56 $
+ * @version $Revision: 61 $
  */
 public class KeyStoreUtil {
 
@@ -85,7 +84,11 @@ public class KeyStoreUtil {
     public void saveKeyStore(KeyStore keystore, char[] keystorePass, String filename) throws Exception {
         OutputStream out = null;
         try {
-            out = Files.newOutputStream(Paths.get(filename));
+            out = Files.newOutputStream(Paths.get(filename),
+                    StandardOpenOption.SYNC, 
+                    StandardOpenOption.CREATE, 
+                    StandardOpenOption.TRUNCATE_EXISTING, 
+                    StandardOpenOption.WRITE);
             this.saveKeyStore(keystore, keystorePass, out);
         } finally {
             if (out != null) {

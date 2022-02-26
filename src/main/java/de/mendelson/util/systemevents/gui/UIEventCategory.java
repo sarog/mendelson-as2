@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/systemevents/gui/UIEventCategory.java 5     15.03.19 11:52 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/gui/UIEventCategory.java 6     26.01.21 15:20 Heller $
 package de.mendelson.util.systemevents.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * Selectable event category in the UI
  *
  * @author S.Heller
- * @version $Revision: 5 $
+ * @version $Revision: 6 $
  */
 public class UIEventCategory implements Comparable<UIEventCategory> {
 
@@ -53,7 +53,7 @@ public class UIEventCategory implements Comparable<UIEventCategory> {
         categoryList.add(new UIEventCategory(SystemEvent.CATEGORY_TRANSACTION));
         categoryList.add(new UIEventCategory(SystemEvent.CATEGORY_FILE_OPERATION));
         categoryList.add(new UIEventCategory(SystemEvent.CATEGORY_OTHER));
-        categoryList.add(new UIEventCategory(SystemEvent.CATEGORY_ACTIVATION));
+        categoryList.add(new UIEventCategory(SystemEvent.CATEGORY_LICENSE));
         categoryList.add(new UIEventCategory(SystemEvent.CATEGORY_CLIENT_OPERATION));
         Collections.sort(categoryList);
         return( categoryList );

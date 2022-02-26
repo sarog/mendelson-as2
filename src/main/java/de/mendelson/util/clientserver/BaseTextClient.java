@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/BaseTextClient.java 15    4/06/18 10:56a Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/clientserver/BaseTextClient.java 16    28.10.21 11:46 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.console.LoggingHandlerPrintStream;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * Text Client root implementation
  *
  * @author S.Heller
- * @version $Revision: 15 $
+ * @version $Revision: 16 $
  */
 public abstract class BaseTextClient implements ClientSessionHandlerCallback {
 
@@ -43,6 +43,11 @@ public abstract class BaseTextClient implements ClientSessionHandlerCallback {
         this.baseClient.setLogger(this.logger);
     }
 
+    public void setBaseClient(BaseClient baseClient) {
+        this.baseClient = baseClient;
+        this.baseClient.setLogger(this.logger);
+    }
+    
     /**
      * Indicates if server log messages should be displayed in the client or
      * simply ignored

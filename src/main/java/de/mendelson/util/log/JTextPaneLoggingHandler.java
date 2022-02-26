@@ -1,4 +1,4 @@
-//$Header: /as4/de/mendelson/util/log/JTextPaneLoggingHandler.java 28    16.10.19 12:34 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/log/JTextPaneLoggingHandler.java 30    29.11.21 15:40 Heller $
 package de.mendelson.util.log;
 
 import de.mendelson.util.ColorUtil;
@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.ErrorManager;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -32,7 +33,7 @@ import javax.swing.text.StyledDocument;
  * Handler to log logger data to a swing text component
  *
  * @author S.Heller
- * @version $Revision: 28 $
+ * @version $Revision: 30 $
  */
 public class JTextPaneLoggingHandler extends Handler {
 
@@ -57,15 +58,14 @@ public class JTextPaneLoggingHandler extends Handler {
     /**
      * Stores the logging colors for the logging levels
      */
-    private final Map<Level, String> colorMap = Collections.synchronizedMap(new HashMap<Level, String>());
+    private final Map<Level, String> colorMap = new ConcurrentHashMap<Level, String>();
 
     public JTextPaneLoggingHandler(JTextPane jTextPane, Formatter formatter) {
         //set default colors, these could be overwritten using the setColor method
-        synchronized (this.colorMap) {
             this.colorMap.put(Level.WARNING, IRCColors.BLUE);
             this.colorMap.put(Level.SEVERE, IRCColors.RED);
             this.colorMap.put(Level.FINE, IRCColors.DARK_GREEN);
-        }
+        this.colorMap.put(Level.FINEST, IRCColors.LIGHT_GRAY);
         this.setFormatter(formatter);
         this.jTextPane = jTextPane;
         StyleContext context = StyleContext.getDefaultStyleContext();
@@ -87,22 +87,18 @@ public class JTextPaneLoggingHandler extends Handler {
      *
      */
     public void setColor(Level loglevel, String color) {
-        synchronized (this.colorMap) {
             this.colorMap.put(loglevel, color);
         }
-    }
 
     /**
      * Returns the current set color for the passed log level. May return null
      * if no color is defined for the passed level
      */
     public String getColor(Level loglevel) {
-        synchronized (this.colorMap) {
             if (colorMap.containsKey(loglevel)) {
                 return (this.colorMap.get(loglevel));
-            }else{
-                return( IRCColors.toColorStr(this.getBestContrastColorAsIndexedColor(IRCColors.BLACK, this.jTextPane.getBackground())));
-            }
+        } else {
+            return (IRCColors.toColorStr(this.getBestContrastColorAsIndexedColor(IRCColors.BLACK, this.jTextPane.getBackground())));
         }
     }
 
@@ -125,8 +121,8 @@ public class JTextPaneLoggingHandler extends Handler {
 
     /**
      * As there are just 16 indexed colors in the log this will test some
-     * alternative colors if the contrast does not match
-     * It will always return an indexed color as defined in the class IRCColors.
+     * alternative colors if the contrast does not match It will always return
+     * an indexed color as defined in the class IRCColors.
      *
      * @param ircColorForeground an index color
      * @param anyColorBackground
@@ -479,12 +475,7 @@ public class JTextPaneLoggingHandler extends Handler {
      */
     private void logMessage(Level level, String message, int rawMessageLength) {
         int timeStampPos = message.length() - rawMessageLength - this.lineSeparator.length();
-        String color = "";
-        synchronized (this.colorMap) {
-            if (this.colorMap.containsKey(level)) {
-                color = this.colorMap.get(level);
-            }
-        }
+        String color = this.getColor(level);
         if (timeStampPos >= 0) {
             message = message.substring(0, timeStampPos)
                     + color + message.substring(timeStampPos);

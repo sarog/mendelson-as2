@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/cert/CertificateAccessDB.java 21    7.11.18 17:14 Heller $
+//$Header: /as2/de/mendelson/comm/as2/cert/CertificateAccessDB.java 22    26.01.21 14:10 Heller $
 package de.mendelson.comm.as2.cert;
 
 import de.mendelson.comm.as2.partner.Partner;
@@ -23,30 +23,22 @@ import java.util.logging.Logger;
 /**
  * Access the certificate lists in the database
  * @author S.Heller
- * @version $Revision: 21 $
+ * @version $Revision: 22 $
  */
 public class CertificateAccessDB {
 
     /**Logger to log information to*/
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
-    /**Connection to the database*/
-    private Connection configConnection;
-    private Connection runtimeConnection;
 
-    /** Creates new message I/O log and connects to localhost
-     *@param host host to connect to
-     */
-    public CertificateAccessDB(Connection configConnection, Connection runtimeConnection) {
-        this.configConnection = configConnection;
-        this.runtimeConnection = runtimeConnection;
+    public CertificateAccessDB() {
     }
 
     /**Returns the list of certificates used by the passed partner*/
-    public void loadPartnerCertificateInformation(Partner partner) {
+    public void loadPartnerCertificateInformation(Partner partner, Connection configConnection) {
         PreparedStatement statement = null;
         ResultSet result = null;
         try {
-            statement = this.configConnection.prepareStatement("SELECT * FROM certificates WHERE partnerid=?");
+            statement = configConnection.prepareStatement("SELECT * FROM certificates WHERE partnerid=?");
             statement.setInt(1, partner.getDBId());
             statement.setEscapeProcessing(true);
             result = statement.executeQuery();
@@ -78,13 +70,13 @@ public class CertificateAccessDB {
     }
 
     /**Stores the actual partner certificate list of a partner*/
-    public void storePartnerCertificateInformationList(Partner partner) {
-        this.deletePartnerCertificateInformationList(partner);
+    public void storePartnerCertificateInformationList(Partner partner, Connection configConnection) {
+        this.deletePartnerCertificateInformationList(partner, configConnection);
         Collection<PartnerCertificateInformation> list = partner.getPartnerCertificateInformationList().asList();
         for (PartnerCertificateInformation certInfo : list) {
             PreparedStatement statement = null;
             try {
-                statement = this.configConnection.prepareStatement("INSERT INTO certificates(partnerid,fingerprintsha1,category)VALUES(?,?,?)");
+                statement = configConnection.prepareStatement("INSERT INTO certificates(partnerid,fingerprintsha1,category)VALUES(?,?,?)");
                 statement.setEscapeProcessing(true);
                 statement.setInt(1, partner.getDBId());
                 statement.setString(2, certInfo.getFingerprintSHA1());
@@ -105,11 +97,13 @@ public class CertificateAccessDB {
         }
     }
 
-    /**Deletes the actual partner certificate list of a partner*/
-    public void deletePartnerCertificateInformationList(Partner partner) {
+    /**Deletes the actual partner certificate list of a partner. A config connection is passed to allow the storing process
+     * in a transactional way
+     */
+    public void deletePartnerCertificateInformationList(Partner partner, Connection configConnection) {
         PreparedStatement statement = null;
         try {
-            statement = this.configConnection.prepareStatement("DELETE FROM certificates WHERE partnerid=?");
+            statement = configConnection.prepareStatement("DELETE FROM certificates WHERE partnerid=?");
             statement.setEscapeProcessing(true);
             statement.setInt(1, partner.getDBId());
             statement.execute();

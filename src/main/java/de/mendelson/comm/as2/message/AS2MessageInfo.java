@@ -1,9 +1,14 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2MessageInfo.java 58    7/03/18 9:35a Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2MessageInfo.java 61    14.09.21 13:08 Heller $
 package de.mendelson.comm.as2.message;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.util.security.BCCryptoHelper;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 /*
@@ -17,7 +22,7 @@ import java.util.Properties;
  * Stores all information about a as2 message
  *
  * @author S.Heller
- * @version $Revision: 58 $
+ * @version $Revision: 61 $
  */
 public class AS2MessageInfo implements AS2Info {
 
@@ -137,7 +142,7 @@ public class AS2MessageInfo implements AS2Info {
     /**
      * Serializes this partner to XML
      *
-     * @param level level in the XML hierarchie for the xml beautifying
+     * @param level level in the XML hierarchy for the xml beautifying
      */
     public String toXML(int level) {
         String offset = "";
@@ -162,6 +167,27 @@ public class AS2MessageInfo implements AS2Info {
         return (builder.toString());
     }
 
+    /**Adds this entry to the passed parent JSON node*/
+    public void addToJSON( ArrayNode parent, Map<String,String> as2Id2NameMap){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS' UTC'");
+        ObjectNode node = parent.addObject();
+        node.put( "messageid", this.messageId);
+        node.put( "userdefinedid", this.userdefinedId == null?"--":this.userdefinedId);
+        node.put( "initdate", dateFormat.format(this.initDate));
+        node.put( "senderid", this.senderId);
+        node.put( "sendername", as2Id2NameMap.getOrDefault(this.senderId, "_UNKNOWN"));
+        node.put( "receiverid", this.receiverId);
+        node.put( "receivername", as2Id2NameMap.getOrDefault(this.receiverId, "_UNKNOWN"));
+        node.put( "messagetype", this.getMessageType());
+        node.put( "signtype", this.signType);
+        node.put( "encryptiontype", this.encryptionType);
+        node.put( "compressiontype", this.compressionType);
+        node.put( "state", this.state);
+        node.put( "direction", this.direction);
+        node.put( "mdnmode", this.requestsSyncMDN?"SYNC":"ASYNC");
+    }
+    
+    
     /**
      * Adds a cdata indicator to xml data
      */
@@ -245,6 +271,9 @@ public class AS2MessageInfo implements AS2Info {
         this.senderEMail = senderEMail;
     }
 
+    /**Returns the direction of the transaction: inbound or outbound
+     * @return AS2MessageInfo.DIRECTION_IN or AS2MessageInfo.DIRECTION_OUT
+     */    
     @Override
     public int getDirection() {
         return direction;

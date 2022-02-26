@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ExecuteMoveToPartner.java 2     10.09.20 12:57 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ExecuteMoveToPartner.java 6     9.03.21 13:30 Heller $
 package de.mendelson.comm.as2.message.postprocessingevent;
 
 import de.mendelson.comm.as2.message.AS2Message;
@@ -11,6 +11,7 @@ import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.sendorder.SendOrderSender;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.cert.CertificateManager;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  * defined remote partner
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 6 $
  */
 public class ExecuteMoveToPartner implements IProcessingExecution {
 
@@ -46,18 +47,20 @@ public class ExecuteMoveToPartner implements IProcessingExecution {
      * Localize your GUI!
      */
     private MecResourceBundle rb = null;
-    //DB connection
+    //DB connections
     private Connection runtimeConnection;
     private Connection configConnection;
+    private IDBDriverManager dbDriverManager;
 
-    public ExecuteMoveToPartner(Connection configConnection, Connection runtimeConnection,
+    public ExecuteMoveToPartner(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection,
             CertificateManager certificateManagerEncSign) {
         this.runtimeConnection = runtimeConnection;
         this.configConnection = configConnection;
+        this.dbDriverManager = dbDriverManager;
         this.certificateManagerEncSign = certificateManagerEncSign;
-        this.messageAccess = new MessageAccessDB(configConnection, runtimeConnection);
-        this.mdnAccess = new MDNAccessDB(configConnection, runtimeConnection);
-        this.partnerAccess = new PartnerAccessDB(configConnection, runtimeConnection);
+        this.messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        this.mdnAccess = new MDNAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        this.partnerAccess = new PartnerAccessDB(dbDriverManager);
         //Load resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
@@ -130,7 +133,7 @@ public class ExecuteMoveToPartner implements IProcessingExecution {
                 String[] originalFilenames = new String[]{originalFilename};
                 String[] payloadContentTypes = new String[]{targetPartner.getContentType()};
                 try {
-                    SendOrderSender orderSender = new SendOrderSender(this.configConnection, this.runtimeConnection);
+                    SendOrderSender orderSender = new SendOrderSender(this.dbDriverManager, this.configConnection, this.runtimeConnection);
                     orderSender.send(this.certificateManagerEncSign, messageSender,
                             targetPartner, sendFiles, originalFilenames, null,
                             targetPartner.getSubject(), payloadContentTypes);
@@ -187,7 +190,7 @@ public class ExecuteMoveToPartner implements IProcessingExecution {
                     Path[] sendFiles = new Path[]{sourceFile};
                     String[] originalFilenames = new String[]{originalFilename};
                     String[] payloadContentTypes = new String[]{targetPartner.getContentType()};
-                    SendOrderSender orderSender = new SendOrderSender(this.configConnection, this.runtimeConnection);
+                    SendOrderSender orderSender = new SendOrderSender(this.dbDriverManager, this.configConnection, this.runtimeConnection);
                     orderSender.send(this.certificateManagerEncSign, messageReceiver,
                             targetPartner, sendFiles, originalFilenames, null,
                             targetPartner.getSubject(), payloadContentTypes);

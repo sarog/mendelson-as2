@@ -1,23 +1,19 @@
-//$Header: /as2/de/mendelson/comm/as2/message/ByteStorageImplFile.java 10    19.03.20 18:51 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/ByteStorageImplFile.java 12    3.08.21 16:45 Heller $
 package de.mendelson.comm.as2.message;
 
 import de.mendelson.util.AS2Tools;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Container that stores byte arrays in a temp file
  *
  * @author S.Heller
- * @version $Revision: 10 $
+ * @version $Revision: 12 $
  */
 public class ByteStorageImplFile implements IByteStorage {
 
@@ -54,18 +50,11 @@ public class ByteStorageImplFile implements IByteStorage {
         //create the file storage
         Path tempFile = AS2Tools.createTempFile("AS2ByteStorage", ".bin");
         this.fullFilename = tempFile.toAbsolutePath().toString();
-        ByteArrayInputStream inStream = new ByteArrayInputStream(data);
-        OutputStream outStream = null;
-        try {
-            outStream = Files.newOutputStream(tempFile);
-            this.copyStreams(inStream, outStream);
-        } finally {
-            if (outStream != null) {
-                outStream.flush();
-                outStream.close();
-            }
-            inStream.close();
-        }
+        Files.write(tempFile, data,
+                StandardOpenOption.SYNC,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING,
+                StandardOpenOption.WRITE);
     }
 
     @Override
@@ -73,19 +62,7 @@ public class ByteStorageImplFile implements IByteStorage {
         if (this.fullFilename == null) {
             return (new byte[0]);
         }
-        InputStream inStream = null;
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        try {
-            inStream = Files.newInputStream(Paths.get(this.fullFilename));
-            this.copyStreams(inStream, outStream);
-        } finally {
-            outStream.flush();
-            if (inStream != null) {
-                inStream.close();
-            }
-            outStream.close();
-        }
-        return (outStream.toByteArray());
+        return (Files.readAllBytes(Paths.get(this.fullFilename)));
     }
 
     @Override
@@ -102,28 +79,9 @@ public class ByteStorageImplFile implements IByteStorage {
             Files.delete(Paths.get(this.fullFilename));
         } catch (IOException e) {
             //nop
-        }finally{
+        } finally {
             this.fullFilename = null;
         }
     }
 
-    /**
-     * Copies all data from one stream to another
-     */
-    private void copyStreams(InputStream in, OutputStream out) throws IOException {
-        BufferedInputStream inStream = new BufferedInputStream(in);
-        BufferedOutputStream outStream = new BufferedOutputStream(out);
-        //copy the contents to an output stream
-        byte[] buffer = new byte[2048];
-        int read = 0;
-        //a read of 0 must be allowed, sometimes it takes time to
-        //extract data from the input
-        while (read != -1) {
-            read = inStream.read(buffer);
-            if (read > 0) {
-                outStream.write(buffer, 0, read);
-            }
-        }
-        outStream.flush();
-    }
 }

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/clientserver/KeystoreStorageImplClientServer.java 14    3.03.20 10:08 Heller $
+//$Header: /oftp2/de/mendelson/util/security/cert/clientserver/KeystoreStorageImplClientServer.java 15    17.02.21 11:49 Heller $
 package de.mendelson.util.security.cert.clientserver;
 
 import de.mendelson.util.MecResourceBundle;
@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 /**
  * Keystore storage implementation that relies on a client-server access
  * @author S.Heller
- * @version $Revision: 14 $
+ * @version $Revision: 15 $
  */
 public class KeystoreStorageImplClientServer implements KeystoreStorage {
 
@@ -88,7 +88,7 @@ public class KeystoreStorageImplClientServer implements KeystoreStorage {
         }
         BCCryptoHelper cryptoHelper = new BCCryptoHelper();
         this.keystore = cryptoHelper.createKeyStoreInstance(this.keystoreStorageType);
-        //load the keystore data from the transfered byte array
+        //load the keystore data from the transferred byte array
         InputStream inStream = null;
         try {
             inStream = new ByteArrayInputStream(keystoreBytes);

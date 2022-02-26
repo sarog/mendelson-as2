@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/security/cert/KeystoreStorageImplFile.java 12    25.01.19 10:34 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/security/cert/KeystoreStorageImplFile.java 14    3.12.21 14:22 Heller $
 package de.mendelson.util.security.cert;
 
 import de.mendelson.util.MecResourceBundle;
@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  * Keystore storage implementation that relies on a keystore file
  *
  * @author S.Heller
- * @version $Revision: 12 $
+ * @version $Revision: 14 $
  */
 public class KeystoreStorageImplFile implements KeystoreStorage {
 
@@ -121,13 +121,13 @@ public class KeystoreStorageImplFile implements KeystoreStorage {
     @Override
     public Map<String, Certificate> loadCertificatesFromKeystore() throws Exception {
         Path keystoreFile = Paths.get(this.keystoreFilename);
-        if (!Files.isReadable(keystoreFile)) {
+        if (!keystoreFile.toFile().canRead()) {
             throw new Exception(this.rb.getResourceString("error.readaccess", this.keystoreFilename));
         }
         if (!Files.exists(keystoreFile)) {
             throw new Exception(this.rb.getResourceString("error.filexists", this.keystoreFilename));
         }
-        if (!Files.isRegularFile(keystoreFile)) {
+        if (!keystoreFile.toFile().isFile()) {
             throw new Exception(this.rb.getResourceString("error.notafile", this.keystoreFilename));
         }
         //recreate keystore object

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/clients/datatransfer/UploadRequestFile.java 4     4/06/18 12:21p Heller $
+//$Header: /oftp2/de/mendelson/util/clientserver/clients/datatransfer/UploadRequestFile.java 5     17.02.21 11:49 Heller $
 package de.mendelson.util.clientserver.clients.datatransfer;
 
 import de.mendelson.util.clientserver.messages.ClientServerMessage;
@@ -14,13 +14,13 @@ import java.io.Serializable;
 /**
  * Msg for the client server protocol: Upload a file to the server, to a specified file name
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 5 $
  */
 public class UploadRequestFile extends ClientServerMessage implements Serializable {
 
     public static final long serialVersionUID = 1L;
     private String targetFilename = null;
-    /**The upload hash that referes the file that is already transfered for this request*/
+    /**The upload hash that referes the file that is already transferred for this request*/
     private String uploadHash = null;
 
 

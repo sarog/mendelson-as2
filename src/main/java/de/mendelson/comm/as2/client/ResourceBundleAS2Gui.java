@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/client/ResourceBundleAS2Gui.java 50    21.08.20 17:59 Heller $ 
+//$Header: /as2/de/mendelson/comm/as2/client/ResourceBundleAS2Gui.java 52    25.03.21 17:54 Heller $ 
 package de.mendelson.comm.as2.client;
 
 import de.mendelson.util.MecResourceBundle;
@@ -13,7 +13,7 @@ import de.mendelson.util.MecResourceBundle;
 /** 
  * ResourceBundle to localize gui entries
  * @author S.Heller
- * @version $Revision: 50 $
+ * @version $Revision: 52 $
  */
 public class ResourceBundleAS2Gui extends MecResourceBundle {
 
@@ -45,6 +45,7 @@ public class ResourceBundleAS2Gui extends MecResourceBundle {
         {"menu.file.resend", "Send as new transaction"},
         {"menu.file.resend.multiple", "Send as new transactions"},
         {"menu.file.migrate.hsqldb", "Migrate from HSQLDB"},
+        {"menu.file.ha", "High Availability Instances"},
         {"menu.help", "Help"},
         {"menu.help.about", "About"},
         {"menu.help.supportrequest", "Support request"},
@@ -92,6 +93,8 @@ public class ResourceBundleAS2Gui extends MecResourceBundle {
         {"dialog.resend.title", "Transaction resend"},
         {"logputput.disabled", "** The log output has been disabled **"},
         {"logputput.enabled", "** The log output has been enabled **"},
-        {"resend.failed.nopayload", "Resend as new transaction failed: The selected transaction {0} has no payload." },
+        {"resend.failed.nopayload", "Resend as new transaction failed: The selected transaction {0} has no payload."},
+        {"server.answer.timeout.title", "Timeout in client-server connection" },
+        {"server.answer.timeout.details", "The server does not answer in the defined timeframe on a request - high load?" },
     };
 }

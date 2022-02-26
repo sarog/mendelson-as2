@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/GUIClient.java 33    14.06.19 8:36 Heller $
+//$Header: /oftp2/de/mendelson/util/clientserver/GUIClient.java 35    27/01/22 10:23 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.MecResourceBundle;
@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -38,7 +39,7 @@ import javax.swing.SwingUtilities;
  * GUI Client root implementation
  *
  * @author S.Heller
- * @version $Revision: 33 $
+ * @version $Revision: 35 $
  */
 public abstract class GUIClient extends JFrame implements ClientSessionHandlerCallback {
 
@@ -88,7 +89,9 @@ public abstract class GUIClient extends JFrame implements ClientSessionHandlerCa
             throw new RuntimeException("GUIClient.connect: No logger set.");
         }
         ProgressRun progress = new ProgressRun(address);
-        Executors.newSingleThreadExecutor().submit(progress);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(progress);
+        executor.shutdown();
         boolean connected = false;
         try {
             connected = this.client.connect(address, timeout);
@@ -194,7 +197,7 @@ public abstract class GUIClient extends JFrame implements ClientSessionHandlerCa
      * ClientSessionHandler callback (syncRequestFailed) if the sync request
      * fails
      */
-    public ClientServerMessage sendSync(ClientServerMessage request, long timeout) {
+    public ClientServerResponse sendSync(ClientServerMessage request, long timeout) {
         return (this.getBaseClient().sendSync(request, timeout));
     }
 
@@ -203,7 +206,7 @@ public abstract class GUIClient extends JFrame implements ClientSessionHandlerCa
      * ClientSessionHandler callback (syncRequestFailed) if the sync request
      * fails
      */
-    public ClientServerMessage sendSync(ClientServerMessage request) {
+    public ClientServerResponse sendSync(ClientServerMessage request) {
         return (this.getBaseClient().sendSync(request));
     }
 

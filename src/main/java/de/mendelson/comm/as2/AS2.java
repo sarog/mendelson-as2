@@ -1,4 +1,4 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/AS2.java 6     14.01.21 9:39 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/AS2.java 7     3/02/22 14:35 Heller $
 package de.mendelson.comm.as2;
 
 import de.mendelson.comm.as2.client.AS2Gui;
@@ -9,6 +9,7 @@ import de.mendelson.comm.as2.server.ServerAlreadyRunningException;
 import de.mendelson.comm.as2.server.UpgradeRequiredException;
 import de.mendelson.util.MendelsonMultiResolutionImage;
 import de.mendelson.util.Splash;
+import de.mendelson.util.font.FontUtil;
 import de.mendelson.util.security.BCCryptoHelper;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
@@ -31,7 +32,7 @@ import javax.swing.JOptionPane;
  * Start the AS2 server and the configuration GUI
  *
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 7 $
  */
 public class AS2 {
 
@@ -42,9 +43,9 @@ public class AS2 {
         System.out.println("java " + AS2.class.getName() + " <options>");
         System.out.println("Start up a " + AS2ServerVersion.getProductNameShortcut() + " server ");
         System.out.println("Options are:");
-        System.out.println("-lang <String>: Language to use for the client/server, non-persistent. Possible values are \"en\", \"fr\" and \"de\".");
-        System.out.println("-country <String>: Country/region to use for the client/server, non-persistent. Possible values are \"DE\", \"US\", \"FR\", \"GB\"...");
-        System.out.println("-nohttpserver: Do not start the integrated HTTP server, only useful if you are integrating the product into another web container");
+        System.out.println("-lang <String>: Language to use for the client/server, nonpersistent. Possible values are \"en\", \"fr\" and \"de\".");
+        System.out.println("-country <String>: Country/region to use for the client/server, nonpersistent. Possible values are \"DE\", \"US\", \"FR\", \"GB\"...");
+        System.out.println("-nohttpserver: Do not start the integrated HTTP server, only useful if you are integrating the product into an other web container");
         System.out.println("-mode <String>: Sets up the LIGHT or DARK mode for the client - default is LIGHT");
     }
 
@@ -117,9 +118,9 @@ public class AS2 {
         }
         Splash splash = new Splash("/comm/as2/client/splash_mendelson_opensource_as2.svg", 330);
         splash.setTextAntiAliasing(false);
-        // dark green
-        Color textColor = Color.decode("#A8A8A8");
-        splash.addDisplayString(new Font("Verdana", Font.BOLD, 12),
+        //dark grey
+        Color textColor = FontUtil.getFontColor(FontUtil.PRODUCT_OFTP2_COMMUNITY);
+        splash.addDisplayString(FontUtil.getProductFont(FontUtil.STYLE_PRODUCT_BOLD, 10),
                 12, 285, AS2ServerVersion.getFullProductName(),
                 textColor);
         splash.setVisible(true);

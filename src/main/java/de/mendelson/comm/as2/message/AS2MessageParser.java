@@ -1,21 +1,22 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2MessageParser.java 244   30.06.20 9:11 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2MessageParser.java 258   15.10.21 13:32 Heller $
 package de.mendelson.comm.as2.message;
 
 import de.mendelson.comm.as2.AS2Exception;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.comm.as2.partner.PartnerAccessDB;
+import de.mendelson.comm.as2.server.AS2Server;
+import de.mendelson.comm.as2.server.ServerInstance;
+import de.mendelson.comm.as2.server.ServerPlugins;
 import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.BCCryptoHelper;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.sql.Connection;
@@ -39,7 +40,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
-import org.apache.commons.io.output.DeferredFileOutputStream;
 import org.bouncycastle.cms.KeyAgreeRecipientId;
 import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.cms.RecipientId;
@@ -64,7 +64,7 @@ import org.bouncycastle.mail.smime.SMIMEEnveloped;
  * Analyzes and builds AS2 messages
  *
  * @author S.Heller
- * @version $Revision: 244 $
+ * @version $Revision: 258 $
  */
 public class AS2MessageParser {
 
@@ -79,6 +79,7 @@ public class AS2MessageParser {
     //DB connection
     private Connection configConnection = null;
     private Connection runtimeConnection = null;
+    private IDBDriverManager dbDriverManager = null;
 
     private final String OID_KEYENCRYPTION_RSAES_AOEP = "1.2.840.113549.1.1.7";
     private final String OID_KEYENCRYPTION_RSA = "1.2.840.113549.1.1.1";
@@ -108,9 +109,10 @@ public class AS2MessageParser {
     /**
      * Passes a db connection to this class
      */
-    public void setDBConnection(Connection configConnection, Connection runtimeConnection) {
+    public void setDBConnection(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
+        this.dbDriverManager = dbDriverManager;
     }
 
     /**
@@ -234,15 +236,20 @@ public class AS2MessageParser {
             mdnInfo.setMessageId("<MDN_ON_" + mdnInfo.getRelatedMessageId() + ">");
         }
         mdnInfo.setDispositionState(mdnParser.getDispositionState());
-        MDNAccessDB mdnAccess = new MDNAccessDB(this.configConnection, this.runtimeConnection);
-        MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
-        PartnerAccessDB partnerAccess = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
+        MDNAccessDB mdnAccess = new MDNAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
+        MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
+        PartnerAccessDB partnerAccess = new PartnerAccessDB(this.dbDriverManager);
         //check if related message id exists in db
         if (!messageAccess.messageIdExists(mdnInfo.getRelatedMessageId())) {
             //there is no way to log this persistent because the MDN is not related to any message: Just write the
             //incoming event to the log without binding it to a as message
             if (this.logger != null) {
+                if (AS2Server.PLUGINS.isActivated(ServerPlugins.PLUGIN_HA)) {
+                    this.logger.log(Level.FINE, this.rb.getResourceString("mdn.incoming.ha",
+                            ServerInstance.ID));
+                } else {
                 this.logger.log(Level.FINE, this.rb.getResourceString("mdn.incoming"));
+            }
             }
             throw new Exception(this.rb.getResourceString("mdn.unexpected.messageid",
                     new Object[]{
@@ -270,7 +277,7 @@ public class AS2MessageParser {
             if (receiverId != null) {
                 receiver = partnerAccess.getPartner(receiverId);
             }
-            StringBuilder relationship = new StringBuilder("[");
+            StringBuilder relationship = new StringBuilder();
             if (sender != null) {
                 relationship.append(sender.getName());
             } else {
@@ -282,11 +289,18 @@ public class AS2MessageParser {
             } else {
                 relationship.append(receiverId);
             }
-            relationship.append("]");
-            this.logger.log(Level.FINE, this.rb.getResourceString("mdn.incoming",
+            if (AS2Server.PLUGINS.isActivated(ServerPlugins.PLUGIN_HA)) {
+                this.logger.log(Level.FINE, this.rb.getResourceString("mdn.incoming.relationship.ha",
+                        new Object[]{
+                            relationship.toString(),
+                            ServerInstance.ID
+                        }), mdnInfo);
+            } else {
+                this.logger.log(Level.FINE, this.rb.getResourceString("mdn.incoming.relationship",
                     new Object[]{
                         relationship.toString()
                     }), mdnInfo);
+        }
         }
         if (this.logger != null) {
             this.logger.log(Level.INFO, this.rb.getResourceString("mdn.answerto",
@@ -435,8 +449,8 @@ public class AS2MessageParser {
                 messageInfo.setAsyncMDNURL(header.getProperty("receipt-delivery-option"));
                 messageInfo.setRequestsSyncMDN(header.getProperty("receipt-delivery-option") == null || header.getProperty("receipt-delivery-option").trim().length() == 0);
                 //check for existing partners
-                PartnerAccessDB partnerAccess = new PartnerAccessDB(this.configConnection, this.runtimeConnection);
-                MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+                PartnerAccessDB partnerAccess = new PartnerAccessDB(this.dbDriverManager);
+                MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
                 Partner sender = partnerAccess.getPartner(messageInfo.getSenderId());
                 Partner receiver = partnerAccess.getPartner(messageInfo.getReceiverId());
                 if (sender == null) {
@@ -470,10 +484,24 @@ public class AS2MessageParser {
                         relationship.append("-");
                         relationship.append(receiver.getName());
                         //do not log before because the logging process is related to an already created message in the transaction log
+                        if (AS2Server.PLUGINS.isActivated(ServerPlugins.PLUGIN_HA)) {
+                            this.logger.log(Level.FINE, this.rb.getResourceString("msg.incoming.ha",
+                                    new Object[]{
+                                        relationship.toString(),
+                                        AS2Tools.getDataSizeDisplay(rawMessageData.length),
+                                        ServerInstance.ID
+                                    }), messageInfo);
+                        } else {
                         this.logger.log(Level.FINE, this.rb.getResourceString("msg.incoming",
                                 new Object[]{
                                     relationship.toString(),
                                     AS2Tools.getDataSizeDisplay(rawMessageData.length)
+                                }), messageInfo);
+                    }
+                        //indicate in the log that the messaeg has been already processed
+                        this.logger.log(Level.WARNING, this.rb.getResourceString("msg.already.processed",
+                                new Object[]{
+                                    messageInfo.getMessageId()
                                 }), messageInfo);
                     }
                     throw new AS2Exception(
@@ -481,7 +509,7 @@ public class AS2MessageParser {
                             "An AS2 message with the message id " + messageInfo.getMessageId()
                             + " has been already processed successfully by the system or is pending ("
                             + alreadyExistingInfo.getInitDate() + "). Please "
-                            + " resubmit the message with a new message id instead or resending it if it should be processed again.",
+                            + " resubmit the message with a new message id instead of resending it if it should be processed again.",
                             new AS2Message(messageInfo));
                 }
                 messageAccess.initializeOrUpdateMessage(messageInfo);
@@ -491,11 +519,20 @@ public class AS2MessageParser {
                     relationship.append("-");
                     relationship.append(receiver.getName());
                     //do not log before because the logging process is related to an already created message in the transaction log
+                    if (AS2Server.PLUGINS.isActivated(ServerPlugins.PLUGIN_HA)) {
+                        this.logger.log(Level.FINE, this.rb.getResourceString("msg.incoming.ha",
+                                new Object[]{
+                                    relationship.toString(),
+                                    AS2Tools.getDataSizeDisplay(rawMessageData.length),
+                                    ServerInstance.ID
+                                }), messageInfo);
+                    } else {
                     this.logger.log(Level.FINE, this.rb.getResourceString("msg.incoming",
                             new Object[]{
                                 relationship.toString(),
                                 AS2Tools.getDataSizeDisplay(rawMessageData.length)
                             }), messageInfo);
+                }
                 }
                 message.setRawData(rawMessageData);
                 byte[] decryptedData = this.decryptMessage(message, rawMessageData, contentType, sender, receiver);
@@ -599,7 +636,7 @@ public class AS2MessageParser {
         if (mdnMessageInfo.getSignType() == AS2Message.SIGNATURE_NONE && mdnMessageInfo.getReceivedContentMIC() == null) {
             return;
         }
-        MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+        MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
         AS2MessageInfo relatedMessageInfo = messageAccess.getLastMessageEntry(mdnMessageInfo.getRelatedMessageId());
         BCCryptoHelper helper = new BCCryptoHelper();
         if (helper.micIsEqual(mdnMessageInfo.getReceivedContentMIC(), relatedMessageInfo.getReceivedContentMIC())) {
@@ -650,7 +687,7 @@ public class AS2MessageParser {
         } else {
             payloadIn = new ByteArrayInputStream(data);
         }
-        this.copyStreams(payloadIn, payloadOut);
+        payloadIn.transferTo(payloadOut);
         payloadOut.flush();
         payloadOut.close();
         byte[] payloadData = payloadOut.toByteArray();
@@ -666,7 +703,8 @@ public class AS2MessageParser {
         }
         try {
             //use the java mail API mechanism to get the payload filename, perhaps this does already work
-            as2Payload.setOriginalFilename(testMessage.getFileName());
+            String decodedFilename = this.decodeTransmittedFilename(testMessage.getFileName());
+            as2Payload.setOriginalFilename(decodedFilename);            
             if (as2Payload.getOriginalFilename() != null) {
                 if (this.logger != null) {
                     this.logger.log(Level.INFO, this.rb.getResourceString("original.filename.found",
@@ -689,7 +727,8 @@ public class AS2MessageParser {
                 MimeBodyPart filenamePart = new MimeBodyPart();
                 filenamePart.setHeader("content-disposition", filenameHeader);
                 try {
-                    as2Payload.setOriginalFilename(filenamePart.getFileName());
+                    String decodedFilename = this.decodeTransmittedFilename(filenamePart.getFileName());
+                    as2Payload.setOriginalFilename(decodedFilename);
                     if (as2Payload.getOriginalFilename() != null) {
                         if (this.logger != null) {
                             this.logger.log(Level.INFO, this.rb.getResourceString("original.filename.found",
@@ -755,7 +794,7 @@ public class AS2MessageParser {
         for (Part attachmentPart : attachmentList) {
             ByteArrayOutputStream payloadOut = new ByteArrayOutputStream();
             InputStream payloadIn = attachmentPart.getInputStream();
-            this.copyStreams(payloadIn, payloadOut);
+            payloadIn.transferTo(payloadOut);
             payloadOut.flush();
             payloadOut.close();
             byte[] data = payloadOut.toByteArray();
@@ -770,7 +809,8 @@ public class AS2MessageParser {
                 as2Payload.setContentType(contentTypeHeader[0]);
             }
             try {
-                as2Payload.setOriginalFilename(attachmentPart.getFileName());
+                String decodedFilename = this.decodeTransmittedFilename(attachmentPart.getFileName());
+                as2Payload.setOriginalFilename(decodedFilename); 
                 if (as2Payload.getOriginalFilename() != null) {
                     if (this.logger != null) {
                         this.logger.log(Level.INFO, this.rb.getResourceString("original.filename.found",
@@ -793,7 +833,8 @@ public class AS2MessageParser {
                     MimeBodyPart filenamePart = new MimeBodyPart();
                     filenamePart.setHeader("content-disposition", filenameheader);
                     try {
-                        as2Payload.setOriginalFilename(filenamePart.getFileName());
+                        String decodedFilename = this.decodeTransmittedFilename(attachmentPart.getFileName());
+                        as2Payload.setOriginalFilename(decodedFilename);                         
                         if (as2Payload.getOriginalFilename() != null) {
                             if (this.logger != null) {
                                 this.logger.log(Level.INFO, this.rb.getResourceString("original.filename.found",
@@ -818,6 +859,30 @@ public class AS2MessageParser {
             }
             message.addPayload(as2Payload);
         }
+    }
+
+    /**
+     * RFC 822 permits to send ASCII > 127 in mail headers. Means if the
+     * filename contains special characters this has to be encoded. This is done
+     * in this method. If no decoding is required this method just returns the
+     * pass filename
+     *
+     * @param filename
+     * @return
+     */
+    private String decodeTransmittedFilename(String filename) {
+        try {
+            //RFC 822 encoded filename
+            String decodedFilename = MimeUtility.decodeText(filename);
+            //RFC 2047/2231 encoded filename
+            if (decodedFilename != null && decodedFilename.startsWith("=?")) {
+                decodedFilename = MimeUtility.decodeWord(filename);
+            }
+            return( decodedFilename );
+        } catch (Exception e) {
+            //NOP
+        }
+        return (filename);
     }
 
     /**
@@ -1143,7 +1208,7 @@ public class AS2MessageParser {
                         digest = BCCryptoHelper.ALGORITHM_SHA3_384;
                     } else if (signDigest == AS2Message.SIGNATURE_SHA3_512) {
                         digest = BCCryptoHelper.ALGORITHM_SHA3_512;
-                    }else if (signDigest == AS2Message.SIGNATURE_SHA3_224_RSASSA_PSS) {
+                    } else if (signDigest == AS2Message.SIGNATURE_SHA3_224_RSASSA_PSS) {
                         digest = BCCryptoHelper.ALGORITHM_SHA3_224_RSASSA_PSS;
                     } else if (signDigest == AS2Message.SIGNATURE_SHA3_256_RSASSA_PSS) {
                         digest = BCCryptoHelper.ALGORITHM_SHA3_256_RSASSA_PSS;
@@ -1163,7 +1228,7 @@ public class AS2MessageParser {
                         this.logger.log(Level.SEVERE, this.rb.getResourceString("signature.analyzed.digest.failed"), as2Info);
                     }
                     as2Info.setSignType(AS2Message.SIGNATURE_UNKNOWN);
-                    throw new Exception( "The system is unable to find out the sign algorithm of the inbound AS2 message.");
+                    throw new Exception("The system is unable to find out the sign algorithm of the inbound AS2 message.");
                 }
             }
         }
@@ -1453,27 +1518,11 @@ public class AS2MessageParser {
             contentStream = recipient.getContentStream(
                     new JceKeyTransEnvelopedRecipient(privateKeyReceiver).setProvider("BC")).getContentStream();
         }
-        //InputStream contentStream = recipient.getContentStream(privateKeyReceiver, "BC").getContentStream();
-        //threshold set to 20 MB: if the data is less then 20MB perform the operaion in memory else stream to disk
-        DeferredFileOutputStream decryptedOutput = new DeferredFileOutputStream(20 * 1024 * 1024, "as2decryptdata_", ".mem", null);
-        this.copyStreams(contentStream, decryptedOutput);
-        decryptedOutput.flush();
-        decryptedOutput.close();
-        contentStream.close();
-        byte[] decryptedData = null;
-        //size of the data was < than the threshold
-        if (decryptedOutput.isInMemory()) {
-            decryptedData = decryptedOutput.getData();
-        } else {
-            //data has been written to a temp file: reread and return
             ByteArrayOutputStream memOut = new ByteArrayOutputStream();
-            decryptedOutput.writeTo(memOut);
+        contentStream.transferTo(memOut);
             memOut.flush();
             memOut.close();
-            //finally delete the temp file
-            boolean deleted = decryptedOutput.getFile().delete();
-            decryptedData = memOut.toByteArray();
-        }
+        byte[] decryptedData = memOut.toByteArray();
         if (this.logger != null) {
             this.logger.log(Level.INFO, this.rb.getResourceString("decryption.done.alias",
                     new Object[]{
@@ -1564,23 +1613,4 @@ public class AS2MessageParser {
         return (uncompressedPayload);
     }
 
-    /**
-     * Copies all data from one stream to another
-     */
-    private void copyStreams(InputStream in, OutputStream out) throws IOException {
-        BufferedInputStream inStream = new BufferedInputStream(in);
-        BufferedOutputStream outStream = new BufferedOutputStream(out);
-        //copy the contents to an output stream
-        byte[] buffer = new byte[4096];
-        int read = 0;
-        //a read of 0 must be allowed, sometimes it takes time to
-        //extract data from the input
-        while (read != -1) {
-            read = inStream.read(buffer);
-            if (read > 0) {
-                outStream.write(buffer, 0, read);
-            }
-        }
-        outStream.flush();
-    }
 }

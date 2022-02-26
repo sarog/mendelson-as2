@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2Payload.java 16    19.03.20 18:51 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2Payload.java 17    26.07.21 15:34 Heller $
 package de.mendelson.comm.as2.message;
 
 import java.io.BufferedInputStream;
@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -24,7 +25,7 @@ import java.nio.file.Paths;
  * have multiple attachments in as2 transmission
  *
  * @author S.Heller
- * @version $Revision: 16 $
+ * @version $Revision: 17 $
  */
 public class AS2Payload implements Serializable {
 
@@ -100,9 +101,13 @@ public class AS2Payload implements Serializable {
         OutputStream outStream = null;
         InputStream inStream = null;
         try {
-            outStream = Files.newOutputStream(file);
+            outStream = Files.newOutputStream(file,
+                    StandardOpenOption.SYNC, 
+                    StandardOpenOption.CREATE, 
+                    StandardOpenOption.TRUNCATE_EXISTING, 
+                    StandardOpenOption.WRITE);
             inStream = this.data.getInputStream();
-            this.copyStreams(inStream, outStream);
+            inStream.transferTo(outStream);
         } finally {
             if (outStream != null) {
                 outStream.flush();
@@ -125,7 +130,7 @@ public class AS2Payload implements Serializable {
         try {
             inStream = Files.newInputStream(Paths.get(this.payloadFilename));
             outStream = new ByteArrayOutputStream();
-            this.copyStreams(inStream, outStream);
+            inStream.transferTo(outStream);
         } finally {
             if (outStream != null) {
                 outStream.flush();
@@ -140,25 +145,6 @@ public class AS2Payload implements Serializable {
         }
     }
 
-    /**
-     * Copies all data from one stream to another
-     */
-    private void copyStreams(InputStream in, OutputStream out) throws IOException {
-        BufferedInputStream inStream = new BufferedInputStream(in);
-        BufferedOutputStream outStream = new BufferedOutputStream(out);
-        //copy the contents to an output stream
-        byte[] buffer = new byte[2048];
-        int read = 2048;
-        //a read of 0 must be allowed, sometimes it takes time to
-        //extract data from the input
-        while (read != -1) {
-            read = inStream.read(buffer);
-            if (read > 0) {
-                outStream.write(buffer, 0, read);
-            }
-        }
-        outStream.flush();
-    }
 
     /**
      * @return the contentId

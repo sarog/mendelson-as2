@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleDirPollManager_fr.java 12    7.12.18 9:51 Heller $
+//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleDirPollManager_fr.java 13    19/01/22 16:17 Heller $
 package de.mendelson.comm.as2.send;
 
 import de.mendelson.util.MecResourceBundle;
@@ -16,7 +16,7 @@ import de.mendelson.util.MecResourceBundle;
  *
  * @author S.Heller
  * @author E.Pailleau
- * @version $Revision: 12 $
+ * @version $Revision: 13 $
  */
 public class ResourceBundleDirPollManager_fr extends MecResourceBundle {
 
@@ -35,6 +35,7 @@ public class ResourceBundleDirPollManager_fr extends MecResourceBundle {
         {"manager.status.modified", "La surveillance des répertoires a changé, {0} les répertoires sont surveillés."},
         {"poll.stopped", "[Gestionnaire de scrutation des répertoires] Scrutation pour les relations \"{0}/{1}\" stoppé."},
         {"poll.started", "[Gestionnaire de scrutation des répertoires] Scrutation pour les relations \"{0}/{1}\" démarré. Fichiers ignorés: \"{2}\". Intervalle de scrutation: {3}s"},
+        {"poll.stopped.notscheduled", "[Gestionnaire de scrutation des répertoires] Le système a essayé d''arrêter la surveillance du répertoire pour \"{0}/{1}\" - mais il n''y a pas eu de surveillance." },
         {"poll.modified", "[Gestionnaire de scrutation des répertoires] Paramètres de partenaire pour la relation \"{0}/{1}\" ont été modifiés."},
         {"warning.noread", "[Gestionnaire de scrutation des répertoires] Pas d''accès en lecture pour le fichier outbox {0}, ignorer."},
         {"warning.ro", "[Gestionnaire de scrutation des répertoires] Le fichier {0} dans la boîte de départ est en lecture seule, ignoré."},

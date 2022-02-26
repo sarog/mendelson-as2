@@ -1,4 +1,4 @@
-//$Header: /mendelson_business_integration/de/mendelson/util/XPathHelper.java 27    6.11.18 11:57 Heller $
+//$Header: /converteride/de/mendelson/util/XPathHelper.java 28    4.01.22 15:15 Heller $
 package de.mendelson.util;
 
 import java.io.InputStream;
@@ -22,7 +22,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -37,7 +40,7 @@ import org.xml.sax.InputSource;
  * parameters of XPATH pathes, get values of nodes ...
  *
  * @author S.Heller
- * @version $Revision: 27 $
+ * @version $Revision: 28 $
  */
 public class XPathHelper {
 
@@ -86,6 +89,22 @@ public class XPathHelper {
         factory.setIgnoringComments(true);
         factory.setValidating(false);
         DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new ErrorHandler(){
+            @Override
+            public void warning(SAXParseException exception) throws SAXException {
+            }
+
+            @Override
+            public void error(SAXParseException exception) throws SAXException {
+                throw( exception );
+            }
+
+            @Override
+            public void fatalError(SAXParseException exception) throws SAXException {
+                throw( exception );
+            }
+            
+        });
         Document parseDocument = builder.parse(source);
         this.parse(parseDocument);
     }

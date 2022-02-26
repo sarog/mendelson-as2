@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/ResourceBundleDialogSearchLogfile_de.java 3     27.02.19 10:08 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/ResourceBundleDialogSearchLogfile_de.java 4     27.09.21 17:12 Heller $
 package de.mendelson.util.clientserver.log.search.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 4 $
  */
 public class ResourceBundleDialogSearchLogfile_de extends MecResourceBundle {
 
@@ -39,10 +39,10 @@ public class ResourceBundleDialogSearchLogfile_de extends MecResourceBundle {
         {"button.close", "Schliessen" },
         {"label.search", "<html><div style=\"text-align:center\">Protokoll<br>durchsuchen</div></html>" },
         {"label.info", "<html>Bitte definieren Sie einen Zeitraum, geben eine vollständige AS2 Nachrichtennummer oder die vollständige Nummer einer MDN ein, um alle Protokolleinträge dafür auf dem Server zu finden - dann drücken Sie bitte den Knopf \"Protokoll durchsuchen\". Die benutzerdefinierte Nummer können Sie für jede Transaktion definieren, wenn Sie die Daten über die Kommandozeile an den laufenden Server schicken.</html>" },
-        {"textfield.preset", "mendelsonAS2@partnerAS2" },
+        {"textfield.preset", "AS2 Nachrichtennummer, MDN Nummer oder benutzerdefinierte Identifikation" },
         {"label.messageid", "Nachrichtennummer" },
         {"label.mdnid", "MDN Nummer" },
-        {"label.uid", "Benutzerdefinierte Nummer" },
+        {"label.uid", "Benutzerdefinierte Identifikation" },
         {"problem.serverside", "Es gab ein serverseitiges Problem beim Durchsuchen der Protokolldateien: [{0}] {1}" },
     };
 }

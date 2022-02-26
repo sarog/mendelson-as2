@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ProcessingEvent.java 6     10.09.20 12:57 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ProcessingEvent.java 10    26.08.21 14:00 Heller $
 package de.mendelson.comm.as2.message.postprocessingevent;
 
 import de.mendelson.comm.as2.message.AS2MDNInfo;
@@ -10,6 +10,7 @@ import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.partner.PartnerEventInformation;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.logging.Level;
  * panel
  *
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 10 $
  */
 public class ProcessingEvent implements Serializable {
 
@@ -101,11 +102,12 @@ public class ProcessingEvent implements Serializable {
     
     
     /**
-     * Enqueues an event if it should be executed for the passed message/MDN id combination
+     * Enqueue an event if it should be executed for the passed message/MDN id combination
      */
-    public static void enqueueEventIfRequired(Connection configConnection, Connection runtimeConnection,
+    public static void enqueueEventIfRequired(IDBDriverManager dbDriverManager, 
+            Connection configConnection, Connection runtimeConnection,
             AS2MessageInfo messageInfo, AS2MDNInfo mdnInfo) {
-        PartnerAccessDB partnerAccess = new PartnerAccessDB(configConnection, runtimeConnection);
+        PartnerAccessDB partnerAccess = new PartnerAccessDB(dbDriverManager);
         Partner messageSender = partnerAccess.getPartner(messageInfo.getSenderId());
         Partner messageReceiver = partnerAccess.getPartner(messageInfo.getReceiverId());
         PartnerEventInformation receiverEvents = messageReceiver.getPartnerEvents();
@@ -144,7 +146,8 @@ public class ProcessingEvent implements Serializable {
                 mdnId = mdnInfo.getMessageId();
             }
             ProcessingEvent event = new ProcessingEvent(eventType, processType, messageId, mdnId, parameter);
-            ProcessingEventAccessDB processingEventDB = new ProcessingEventAccessDB(configConnection, runtimeConnection);
+            ProcessingEventAccessDB processingEventDB = new ProcessingEventAccessDB(
+                    dbDriverManager, configConnection, runtimeConnection);
             processingEventDB.addEventToExecute(event);
             logger.log( Level.INFO, rb.getResourceString( "event.enqueued",
                     rb.getResourceString("processtype." + event.getProcessType())), messageInfo );

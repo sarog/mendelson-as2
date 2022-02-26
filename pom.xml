@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>as2</artifactId>
-    <version>1.1b59-gh</version>
+    <version>1.1b61-gh</version>
     <name>Mendelson AS2 Community Server</name>
 
     <properties>
@@ -14,7 +14,12 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jettyVersion>9.2.25.v20180606</jettyVersion>
-        <assembly-directory>target/hightide</assembly-directory>
+        <luceneVersion>9.0.0</luceneVersion>
+        <vaadinVersion>8.14.3</vaadinVersion>
+        <bcVersion>1.69</bcVersion>
+        <minaVersion>2.1.5</minaVersion>
+        <flatlafVersion>2.0.1</flatlafVersion>
+        <assembly-directory>target/assembly</assembly-directory>
         <root-dist-directory>target/jetty-distribution</root-dist-directory>
     </properties>
 
@@ -99,11 +104,11 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.3.3.v20150827</version>
                 <configuration>
-                    <!--<war>${project.basedir}/target/webas2.war</war>
-                    <jettyXml>jetty.xml</jettyXml>
+                    <war>${project.basedir}/target/webas2.war</war>
+                    <jettyXml>${project.basedir}\webas2\jetty.xml</jettyXml>
                     <webApp>
-                        <contextPath>/</contextPath>
-                    </webApp>-->
+                        <contextPath>/webas2</contextPath>
+                    </webApp>
                     <!--<jettyXml>jetty.xml,jetty-ssl.xml,jetty-https.xml</jettyXml>-->
 
                     <!--Running More than One Webapp-->
@@ -113,10 +118,10 @@
                             <!--<war>${project.basedir}../../B.war</war>-->
                             <contextPath>/as2</contextPath>
                         </contextHandler>
-                        <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
+                        <!--<contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
                             <war>${project.basedir}\out\artifacts\webas2.war</war>
                             <contextPath>/webas2</contextPath>
-                        </contextHandler>
+                        </contextHandler>-->
                     </contextHandlers>
 
                 </configuration>
@@ -151,23 +156,24 @@
                 <version>2.8</version>
                 <executions>
                     <execution>
-                        <id>unpack-root-dist</id>
-                        <phase>initialize</phase>
+                        <id>unpack-jetty-dist</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
                             <artifactItems>
-                                <artifactItem>
+                               <artifactItem>
                                     <groupId>org.eclipse.jetty</groupId>
                                     <artifactId>jetty-distribution</artifactId>
                                     <version>${jettyVersion}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <includes>**</includes>
+                                    <excludes>META-INF/**</excludes>
                                     <outputDirectory>${root-dist-directory}</outputDirectory>
                                 </artifactItem>
-                                <artifactItem>
+                                <!--<artifactItem>
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jetty-setuid-java</artifactId>
                                     <version>${project.version}</version>
@@ -177,55 +183,56 @@
                                     <includes>**</includes>
                                     <excludes>META-INF/**</excludes>
                                     <outputDirectory>${assembly-directory}</outputDirectory>
-                                </artifactItem>
+                                </artifactItem>-->
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <execution>
+                    <!--<execution>
                         <id>copy-dist-deps</id>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                        <artifactItems>
-                            <!--<artifactItem>
-                                <groupId>org.cometd</groupId>
-                                <artifactId>cometd-demo</artifactId>
-                                <version>${org-cometd-version}</version>
-                                <type>war</type>
-                                <overWrite>true</overWrite>
-                                <includes>**</includes>
-                                <outputDirectory>${assembly-directory}/webapps</outputDirectory>
-                                <destFileName>cometd.war</destFileName>
-                            </artifactItem>-->
-                            <artifactItem>
-                                <groupId>org.eclipse.jetty</groupId>
-                                <artifactId>jetty-websocket</artifactId>
-                                <version>${jettyVersion}</version>
-                                <type>jar</type>
-                                <overWrite>true</overWrite>
-                                <includes>**</includes>
-                                <outputDirectory>${assembly-directory}/lib</outputDirectory>
-                            </artifactItem>
-                        </artifactItems>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.cometd</groupId>
+                                    <artifactId>cometd-demo</artifactId>
+                                    <version>${org-cometd-version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>**</includes>
+                                    <outputDirectory>${assembly-directory}/webapps</outputDirectory>
+                                    <destFileName>cometd.war</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.eclipse.jetty</groupId>
+                                    <artifactId>jetty-websocket</artifactId>
+                                    <version>${jettyVersion}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>**</includes>
+                                    <excludes>META-INF/**</excludes>
+                                    <outputDirectory>${assembly-directory}/lib</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
         </plugins>
     </build>
 
-        <!--<repositories>
-            <repository>
-                <id>jcenter</id>
-                <url>https://jcenter.bintray.com/</url>
-            </repository>
-            <repository>
-                <id>jboss-3p</id>
-                <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
-            </repository>
-        </repositories>-->
+    <!--<repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+        <repository>
+            <id>jboss-3p</id>
+            <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+        </repository>
+    </repositories>-->
 
     <dependencies>
 
@@ -268,19 +275,19 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.67</version>
+            <version>${bcVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.67</version>
+            <version>${bcVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcmail-jdk15on</artifactId>
-            <version>1.67</version>
+            <version>${bcVersion}</version>
         </dependency>
 
         <dependency>
@@ -328,58 +335,58 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>8.6.0</version>
+            <version>${luceneVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-backward-codecs</artifactId>
-            <version>8.6.0</version>
+            <version>${luceneVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-            <version>8.6.0</version>
+            <version>8.11.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.mina</groupId>
             <artifactId>mina-core</artifactId>
-            <version>2.1.3</version>
+            <version>${minaVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-server</artifactId>
-            <version>8.12.0</version>
+            <version>${vaadinVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client</artifactId>
-            <version>8.12.0</version>
+            <version>${vaadinVersion}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>0.45</version>
+            <version>${flatlafVersion}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-extras</artifactId>
-            <version>0.45</version>
+            <version>${flatlafVersion}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-swingx</artifactId>
-            <version>0.45</version>
+            <version>${flatlafVersion}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -443,6 +450,16 @@
             <groupId>com.oracle</groupId>
             <artifactId>icebrowser</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
         </dependency>
 
     </dependencies>

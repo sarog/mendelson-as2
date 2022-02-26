@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/systemevents/search/ServerSideEventSearch.java 8     17.09.19 12:07 Heller $
+//$Header: /mendelson_business_integration/de/mendelson/util/systemevents/search/ServerSideEventSearch.java 10    3.12.21 14:22 Heller $
 package de.mendelson.util.systemevents.search;
 
 import de.mendelson.util.systemevents.SystemEvent;
@@ -57,7 +57,7 @@ import org.apache.lucene.store.FSDirectory;
  * by state, type, category or also free text search
  *
  * @author S.Heller
- * @version $Revision: 8 $
+ * @version $Revision: 10 $
  */
 public class ServerSideEventSearch {
 
@@ -129,7 +129,7 @@ public class ServerSideEventSearch {
                     //think that the index is complete - but it is possible that more events happen today
                 }
                 //skip the index generation process for this date if there is no event directory available
-                if (!Files.exists(Paths.get("log", this.dailySubDirFormat.format(searchDate) + FileSystems.getDefault().getSeparator() + "events"))) {
+                if (!Files.exists(Paths.get("log", this.dailySubDirFormat.format(searchDate), "events"))) {
                     continue;
                 }
                 try {

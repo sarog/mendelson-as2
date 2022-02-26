@@ -1,16 +1,19 @@
-//$Header: /mec_as2/de/mendelson/comm/as2/client/about/AboutDialog.java 9     17.12.20 15:48 Heller $
+//$Header: /mec_as2/de/mendelson/comm/as2/client/about/AboutDialog.java 10    3/02/22 14:35 Heller $
 package de.mendelson.comm.as2.client.about;
 import javax.swing.*;
 import de.mendelson.Copyright;
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.comm.as2.client.AS2Gui;
+import de.mendelson.util.ColorUtil;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.font.FontUtil;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileReader;
-import java.io.StringWriter;
+import java.awt.font.TextAttribute;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,7 +30,7 @@ import java.util.*;
 /**
  * Dialog to show the about info
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 10 $
  */
 public class AboutDialog extends JDialog {
     
@@ -50,10 +53,14 @@ public class AboutDialog extends JDialog {
         this.initComponents();
         this.setMultiresolutionIcons();        
         this.getRootPane().setDefaultButton( this.jButtonOk );
-        this.jLabelProductName.setText( "<HTML><b>"
-                + AS2ServerVersion.getProductName()
+        Font font = FontUtil.getProductFont(FontUtil.STYLE_PRODUCT_PLAIN, 12);
+        Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+        attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+        this.jLabelProductName.setFont(font.deriveFont(attributes));
+        this.jLabelProductName.setText( 
+                AS2ServerVersion.getProductName()
                 + " " + AS2ServerVersion.getVersion()
-                + " <i>" + AS2ServerVersion.getBuild() + "</i></b><HTML>" );
+                + " " + AS2ServerVersion.getBuild());
         this.jLabelBuildDate.setText(
                 this.rb.getResourceString( "builddate",
                 new Object[]{ AS2ServerVersion.getLastModificationDate() }));
@@ -90,6 +97,14 @@ public class AboutDialog extends JDialog {
             });
         }
         this.displayLicense();
+        Color foregroundColor = ColorUtil.getBestContrastColorAroundForeground(UIManager.getColor("Label.background"),
+                FontUtil.getFontColor(FontUtil.PRODUCT_OFTP2_COMMUNITY));
+        this.jLabelCopyright.setForeground(foregroundColor);
+        this.jLabelStreet.setForeground(foregroundColor);
+        this.jLabelZip.setForeground(foregroundColor);
+        this.jLabelEMail.setForeground(foregroundColor);
+        this.jLabelProductName.setForeground(foregroundColor);
+        this.jLabelBuildDate.setForeground(foregroundColor);
     }
     
     private void setMultiresolutionIcons() {

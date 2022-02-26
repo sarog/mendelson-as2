@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleExportKeyPKCS12.java 2     4/06/18 1:35p Heller $ 
+//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleExportKeyPKCS12.java 3     22.09.21 18:12 Heller $ 
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize gui entries
  *
  * @author S.Heller
- * @version $Revision: 2 $
+ * @version $Revision: 3 $
  */
 public class ResourceBundleExportKeyPKCS12 extends MecResourceBundle {
 
@@ -34,15 +34,17 @@ public class ResourceBundleExportKeyPKCS12 extends MecResourceBundle {
         {"button.cancel", "Cancel"},
         {"button.browse", "Browse"},
         {"keystore.contains.nokeys", "This keystore does not contain private keys."},
-        {"label.exportkey", "Export key store (PKCS#12):"},
-        {"label.keypass", "Key password for exported keystore:"},
+        {"label.exportkey", "Filename:"},
+        {"label.exportkey.hint", "Exported keystore file (PKCS#12)"},
+        {"label.keypass", "Password:"},
+        {"label.keypass.hint", "Exported keystore password"},
         {"title", "Export key to keystore(PKCS#12 format)"},
         {"filechooser.key.export", "Please select the PKCS#12 keystore file for the export"},
         {"key.export.success.message", "The key has been exported successfully."},
         {"key.export.success.title", "Success"},
         {"key.export.error.message", "There occured an error during the export process.\n{0}"},
         {"key.export.error.title", "Error"},
-        {"label.alias", "Key to export:"},
+        {"label.alias", "Key:"},
         {"key.exported.to.file", "The key \"{0}\" has been written to the keystore \"{1}\"."},};
 
 }

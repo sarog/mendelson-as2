@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/AS2MessageCreation.java 59    30.06.20 9:13 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/AS2MessageCreation.java 63    15.10.21 12:22 Heller $
 package de.mendelson.comm.as2.message;
 
 import com.sun.mail.util.LineOutputStream;
@@ -6,6 +6,7 @@ import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.util.AS2Tools;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.BCCryptoHelper;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
@@ -15,9 +16,12 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -63,7 +67,7 @@ import org.bouncycastle.operator.jcajce.JcaAlgorithmParametersConverter;
  * Packs a message with all necessary headers and attachments
  *
  * @author S.Heller
- * @version $Revision: 59 $
+ * @version $Revision: 63 $
  */
 public class AS2MessageCreation {
 
@@ -73,8 +77,9 @@ public class AS2MessageCreation {
     private CertificateManager signatureCertManager = null;
     private CertificateManager encryptionCertManager = null;
     //Database connection
-    private Connection runtimeConnection;
-    private Connection configConnection;
+    private Connection runtimeConnection = null;
+    private Connection configConnection = null;
+    private IDBDriverManager dbDriverManager = null;
 
     public AS2MessageCreation(CertificateManager signatureCertManager, CertificateManager encryptionCertManager) {
         //Load resourcebundle
@@ -101,9 +106,10 @@ public class AS2MessageCreation {
     /**
      * Passes a database connection to this class to allow logging functionality
      */
-    public void setServerResources(Connection configConnection, Connection runtimeConnection) {
+    public void setServerResources(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         this.runtimeConnection = runtimeConnection;
         this.configConnection = configConnection;
+        this.dbDriverManager = dbDriverManager;
     }
 
     /**
@@ -536,7 +542,7 @@ public class AS2MessageCreation {
         }
         info.setUserdefinedId(userdefinedId);
         if (this.runtimeConnection != null) {
-            MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+            MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
             messageAccess.initializeOrUpdateMessage(info);
         }
         if (this.logger != null) {
@@ -552,7 +558,7 @@ public class AS2MessageCreation {
             //add payload
             message.addPayload(as2Payload);
             if (this.runtimeConnection != null) {
-                MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
+                MessageAccessDB messageAccess = new MessageAccessDB(this.dbDriverManager, this.configConnection, this.runtimeConnection);
                 messageAccess.initializeOrUpdateMessage(info);
             }
             //no MIME message: single payload, unsigned, no CEM
@@ -580,7 +586,7 @@ public class AS2MessageCreation {
             }
             //prepare filename to not violate the MIME header rules
             if (as2Payload.getOriginalFilename() == null) {
-                as2Payload.setOriginalFilename(new File(as2Payload.getPayloadFilename()).getName());
+                as2Payload.setOriginalFilename(Paths.get(as2Payload.getPayloadFilename()).getFileName().toString());
             }
             String newFilename = as2Payload.getOriginalFilename().replace(' ', '_');
             newFilename = newFilename.replace('@', '_');
@@ -588,7 +594,20 @@ public class AS2MessageCreation {
             newFilename = newFilename.replace(';', '_');
             newFilename = newFilename.replace('(', '_');
             newFilename = newFilename.replace(')', '_');
+            //RFC 822 mail headers must contain only US-ASCII characters. Headers that contain non US-ASCII 
+            //characters must be encoded so that they contain only US-ASCII characters. Basically, 
+            //this process involves using either BASE64 or QP to encode certain characters. 
+            //RFC 2047 describes this in detail. 
+            //test if an encoding is required
+            boolean filenameEncodingRequired = !MimeUtility.encodeText(newFilename).equals(newFilename);
+            if (!filenameEncodingRequired) {
             bodyPart.addHeader("Content-Disposition", "attachment; filename=" + newFilename);
+            } else {
+                bodyPart.addHeader("Content-Disposition", "attachment; filename=\""
+                        + MimeUtility.encodeText(newFilename,
+                                StandardCharsets.UTF_8.displayName(), "B")
+                        + "\"");
+            }            
             contentPartList.add(bodyPart);
         }
         Part contentPart = null;
@@ -727,8 +746,8 @@ public class AS2MessageCreation {
         DeferredFileOutputStream encryptedOutput = null;
         OutputStream out = null;
         try {
-            //if the data is less then 3MB perform the operaion in memory else stream to disk
-            encryptedOutput = new DeferredFileOutputStream(3 * 1024 * 1024, "as2encryptdata_", ".mem", null);
+            //if the data is less then 20MB perform the operaion in memory else stream to disk
+            encryptedOutput = new DeferredFileOutputStream(20 * 1024 * 1024, "as2encryptdata_", ".mem", null);
             if (encryptionType == AS2Message.ENCRYPTION_3DES) {
                 out = dataGenerator.open(encryptedOutput, new JceCMSContentEncryptorBuilder(CMSAlgorithm.DES_EDE3_CBC)
                         .setProvider("BC").build());

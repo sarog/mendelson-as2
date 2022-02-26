@@ -1,4 +1,4 @@
-//$Header: /oftp2/de/mendelson/util/systemevents/ResourceBundleSystemEvent_de.java 25    20.09.19 10:32 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/ResourceBundleSystemEvent_de.java 26    26.01.21 15:20 Heller $
 package de.mendelson.util.systemevents;
 
 import de.mendelson.util.MecResourceBundle;
@@ -14,7 +14,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize the mendelson products
  *
  * @author S.Heller
- * @version $Revision: 25 $
+ * @version $Revision: 26 $
  */
 public class ResourceBundleSystemEvent_de extends MecResourceBundle {
 
@@ -82,7 +82,7 @@ public class ResourceBundleSystemEvent_de extends MecResourceBundle {
         {"type." + SystemEvent.TYPE_PROCESSING_ANY, "Datenverarbeitung"},
         {"type." + SystemEvent.TYPE_PRE_PROCESSING, "Vorverarbeitung"},
         {"type." + SystemEvent.TYPE_POST_PROCESSING, "Nachverarbeitung"},
-        {"type." + SystemEvent.TYPE_ACTIVATION_ANY, "Aktivierung"},
+        {"type." + SystemEvent.TYPE_LICENSE_ANY, "Lizenz"},
         {"type." + SystemEvent.TYPE_FILE_OPERATION_ANY, "Dateioperation"},
         {"type." + SystemEvent.TYPE_FILE_DELETE, "Datei (löschen)"},
         {"type." + SystemEvent.TYPE_FILE_MOVE, "Datei (verschieben)"},
@@ -101,7 +101,7 @@ public class ResourceBundleSystemEvent_de extends MecResourceBundle {
         {"severity." + SystemEvent.SEVERITY_ERROR, "Fehler"},
         {"severity." + SystemEvent.SEVERITY_WARNING, "Warnung"},
         {"severity." + SystemEvent.SEVERITY_INFO, "Info"},
-        {"category." + SystemEvent.CATEGORY_ACTIVATION, "Aktivierung"},
+        {"category." + SystemEvent.CATEGORY_LICENSE, "Aktivierung"},
         {"category." + SystemEvent.CATEGORY_CERTIFICATE, "Zertifikat"},
         {"category." + SystemEvent.CATEGORY_CONFIGURATION, "Konfiguration"},
         {"category." + SystemEvent.CATEGORY_CONNECTIVITY, "Verbindung"},

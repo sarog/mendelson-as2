@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/configurationcheck/ResourceBundleConfigurationIssue_de.java 23    8.12.20 11:42 Heller $
+//$Header: /as2/de/mendelson/comm/as2/configurationcheck/ResourceBundleConfigurationIssue_de.java 24    19/01/22 16:17 Heller $
 package de.mendelson.comm.as2.configurationcheck;
 
 import de.mendelson.util.MecResourceBundle;
@@ -14,7 +14,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize gui entries
  *
  * @author S.Heller
- * @version $Revision: 23 $
+ * @version $Revision: 24 $
  */
 public class ResourceBundleConfigurationIssue_de extends MecResourceBundle {
 
@@ -131,7 +131,8 @@ public class ResourceBundleConfigurationIssue_de extends MecResourceBundle {
         {String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS), "Große Menge von Verzeichnisüberwachungen pro Zeiteinheit"},
         {"hint." + String.valueOf(ConfigurationIssue.TOO_MANY_DIR_POLLS),
             "<HTML>Sie haben in Ihrem System eine große Menge von Partnerbeziehnungen definiert und überwachen die entsprechenden "
-            + "Ausgangsverzeichnisse in zu kurzen Zeitintervallen.<br>Aktuell werden pro Minute {0} Verzeichnisüberwachungen aktiviert.<br>"
+            + "Ausgangsverzeichnisse in zu kurzen Zeitintervallen.<br>Aktuell werden pro Minute {0} Verzeichnisüberwachungen aktiviert, "
+            + "das System kann diese hohe Rate nicht einhalten.<br>"
             + "Bitte reduzieren Sie diesen Wert, indem Sie die Überwachungsintervalle der jeweiligen Partnerverzeichnisse vergrößern und"
             + " auch Überwachungen für Partner deaktivieren, wo dies nicht benötigt wird."
             + "Bei einer großen Anzahl von Partnern wird empfohlen, alle Verzeichnisüberwachungen deaktivieren und die Sendeaufträge von "

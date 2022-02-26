@@ -1,9 +1,11 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/JDialogImportKeyPEM.java 9     11.11.20 17:06 Heller $
+//$Header: /oftp2/de/mendelson/util/security/cert/gui/JDialogImportKeyPEM.java 13    24.09.21 10:37 Heller $
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.MecFileChooser;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.TextOverlay;
+import de.mendelson.util.passwordfield.PasswordOverlay;
 import de.mendelson.util.security.BCCryptoHelper;
 import de.mendelson.util.security.PEMKeys2Keystore;
 import de.mendelson.util.uinotification.UINotification;
@@ -14,7 +16,6 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 
@@ -29,7 +30,7 @@ import javax.swing.SwingUtilities;
  * Dialog to configure a single partner
  *
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 13 $
  */
 public class JDialogImportKeyPEM extends JDialog {
 
@@ -59,9 +60,15 @@ public class JDialogImportKeyPEM extends JDialog {
         this.setTitle(this.rb.getResourceString("title"));
         this.keystoreType = keystoreType;
         initComponents();
+        PasswordOverlay.addTo(this.jPasswordFieldPEMPassphrase,
+                this.rb.getResourceString( "label.keypass.hint"));
+        TextOverlay.addTo( this.jTextFieldNewAlias, this.rb.getResourceString( "label.alias.hint"));
+        TextOverlay.addTo( this.jTextFieldImportCert, this.rb.getResourceString( "label.importcert.hint"));
+        TextOverlay.addTo(this.jTextFieldImportKeyFile, this.rb.getResourceString( "label.importkey.hint"));
         this.jLabelIcon.setIcon(new ImageIcon(JDialogCertificates.IMAGE_IMPORT_MULTIRESOLUTION.toMinResolution(32)));
         this.manager = manager;
         this.getRootPane().setDefaultButton(this.jButtonOk);
+        this.setButtonState();
     }
 
     public String getNewAlias() {
@@ -73,7 +80,7 @@ public class JDialogImportKeyPEM extends JDialog {
      */
     private void setButtonState() {
         this.jButtonOk.setEnabled(this.jTextFieldImportCert.getText().length() > 0
-                && this.jTextFieldImportPEMFile.getText().length() > 0
+                && this.jTextFieldImportKeyFile.getText().length() > 0
                 && this.jTextFieldNewAlias.getText().length() > 0);
     }
 
@@ -91,7 +98,7 @@ public class JDialogImportKeyPEM extends JDialog {
                 throw new IllegalArgumentException("JDialogImportKeyPEM:performImport: Unsupported keystore type " + this.keystoreType);
             }
             importer.setTargetKeyStore(this.manager.getKeystore(), this.manager.getKeystorePass());
-            importer.importKey(Paths.get(this.jTextFieldImportPEMFile.getText()),
+            importer.importKey(Paths.get(this.jTextFieldImportKeyFile.getText()),
                     this.jPasswordFieldPEMPassphrase.getPassword(),
                     this.manager.getKeystorePass(),
                     Paths.get(this.jTextFieldImportCert.getText()),
@@ -120,7 +127,7 @@ public class JDialogImportKeyPEM extends JDialog {
         jPanelEdit = new javax.swing.JPanel();
         jLabelIcon = new javax.swing.JLabel();
         jLabelImportPEMFile = new javax.swing.JLabel();
-        jTextFieldImportPEMFile = new javax.swing.JTextField();
+        jTextFieldImportKeyFile = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jButtonBrowseImportPEMFile = new javax.swing.JButton();
         jLabelImportCert = new javax.swing.JLabel();
@@ -143,20 +150,20 @@ public class JDialogImportKeyPEM extends JDialog {
         jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/util/security/cert/gui/missing_image24x24.gif"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 20, 10);
         jPanelEdit.add(jLabelIcon, gridBagConstraints);
 
         jLabelImportPEMFile.setText(this.rb.getResourceString( "label.importkey"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelImportPEMFile, gridBagConstraints);
 
-        jTextFieldImportPEMFile.addKeyListener(new java.awt.event.KeyAdapter() {
+        jTextFieldImportKeyFile.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldImportPEMFileKeyReleased(evt);
+                jTextFieldImportKeyFileKeyReleased(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -165,7 +172,7 @@ public class JDialogImportKeyPEM extends JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanelEdit.add(jTextFieldImportPEMFile, gridBagConstraints);
+        jPanelEdit.add(jTextFieldImportKeyFile, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -184,14 +191,14 @@ public class JDialogImportKeyPEM extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jButtonBrowseImportPEMFile, gridBagConstraints);
 
         jLabelImportCert.setText(this.rb.getResourceString( "label.importcert"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelImportCert, gridBagConstraints);
 
@@ -219,17 +226,19 @@ public class JDialogImportKeyPEM extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 10);
         jPanelEdit.add(jButtonBrowseImportCert, gridBagConstraints);
 
         jLabelImportPEMPassphrase.setText(this.rb.getResourceString( "label.keypass"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelImportPEMPassphrase, gridBagConstraints);
 
+        jPasswordFieldPEMPassphrase.setMinimumSize(new java.awt.Dimension(150, 20));
+        jPasswordFieldPEMPassphrase.setPreferredSize(new java.awt.Dimension(150, 20));
         jPasswordFieldPEMPassphrase.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jPasswordFieldPEMPassphraseKeyReleased(evt);
@@ -238,8 +247,7 @@ public class JDialogImportKeyPEM extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jPasswordFieldPEMPassphrase, gridBagConstraints);
 
@@ -247,7 +255,7 @@ public class JDialogImportKeyPEM extends JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanelEdit.add(jLabelNewAlias, gridBagConstraints);
 
@@ -301,7 +309,7 @@ public class JDialogImportKeyPEM extends JDialog {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanelButtons, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(452, 331));
+        setSize(new java.awt.Dimension(545, 346));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -326,12 +334,12 @@ public class JDialogImportKeyPEM extends JDialog {
     private void jButtonBrowseImportPEMFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseImportPEMFileActionPerformed
         JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
         MecFileChooser chooser = new MecFileChooser(parent, this.rb.getResourceString("filechooser.key.import"));
-        chooser.browseFilename(this.jTextFieldImportPEMFile);
+        chooser.browseFilename(this.jTextFieldImportKeyFile);
     }//GEN-LAST:event_jButtonBrowseImportPEMFileActionPerformed
 
-    private void jTextFieldImportPEMFileKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldImportPEMFileKeyReleased
+    private void jTextFieldImportKeyFileKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldImportKeyFileKeyReleased
         this.setButtonState();
-    }//GEN-LAST:event_jTextFieldImportPEMFileKeyReleased
+    }//GEN-LAST:event_jTextFieldImportKeyFileKeyReleased
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         this.setVisible(false);
@@ -359,7 +367,7 @@ public class JDialogImportKeyPEM extends JDialog {
     private javax.swing.JPanel jPanelEdit;
     private javax.swing.JPasswordField jPasswordFieldPEMPassphrase;
     private javax.swing.JTextField jTextFieldImportCert;
-    private javax.swing.JTextField jTextFieldImportPEMFile;
+    private javax.swing.JTextField jTextFieldImportKeyFile;
     private javax.swing.JTextField jTextFieldNewAlias;
     // End of variables declaration//GEN-END:variables
 }

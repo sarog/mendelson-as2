@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/upgrade/DB18ToScript.java 8     20.08.20 15:47 Heller $
+//$Header: /as2/de/mendelson/upgrade/DB18ToScript.java 10    27.08.21 16:59 Heller $
 package de.mendelson.upgrade;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
@@ -21,7 +21,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.Properties;
 import org.hsqldb.Server;
-import de.mendelson.comm.as2.database.IDBDriverManager;
+import de.mendelson.util.database.IDBDriverManager;
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
  *
@@ -34,11 +34,11 @@ import de.mendelson.comm.as2.database.IDBDriverManager;
  * Update as2, must be applied for versions < 2012
  *
  * @author S.Heller
- * @version $Revision: 8 $
+ * @version $Revision: 10 $
  */
 public class DB18ToScript {
 
-    private DBDriverManagerHSQL dbDriverManager = new DBDriverManagerHSQL();
+    private DBDriverManagerHSQL dbDriverManager = DBDriverManagerHSQL.instance();
     
     private void performUpdate()throws Throwable{
         boolean updateRequired = this.upgradeIsRequired();

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/clients/datatransfer/TransferClientWithProgress.java 3     29.08.19 11:24 Heller $
+//$Header: /oftp2/de/mendelson/util/clientserver/clients/datatransfer/TransferClientWithProgress.java 4     17.02.21 11:49 Heller $
 package de.mendelson.util.clientserver.clients.datatransfer;
 
 import de.mendelson.util.ProgressPanel;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 /**
  * Requests downloads from and sends new uploads to the server
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 4 $
  */
 public class TransferClientWithProgress extends TransferClient {
 
@@ -50,7 +50,7 @@ public class TransferClientWithProgress extends TransferClient {
                     }
                     //display this progress in the progress bar
                     this.progressPanel.setProgressValue(uniqueId, readBytes);
-                    //special case: the transfered file has the size 0
+                    //special case: the transferred file has the size 0
                     if( data.length == 0){
                         break;
                     }

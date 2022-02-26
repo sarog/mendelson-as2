@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/TextClient.java 19    31.10.18 10:38 Heller $
+//$Header: /oftp2/de/mendelson/util/clientserver/TextClient.java 20    27/01/22 10:23 Heller $
 package de.mendelson.util.clientserver;
 
 import de.mendelson.util.clientserver.messages.ClientServerMessage;
@@ -9,6 +9,7 @@ import de.mendelson.util.clientserver.messages.ServerInfo;
 import de.mendelson.util.clientserver.user.User;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -24,7 +25,7 @@ import java.util.logging.Level;
  * Sends a command to the OFTP2 server
  *
  * @author S.Heller
- * @version $Revision: 19 $
+ * @version $Revision: 20 $
  */
 public class TextClient extends BaseTextClient implements ClientsideMessageProcessor {
 
@@ -46,7 +47,9 @@ public class TextClient extends BaseTextClient implements ClientsideMessageProce
         this.password = password;
         this.clientId = clientId;
         this.connectionThread = new ConnectThread(host, clientServerCommPort, timeout);
-        Executors.newSingleThreadExecutor().submit(this.connectionThread);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(this.connectionThread);
+        executor.shutdown();
         this.connectionThread.getDoneSignal().await(timeout, TimeUnit.MILLISECONDS);
         if (this.connectionThread.getState() == ConnectThread.STATE_FAILURE) {
             throw (this.connectionThread.getException());
@@ -137,7 +140,7 @@ public class TextClient extends BaseTextClient implements ClientsideMessageProce
      * Returns the version of this class
      */
     public static String getVersion() {
-        String revision = "$Revision: 19 $";
+        String revision = "$Revision: 20 $";
         return (revision.substring(revision.indexOf(":") + 1,
                 revision.lastIndexOf("$")).trim());
     }

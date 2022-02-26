@@ -1,11 +1,11 @@
-//$Header: /as2/de/mendelson/comm/as2/database/DBServerHSQL.java 7     3.09.20 9:38 Heller $
+//$Header: /as2/de/mendelson/comm/as2/database/DBServerHSQL.java 14    15.12.21 16:46 Heller $
 package de.mendelson.comm.as2.database;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
-import de.mendelson.comm.as2.preferences.PreferencesAS2;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.comm.as2.server.UpgradeRequiredException;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.io.ByteArrayOutputStream;
@@ -46,11 +46,13 @@ import org.hsqldb.server.ServerConstants;
  * Class to start a dedicated SQL database server
  *
  * @author S.Heller
- * @version $Revision: 7 $
+ * @version $Revision: 14 $
  * @since build 70
  */
-public class DBServerHSQL implements IDBServer{
+public class DBServerHSQL implements IDBServer {
 
+    
+    public static final int DB_PORT = 3336;
     /**
      * Resourcebundle to localize messages of the DB server
      */
@@ -63,7 +65,6 @@ public class DBServerHSQL implements IDBServer{
      * Database object
      */
     private Server server = null;
-    private PreferencesAS2 preferences = new PreferencesAS2();
     private DBDriverManagerHSQL driverManager;
     private DBServerInformation dbServerInformation = new DBServerInformation();
 
@@ -81,10 +82,10 @@ public class DBServerHSQL implements IDBServer{
      * Start an embedded database server
      */
     public DBServerHSQL(IDBDriverManager driverManager, DBServerInformation dbServerInformation) throws Exception {
-        if( dbServerInformation != null ){
+        if (dbServerInformation != null) {
             this.dbServerInformation = dbServerInformation;
         }
-        this.driverManager = (DBDriverManagerHSQL)driverManager;
+        this.driverManager = (DBDriverManagerHSQL) driverManager;
         //split up database if its an older version with a single DB
         this.createDeprecatedCheck();
         //check if hsqldb 2.x is used or an older version
@@ -127,9 +128,11 @@ public class DBServerHSQL implements IDBServer{
         }
     }
 
-    /**Returns the product information of the database*/
-    public DBServerInformation getDBServerInformation(){
-        return( this.dbServerInformation);
+    /**
+     * Returns the product information of the database
+     */
+    public DBServerInformation getDBServerInformation() {
+        return (this.dbServerInformation);
     }
     
     /**
@@ -147,8 +150,7 @@ public class DBServerHSQL implements IDBServer{
         this.dbServerInformation.setProductName(this.server.getProductName());
         this.dbServerInformation.setProductVersion(this.server.getProductVersion());
         //start an internal server
-        int dbPort = this.preferences.getInt(PreferencesAS2.SERVER_DB_PORT);
-        this.server.setPort(dbPort);
+        this.server.setPort(DB_PORT);
         this.server.setDatabasePath(0, this.driverManager.getDBName(IDBDriverManager.DB_CONFIG));
         this.server.setDatabaseName(0, this.driverManager.getDBAlias(IDBDriverManager.DB_CONFIG));
         this.server.setDatabasePath(1, this.driverManager.getDBName(IDBDriverManager.DB_RUNTIME));
@@ -173,7 +175,7 @@ public class DBServerHSQL implements IDBServer{
         memStream.flush();
         memStream.close();
         this.server.setLogWriter(null);
-        return( memStream.toString(StandardCharsets.UTF_8.name()));
+        return (memStream.toString(StandardCharsets.UTF_8.name()));
     }
 
     @Override
@@ -197,8 +199,10 @@ public class DBServerHSQL implements IDBServer{
             this.logger.warning(e.getMessage());
             startupLog = startupLog + "\n" + "[" + e.getClass().getSimpleName() + "]: " + e.getMessage();
         }
+        Connection configConnection = null;
+        Connection runtimeConnection = null;
         try {
-            Connection configConnection = this.driverManager.getLocalConnection(IDBDriverManager.DB_CONFIG);
+            configConnection = this.driverManager.getLocalConnection(IDBDriverManager.DB_CONFIG);
             if (configConnection == null) {
                 return;
             }
@@ -207,8 +211,7 @@ public class DBServerHSQL implements IDBServer{
             statement.close();
             //check if a DB update is necessary. If so, update the DB
             this.updateDB(configConnection, IDBDriverManager.DB_CONFIG);
-            configConnection.close();
-            Connection runtimeConnection = this.driverManager.getLocalConnection(DBDriverManagerHSQL.DB_RUNTIME);
+            runtimeConnection = this.driverManager.getLocalConnection(DBDriverManagerHSQL.DB_RUNTIME);
             if (runtimeConnection == null) {
                 return;
             }
@@ -218,7 +221,7 @@ public class DBServerHSQL implements IDBServer{
             //check if a runtime DB update is necessary. If so, update the runtime DB
             this.updateDB(runtimeConnection, DBDriverManagerHSQL.DB_RUNTIME);
             DatabaseMetaData data = runtimeConnection.getMetaData();
-            this.dbServerInformation.setJDBCVersion( data.getJDBCMajorVersion() + "." + data.getJDBCMinorVersion());
+            this.dbServerInformation.setJDBCVersion(data.getJDBCMajorVersion() + "." + data.getJDBCMinorVersion());
             this.logger.info(rb.getResourceString("dbserver.running.embedded",
                     new Object[]{data.getDatabaseProductName() + " " + data.getDatabaseProductVersion()}));
             SystemEventManagerImplAS2.newEvent(
@@ -231,8 +234,7 @@ public class DBServerHSQL implements IDBServer{
                                 + " "
                                 + data.getDatabaseProductVersion()
                             }),
-                    startupLog );
-            runtimeConnection.close();
+                    startupLog);
         } catch (Exception e) {
             SystemEventManagerImplAS2.newEvent(
                     SystemEvent.SEVERITY_ERROR,
@@ -242,12 +244,27 @@ public class DBServerHSQL implements IDBServer{
                     startupLog + "\n"
                     + "[" + e.getClass().getSimpleName() + "]: " + e.getMessage());
             this.logger.severe("DBServer.startup: " + e.getMessage());
+        } finally {
+            if (configConnection != null) {
+                try {
+                    configConnection.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e);
+                }
+            }
+            if (runtimeConnection != null) {
+                try {
+                    runtimeConnection.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e);
+                }
+            }
         }
         this.driverManager.setupConnectionPool();
         //wait until the server is up
         while (true) {
             try {
-                Connection testConnection = this.driverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG, "localhost");
+                Connection testConnection = this.driverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
                 testConnection.close();
                 break;
             } catch (Throwable e) {
@@ -269,7 +286,7 @@ public class DBServerHSQL implements IDBServer{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = this.driverManager.getConnectionWithoutErrorHandling(DB_TYPE, "localhost");
+            connection = this.driverManager.getConnectionWithoutErrorHandling(DB_TYPE);
             statement = connection.createStatement();
             //Automatic Defrag at Checkpoint
             //When a checkpoint is performed, the percentage of wasted space 
@@ -321,7 +338,7 @@ public class DBServerHSQL implements IDBServer{
         boolean databaseFound = false;
         Connection connection = null;
         try {
-            connection = this.driverManager.getConnectionWithoutErrorHandling(databaseType, "localhost");
+            connection = this.driverManager.getConnectionWithoutErrorHandling(databaseType);
             if (connection != null) {
                 DatabaseMetaData metadata = connection.getMetaData();
                 ResultSet tableResultRuntime = metadata.getTables(null, null, null, TABLE_TYPES);
@@ -399,6 +416,28 @@ public class DBServerHSQL implements IDBServer{
             throw new RuntimeException("Unknown DB type requested in DBServer:updateDB.");
         }
         int foundVersion = this.getActualDBVersion(connection);
+        //if the found version is higher than the required this is a fatal problem. The software
+        //cannot work with future versions of its database. This could happen if a backup is restored
+        //or the system works in HA mode and another node has modified the database
+        if (foundVersion != -1 && foundVersion > requiredDBVersion) {
+            this.logger.info(rb.getResourceString("update.error.futureversion",
+                    new Object[]{
+                        rb.getResourceString("database." + DB_TYPE),
+                        String.valueOf(requiredDBVersion),
+                        String.valueOf(foundVersion)}));
+            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_ERROR,
+                    SystemEvent.ORIGIN_SYSTEM,
+                    SystemEvent.TYPE_DATABASE_UPDATE);
+            event.setSubject(
+                    rb.getResourceString("database." + DB_TYPE));
+            event.setBody(rb.getResourceString("update.error.futureversion",
+                    new Object[]{
+                        rb.getResourceString("database." + DB_TYPE),
+                        String.valueOf(requiredDBVersion),
+                        String.valueOf(foundVersion)}));
+            SystemEventManagerImplAS2.newEvent(event);
+            System.exit(-1);
+        }
         //check if the found version is lesser than the required version!
         if (foundVersion != -1 && foundVersion < requiredDBVersion) {
             this.logger.info(rb.getResourceString("update.versioninfo",
@@ -460,7 +499,7 @@ public class DBServerHSQL implements IDBServer{
             statement.execute();
             statement.close();
         } catch (SQLException e) {
-            this.logger.warning("DBServer.setNewDBVersion: " + e);
+            SystemEventManagerImplAS2.systemFailure(e);
         }
     }
 
@@ -470,8 +509,8 @@ public class DBServerHSQL implements IDBServer{
     @Override
     public void shutdown() {
         try {
-            Connection configConnection = this.driverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG, "localhost");
-            Connection runtimeConnection = this.driverManager.getConnection(IDBDriverManager.DB_RUNTIME, "localhost");
+            Connection configConnection = this.driverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
+            Connection runtimeConnection = this.driverManager.getConnection(IDBDriverManager.DB_RUNTIME);
             configConnection.createStatement().execute("SHUTDOWN");
             configConnection.close();
             System.out.println("DB server: config DB shutdown complete.");
@@ -530,6 +569,7 @@ public class DBServerHSQL implements IDBServer{
         //sql file to execute for the update process
         String sqlResource = updateResource + "update" + startVersion + "to" + (startVersion + 1) + ".sql";
         SQLScriptExecutor executor = new SQLScriptExecutor();
+        executor.setQueryModifier((ISQLQueryModifier)this.driverManager);
         try {
             //defrag the DB
             this.defragDB(DB_TYPE);
@@ -544,7 +584,7 @@ public class DBServerHSQL implements IDBServer{
                 javaUpdateClass = javaUpdateClass.substring(1);
             }
             Class cl = Class.forName(javaUpdateClass);
-            IUpdater updater = (IUpdater) cl.newInstance();
+            IUpdater updater = (IUpdater) cl.getDeclaredConstructor().newInstance();
             updater.startUpdate(connection);
             if (!updater.updateWasSuccessfully()) {
                 throw new Exception("Update failed.");
@@ -602,7 +642,7 @@ public class DBServerHSQL implements IDBServer{
     private void copyFile(String source, String target) throws IOException {
         Path sourceFile = Paths.get(source);
         Path targetFile = Paths.get(target);
-        if( !Files.exists(sourceFile)){
+        if (!Files.exists(sourceFile)) {
             return;
         }
         Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);

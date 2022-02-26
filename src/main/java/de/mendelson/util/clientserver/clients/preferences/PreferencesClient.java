@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/clients/preferences/PreferencesClient.java 3     10.01.11 17:19 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/clients/preferences/PreferencesClient.java 5     26.08.21 14:00 Heller $
 package de.mendelson.util.clientserver.clients.preferences;
 
 import de.mendelson.util.clientserver.BaseClient;
@@ -13,14 +13,20 @@ import de.mendelson.util.clientserver.BaseClient;
 /**
  * Requests and preferences from and sets new values to the server
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 5 $
  */
 public class PreferencesClient {
 
     private BaseClient baseClient;
+    private long syncTimeout = BaseClient.TIMEOUT_SYNC_RECEIVE;
 
-    public PreferencesClient(BaseClient baseClient) {
+    public PreferencesClient(BaseClient baseClient, long syncTimeout) {
         this.baseClient = baseClient;
+        this.syncTimeout = syncTimeout;
+    }
+    
+    public PreferencesClient(BaseClient baseClient) {
+        this( baseClient, BaseClient.TIMEOUT_SYNC_RECEIVE);
     }
 
     /**Returns a single string value from the preferences or the default
@@ -32,7 +38,7 @@ public class PreferencesClient {
         PreferencesRequest request = new PreferencesRequest();
         request.setKey(KEY);
         request.setType(PreferencesRequest.TYPE_GET);
-        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request);
+        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request, this.syncTimeout);
         if (response != null) {
             return (response.getValue());
         } else {
@@ -49,7 +55,7 @@ public class PreferencesClient {
         PreferencesRequest request = new PreferencesRequest();
         request.setKey(KEY);
         request.setType(PreferencesRequest.TYPE_GET_DEFAULT);
-        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request);
+        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request, this.syncTimeout);
         if (response != null) {
             return (response.getValue());
         } else {
@@ -87,7 +93,7 @@ public class PreferencesClient {
         PreferencesRequest request = new PreferencesRequest();
         request.setKey(KEY);
         request.setType(PreferencesRequest.TYPE_GET);
-        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request);
+        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request, this.syncTimeout);
         if (response != null) {
             return (Integer.valueOf(response.getValue()));
         } else {
@@ -102,7 +108,7 @@ public class PreferencesClient {
     public void putBoolean(final String KEY, boolean value) {
         PreferencesRequest request = new PreferencesRequest();
         request.setKey(KEY);
-        request.setValue(String.valueOf(value));
+        request.setValue(String.valueOf(value).toUpperCase());
         request.setType(PreferencesRequest.TYPE_SET);
         this.baseClient.sendAsync(request);
     }
@@ -113,7 +119,7 @@ public class PreferencesClient {
         PreferencesRequest request = new PreferencesRequest();
         request.setKey(KEY);
         request.setType(PreferencesRequest.TYPE_GET);
-        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request);
+        PreferencesResponse response = (PreferencesResponse) this.baseClient.sendSync(request, this.syncTimeout);
         if (response != null) {
             return (Boolean.valueOf(response.getValue()).booleanValue());
         } else {

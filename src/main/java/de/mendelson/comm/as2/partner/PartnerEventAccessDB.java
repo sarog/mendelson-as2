@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/PartnerEventAccessDB.java 4     4.09.20 11:36 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/PartnerEventAccessDB.java 6     26.08.21 14:00 Heller $
 package de.mendelson.comm.as2.partner;
 
 import de.mendelson.comm.as2.server.AS2Server;
@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * Access the partner events in the database
  *
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 6 $
  */
 public class PartnerEventAccessDB {
 
@@ -33,30 +33,19 @@ public class PartnerEventAccessDB {
      * Logger to log information to
      */
     private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
-    /**
-     * Connection to the database
-     */
-    private Connection configConnection;
-    private Connection runtimeConnection;
 
-    /**
-     * Creates new message I/O log and connects to localhost
-     *
-     * @param host host to connect to
-     */
-    public PartnerEventAccessDB(Connection configConnection, Connection runtimeConnection) {
-        this.configConnection = configConnection;
+    public PartnerEventAccessDB() {
     }
 
     /**
      * Populates the passed partner with the stored event data
      */
-    public void loadPartnerEvents(Partner partner) {
+    public void loadPartnerEvents(Partner partner, Connection configConnection) {
         PreparedStatement statement = null;
         ResultSet result = null;
         PartnerEventInformation eventInfo = partner.getPartnerEvents();
         try {
-            statement = this.configConnection.prepareStatement("SELECT * FROM partnerevent WHERE partnerid=?");
+            statement = configConnection.prepareStatement("SELECT * FROM partnerevent WHERE partnerid=?");
             statement.setInt(1, partner.getDBId());
             result = statement.executeQuery();
             while (result.next()) {                
@@ -130,12 +119,16 @@ public class PartnerEventAccessDB {
         return( list );
     }
     
-    public void storePartnerEvents( Partner partner ){
-        this.deletePartnerEvents(partner);
+    /**Stores the events of a partner
+     * @param configConnectionNoAutoCommit passed database connection - required for transactional operation
+     * 
+     */
+    public void storePartnerEvents( Partner partner, Connection configConnectionNoAutoCommit ){
+        this.deletePartnerEvents(partner, configConnectionNoAutoCommit);
         PartnerEventInformation partnerEvents = partner.getPartnerEvents();
         PreparedStatement statement = null;
             try {
-                statement = this.configConnection.prepareStatement(
+                statement = configConnectionNoAutoCommit.prepareStatement(
                     "INSERT INTO partnerevent(partnerid,useonreceipt,useonsenderror,useonsendsuccess,"
                     + "typeonreceipt,typeonsenderror,typeonsendsuccess,"
                     + "parameteronreceipt,parameteronsenderror,parameteronsendsuccess)"
@@ -181,11 +174,12 @@ public class PartnerEventAccessDB {
     
     /**
      * Deletes a single partners event entry in the database
+     * @param configConnection passed database connection - required for transactional operation
      */
-    public void deletePartnerEvents(Partner partner) {
+    public void deletePartnerEvents(Partner partner, Connection configConnection) {
         PreparedStatement statement = null;
         try {
-            statement = this.configConnection.prepareStatement("DELETE FROM partnerevent WHERE partnerid=?");
+            statement = configConnection.prepareStatement("DELETE FROM partnerevent WHERE partnerid=?");
             statement.setInt(1, partner.getDBId());
             statement.execute();
         } catch (SQLException e) {

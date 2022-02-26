@@ -1,7 +1,8 @@
-//$Header: /as2/de/mendelson/comm/as2/message/UniqueId.java 5     15.02.10 13:10 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/UniqueId.java 7     3.08.21 16:22 Heller $
 package de.mendelson.comm.as2.message;
 
 import de.mendelson.comm.as2.AS2ServerVersion;
+import de.mendelson.comm.as2.server.ServerInstance;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,18 +16,24 @@ import java.util.Date;
  */
 /**
  * Class that ensures that a requested number is unique in the VM
+ *
  * @author S.Heller
- * @version $Revision: 5 $
+ * @version $Revision: 7 $
  */
 public class UniqueId {
 
     private static long currentMessageId = 0L;
     private static long currentId = System.currentTimeMillis();
+    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
-    /**Creates a new message id for the AS2 messages*/
+    /**
+     * Creates a new message id for the AS2 messages
+     */
     static public synchronized String createMessageId(String senderId, String receiverId) {
         StringBuilder idBuffer = new StringBuilder();
         idBuffer.append(AS2ServerVersion.getProductNameShortcut().replace(' ', '_'));
+        idBuffer.append("-");
+        idBuffer.append(ServerInstance.ID);
         idBuffer.append("-");
         idBuffer.append(String.valueOf(System.currentTimeMillis()));
         idBuffer.append("-");
@@ -46,13 +53,14 @@ public class UniqueId {
         return (idBuffer.toString());
     }
 
-    /**Creates a new id in the format yyyyMMddHHmm-nn*/
-    public static synchronized String createId(){        
+    /**
+     * Creates a new id in the format yyyyMMddHHmm-nn
+     */
+    public static synchronized String createId() {
         StringBuilder idBuffer = new StringBuilder();
-        DateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
-        idBuffer.append( format.format( new Date()));
-        idBuffer.append( "-" );
-        idBuffer.append( currentId++ );
-        return( idBuffer.toString() );
+        idBuffer.append(DATE_FORMAT.format(new Date()));
+        idBuffer.append("-");
+        idBuffer.append(currentId++);
+        return (idBuffer.toString());
     }
 }

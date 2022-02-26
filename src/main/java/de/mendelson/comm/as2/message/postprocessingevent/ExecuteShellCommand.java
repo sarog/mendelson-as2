@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ExecuteShellCommand.java 6     10.09.20 12:57 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/postprocessingevent/ExecuteShellCommand.java 12    10.03.21 8:39 Heller $
 package de.mendelson.comm.as2.message.postprocessingevent;
 
 import de.mendelson.comm.as2.log.LogAccessDB;
@@ -15,6 +15,7 @@ import de.mendelson.comm.as2.partner.PartnerAccessDB;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.Exec;
 import de.mendelson.util.MecResourceBundle;
+import de.mendelson.util.database.IDBDriverManager;
 import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
  * message receipt
  *
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 12 $
  */
 public class ExecuteShellCommand implements IProcessingExecution {
 
@@ -44,6 +45,7 @@ public class ExecuteShellCommand implements IProcessingExecution {
     private MessageAccessDB messageAccess;
     private MDNAccessDB mdnAccess;
     private PartnerAccessDB partnerAccess;
+    private IDBDriverManager dbDriverManager;
     /**
      * Localize your GUI!
      */
@@ -52,12 +54,13 @@ public class ExecuteShellCommand implements IProcessingExecution {
     private Connection runtimeConnection;
     private Connection configConnection;
 
-    public ExecuteShellCommand(Connection configConnection, Connection runtimeConnection) {
+    public ExecuteShellCommand(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         this.runtimeConnection = runtimeConnection;
         this.configConnection = configConnection;
-        this.messageAccess = new MessageAccessDB(configConnection, runtimeConnection);
-        this.mdnAccess = new MDNAccessDB(configConnection, runtimeConnection);
-        this.partnerAccess = new PartnerAccessDB(configConnection, runtimeConnection);
+        this.dbDriverManager = dbDriverManager;
+        this.messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        this.mdnAccess = new MDNAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        this.partnerAccess = new PartnerAccessDB(dbDriverManager);
         //Load resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
@@ -142,8 +145,8 @@ public class ExecuteShellCommand implements IProcessingExecution {
                 //add log?
                 if (command.contains("${log}")) {
                     try {
-                        LogAccessDB logAccess = new LogAccessDB(this.configConnection, this.runtimeConnection);
-                        List<LogEntry> entries = logAccess.getLog(messageInfo.getMessageId());
+                        LogAccessDB logAccess = new LogAccessDB(this.dbDriverManager);
+                        List<LogEntry> entries = logAccess.getLog(this.runtimeConnection, messageInfo.getMessageId());
                         StringBuilder logBuffer = new StringBuilder();
                         for (LogEntry logEntry : entries) {
                             logBuffer.append(logEntry.getMessage()).append("\\n");

@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/log/panel/LogConsolePanel.java 13    28.01.20 15:30 Heller $
+//$Header: /oftp2/de/mendelson/util/log/panel/LogConsolePanel.java 14    19.02.21 11:33 Heller $
 package de.mendelson.util.log.panel;
 
 import de.mendelson.util.MecResourceBundle;
@@ -33,7 +33,7 @@ import javax.swing.JPanel;
  * The frame system output/debug info is written to
  *
  * @author S.Heller
- * @version $Revision: 13 $
+ * @version $Revision: 14 $
  */
 public class LogConsolePanel extends JPanel implements ClipboardOwner {
 
@@ -123,7 +123,7 @@ public class LogConsolePanel extends JPanel implements ClipboardOwner {
         OutputStream logStream = new JTextPaneOutputStream(this.jTextPane);
         this.out = new PrintStream(logStream);
         this.handler = new JTextPaneLoggingHandler(this.jTextPane, logFormatter);
-        this.setDefaultColors();
+        this.setDefaultColors(this.handler);
         this.logger.addHandler(handler);
         this.jPopupMenu.setInvoker(this.jTextPane);
     }
@@ -133,14 +133,14 @@ public class LogConsolePanel extends JPanel implements ClipboardOwner {
      * using the setColor method
      *
      */
-    public void setDefaultColors() {
-        this.handler.setColor(Level.SEVERE, COLOR_RED);
-        this.handler.setColor(Level.WARNING, COLOR_BROWN);
-        this.handler.setColor(Level.INFO, COLOR_BLACK);
-        this.handler.setColor(Level.CONFIG, COLOR_DARK_GREEN);
-        this.handler.setColor(Level.FINE, COLOR_BLUE);
-        this.handler.setColor(Level.FINER, COLOR_OLIVE);
-        this.handler.setColor(Level.FINEST, COLOR_LIGHT_GRAY);
+    public void setDefaultColors(JTextPaneLoggingHandler handler) {
+        handler.setColor(Level.SEVERE, COLOR_RED);
+        handler.setColor(Level.WARNING, COLOR_BROWN);
+        handler.setColor(Level.INFO, COLOR_BLACK);
+        handler.setColor(Level.CONFIG, COLOR_DARK_GREEN);
+        handler.setColor(Level.FINE, COLOR_BLUE);
+        handler.setColor(Level.FINER, COLOR_OLIVE);
+        handler.setColor(Level.FINEST, COLOR_LIGHT_GRAY);
     }
 
     /**

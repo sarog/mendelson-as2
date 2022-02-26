@@ -1,16 +1,15 @@
-//$Header: /as2/de/mendelson/comm/as2/message/MDNAccessDB.java 17    21.08.20 13:22 Heller $
+//$Header: /as2/de/mendelson/comm/as2/message/MDNAccessDB.java 27    26.08.21 11:30 Heller $
 package de.mendelson.comm.as2.message;
 
 import de.mendelson.comm.as2.server.AS2Server;
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.logging.Logger;
  * Access MDN
  *
  * @author S.Heller
- * @version $Revision: 17 $
+ * @version $Revision: 27 $
  */
 public class MDNAccessDB {
 
@@ -39,89 +38,35 @@ public class MDNAccessDB {
     /**
      * Connection to the database
      */
-    private Connection runtimeConnection = null;
-    private Connection configConnection = null;
+    private Connection runtimeConnection;
+    private Connection configConnection;
+    private IDBDriverManager dbDriverManager;
     private Calendar calendarUTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    /**HSQLDB supports Java_Objects, PostgreSQL does not support it. Means there are
-     * different access methods required for Object access
-     */
-    private boolean databaseSupportsJavaObjects = true;
+    private MessageAccessDB messageAccess;
+    
     
     /**
-     * Creates new message I/O log and connects to localhost
+     * Creates new MDNAccessDB
      *
      * @param host host to connect to
      */
-    public MDNAccessDB(Connection configConnection, Connection runtimeConnection) {
+    public MDNAccessDB(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         this.runtimeConnection = runtimeConnection;
         this.configConnection = configConnection;
-        this.analyzeDatabaseMetadata(configConnection);
-    }
-
-    private void analyzeDatabaseMetadata(Connection connection) {
-        try {
-            DatabaseMetaData data = connection.getMetaData();
-            ResultSet result = null;
-            try {
-                result = data.getTypeInfo();
-                while (result.next()) {
-                    if( result.getString( "TYPE_NAME").equalsIgnoreCase("bytea")){
-                        databaseSupportsJavaObjects = false;
-                    }
-                }
-            } finally {
-                if (result != null) {
-                    result.close();
-                }
-            }
-        } catch (Exception e) {
-            //ignore
-        }
-
+        this.dbDriverManager = dbDriverManager;
+        this.messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
     }
     
     /**
-     * Reads a binary object from the database and returns a byte array that
-     * contains it. Will return null if the read data was null. Reading and
-     * writing binary objects differs relating the used database system
-     */
-    private String readTextStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
-        if( this.databaseSupportsJavaObjects){
-            Object object = result.getObject(columnName);
-            if (!result.wasNull()) {
-                if (object instanceof String) {
-                    return (((String) object));
-                } else if (object instanceof byte[]) {
-                    return (new String((byte[]) object));
-                }
-            }
-        }else{
-            byte[] bytes = result.getBytes(columnName);
-            if (result.wasNull()) {
-                return (null);
-            }
-            return (new String( bytes, StandardCharsets.UTF_8));
-        }
-        return (null);
-    }
-
-    /**Sets text data as parameter to a stored procedure. The handling depends if the database supports java objects
+     * Creates new MDNAccessDB
      * 
+     * @param host host to connect to
      */
-    private void setTextParameterAsJavaObject(PreparedStatement statement, int index, String text) throws SQLException{        
-        if( this.databaseSupportsJavaObjects ){
-            if (text == null) {
-                statement.setNull(index, Types.JAVA_OBJECT);
-            } else {
-                statement.setObject(index, text);
-            }
-        }else{
-            if (text == null) {
-                statement.setNull(index, Types.BINARY);
-            } else {
-                statement.setBytes(index, text.getBytes(StandardCharsets.UTF_8));
-            }
-        }
+    public MDNAccessDB(MessageAccessDB messageAccess) {
+        this.runtimeConnection = messageAccess.getRuntimeConnection();
+        this.configConnection = messageAccess.getConfigConnection();
+        this.dbDriverManager = messageAccess.getDBDriverManager();
+        this.messageAccess = messageAccess;        
     }
     
     
@@ -151,7 +96,7 @@ public class MDNAccessDB {
                 info.setSenderHost(result.getString("senderhost"));
                 info.setUserAgent(result.getString("useragent"));
                 info.setDispositionState(result.getString("dispositionstate"));
-                info.setRemoteMDNText( this.readTextStoredAsJavaObject(result, "mdntext"));
+                info.setRemoteMDNText(this.dbDriverManager.readTextStoredAsJavaObject(result, "mdntext"));
                 messageList.add(info);
             }
             return (messageList);
@@ -178,30 +123,69 @@ public class MDNAccessDB {
     }
 
     /**
-     * Adds a MDN to the database
+     * Adds a MDN to the database - opens a new database connection because this
+     * has to be transactional
      */
     public void initializeOrUpdateMDN(AS2MDNInfo info) {
+        Statement statement = null;
+        //a new connection to the database is required because the message storage contains several queries and all this has to be transactional
+        Connection runtimeConnectionNoAutoCommit = null;
         String messageId = info.getRelatedMessageId();
+        String transactionName = "MDN_init_update";
         //check if a related message exists
-        MessageAccessDB messageAccess = new MessageAccessDB(this.configConnection, this.runtimeConnection);
-        if (!messageAccess.messageIdExists(messageId)) {
-            throw new RuntimeException("Unexpected MDN received: No related message exists for inbound MDN \"" + messageId + "\"");
+        if (!this.messageAccess.messageIdExists(messageId)) {
+            throw new RuntimeException("Unexpected MDN received. The inbound MDN references a message with the AS2 message id \"" + messageId + "\" that does not exist in the system.");
         }
-        List<AS2MDNInfo> list = this.getMDN(messageId);
-        if (list == null || list.isEmpty()) {
-            this.initializeMDN(info);
-        } else {
-            this.updateMDN(info);
+        try {
+            runtimeConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_RUNTIME);
+            runtimeConnectionNoAutoCommit.setAutoCommit(false);
+            statement = runtimeConnectionNoAutoCommit.createStatement();
+            //start transaction
+            this.dbDriverManager.startTransaction(statement, transactionName);
+            this.dbDriverManager.setTableLockINSERTAndUPDATE(statement, new String[]{"mdn"});
+            int updatedEntries = this.updateMDN(info, runtimeConnectionNoAutoCommit);
+            if (updatedEntries == 0) {
+                this.initializeMDN(info, runtimeConnectionNoAutoCommit);
+            }
+            //all ok - finish transaction and release all locks
+            this.dbDriverManager.commitTransaction(statement, transactionName);
+        } catch (Throwable e) {
+            try {
+                //an error occured - rollback transaction and release all table locks
+                this.dbDriverManager.rollbackTransaction(statement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
+            this.logger.severe("MessageAccessDB.deleteMessage: " + e.getMessage());
+            SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (runtimeConnectionNoAutoCommit != null) {
+                try {
+                    runtimeConnectionNoAutoCommit.close();
+                } catch (Exception e) {
+                    //nop
+                }
+            }
         }
     }
 
     /**
-     * Adds a MDN to the database
+     * Updates a MDN in the database and returns the number of modified rows. If
+     * this is 0 a new insert of the MDN is recommended as it does not exist so
+     * far
      */
-    private void updateMDN(AS2MDNInfo info) {
+    private int updateMDN(AS2MDNInfo info, Connection runtimeConnectionNoAutoCommit) throws Exception {
         PreparedStatement statement = null;
+        int updatedEntries = 0;
         try {
-            statement = this.runtimeConnection.prepareStatement(
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(
                     "UPDATE mdn SET rawfilename=?,receiverid=?,senderid=?,signature=?,state=?,headerfilename=?,"
                     + "mdntext=?,dispositionstate=? WHERE messageid=?");
             statement.setString(1, info.getRawFilename());
@@ -210,14 +194,15 @@ public class MDNAccessDB {
             statement.setInt(4, info.getSignType());
             statement.setInt(5, info.getState());
             statement.setString(6, info.getHeaderFilename());
-            this.setTextParameterAsJavaObject(statement, 7, info.getRemoteMDNText());
+            this.dbDriverManager.setTextParameterAsJavaObject(statement, 7, info.getRemoteMDNText());
             statement.setString(8, info.getDispositionState());
             //condition
             statement.setString(9, info.getMessageId());
-            statement.execute();
+            updatedEntries = statement.executeUpdate();
         } catch (SQLException e) {
             this.logger.severe("MDNAccessDB.updateMDN: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
+            throw e;
         } finally {
             if (statement != null) {
                 try {
@@ -227,19 +212,20 @@ public class MDNAccessDB {
                 }
             }
         }
+        return (updatedEntries);
     }
 
     /**
      * Checks if the MDN id does already exist in the database. In this case an
      * error occured - a MDNs message id has to be unique
      */
-    private void checkForUniqueMDNMessageId(AS2MDNInfo info) {
+    private void checkForUniqueMDNMessageId(AS2MDNInfo info, Connection runtimeConnectionNoAutoCommit) throws Exception {
         PreparedStatement statement = null;
         ResultSet result = null;
         try {
             //get SSL and sign certificates
             String query = "SELECT COUNT(1) AS counter FROM mdn WHERE messageid=?";
-            statement = this.runtimeConnection.prepareStatement(query);
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query);
             statement.setString(1, info.getMessageId());
             result = statement.executeQuery();
             if (result.next()) {
@@ -250,10 +236,6 @@ public class MDNAccessDB {
                             + "\"" + info.getRelatedMessageId() + "\".");
                 }
             }
-        } catch (SQLException e) {
-            //keep a SQL exception here, do not catch the runtime exception
-            this.logger.severe("MDNAccessDB.checkForUniqueMDNMessageId: " + e.getMessage());
-            SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
             if (result != null) {
                 try {
@@ -277,11 +259,11 @@ public class MDNAccessDB {
     /**
      * Adds a MDN to the database
      */
-    private void initializeMDN(AS2MDNInfo info) {
-        this.checkForUniqueMDNMessageId(info);
+    private void initializeMDN(AS2MDNInfo info, Connection runtimeConnectionNoAutoCommit) throws Exception {
+        this.checkForUniqueMDNMessageId(info, runtimeConnectionNoAutoCommit);
         PreparedStatement statement = null;
         try {
-            statement = this.runtimeConnection.prepareStatement(
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(
                     "INSERT INTO mdn(messageid,relatedmessageid,initdateutc,direction,rawfilename,receiverid,senderid,signature,state,headerfilename,senderhost,useragent,mdntext,dispositionstate)"
                     + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1, info.getMessageId());
@@ -296,12 +278,13 @@ public class MDNAccessDB {
             statement.setString(10, info.getHeaderFilename());
             statement.setString(11, info.getSenderHost());
             statement.setString(12, info.getUserAgent());
-            this.setTextParameterAsJavaObject(statement, 13, info.getRemoteMDNText());
+            this.dbDriverManager.setTextParameterAsJavaObject(statement, 13, info.getRemoteMDNText());
             statement.setString(14, info.getDispositionState());
             statement.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             this.logger.severe("MDNAccessDB.initializeMDN: " + e.getMessage());
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+            throw e;
         } finally {
             if (statement != null) {
                 try {
@@ -318,23 +301,32 @@ public class MDNAccessDB {
      * Returns all file names of files that could be deleted for a passed
      * message info
      */
-    public List<String> getRawFilenamesToDelete(String messageId) {
-        List<String> list = new ArrayList<String>();
+    public List<String> getRawFilenamesToDelete(List<String> messageIds, Connection runtimeConnectionNoAutoCommit) {
+        List<String> filenameList = new ArrayList<String>();
         ResultSet result = null;
         PreparedStatement statement = null;
         try {
-            String query = "SELECT * FROM mdn WHERE relatedmessageid=?";
-            statement = this.runtimeConnection.prepareStatement(query);
-            statement.setString(1, messageId);
+            StringBuilder query = new StringBuilder("SELECT rawfilename,headerfilename FROM mdn WHERE relatedmessageid IN (");
+            for (int i = 0; i < messageIds.size(); i++) {
+                if (i > 0) {
+                    query.append(",");
+                }
+                query.append("?");
+            }
+            query.append(")");
+            statement = runtimeConnectionNoAutoCommit.prepareStatement(query.toString());
+            for (int i = 0; i < messageIds.size(); i++) {
+                statement.setString(i + 1, messageIds.get(i));
+            }
             result = statement.executeQuery();
             while (result.next()) {
                 String rawFilename = result.getString("rawfilename");
                 if (!result.wasNull()) {
-                    list.add(rawFilename);
+                    filenameList.add(rawFilename);
                 }
                 String headerFilename = result.getString("headerfilename");
                 if (!result.wasNull()) {
-                    list.add(headerFilename);
+                    filenameList.add(headerFilename);
                 }
             }
         } catch (Exception e) {
@@ -358,6 +350,6 @@ public class MDNAccessDB {
                 }
             }
         }
-        return (list);
+        return (filenameList);
     }
 }

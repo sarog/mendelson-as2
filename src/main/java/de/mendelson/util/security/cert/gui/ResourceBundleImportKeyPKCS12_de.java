@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleImportKeyPKCS12_de.java 3     4/06/18 1:35p Heller $ 
+//$Header: /as2/de/mendelson/util/security/cert/gui/ResourceBundleImportKeyPKCS12_de.java 4     23.09.21 12:27 Heller $ 
 package de.mendelson.util.security.cert.gui;
 
 import de.mendelson.util.MecResourceBundle;
@@ -15,7 +15,7 @@ import de.mendelson.util.MecResourceBundle;
  * ResourceBundle to localize gui entries
  *
  * @author S.Heller
- * @version $Revision: 3 $
+ * @version $Revision: 4 $
  */
 public class ResourceBundleImportKeyPKCS12_de extends MecResourceBundle {
 
@@ -34,8 +34,10 @@ public class ResourceBundleImportKeyPKCS12_de extends MecResourceBundle {
         {"button.cancel", "Abbruch"},
         {"button.browse", "Durchsuchen"},
         {"keystore.contains.nokeys", "Diese Keystore beinhaltet keine privaten Schlüssel."},
-        {"label.importkey", "Import Keystore Datei (PKCS#12):"},
-        {"label.keypass", "Passwort des Keystores:"},
+        {"label.importkey", "Dateiname:"},
+        {"label.importkey.hint", "Keystore Datei, die importiert werden soll (PKCS#12)"},
+        {"label.keypass", "Passwort:"},
+        {"label.keypass.hint", "Keystore Passwort (PKCS#12)"},
         {"title", "Schlüssel aus Keystore importieren (PKCS#12 Format)"},
         {"filechooser.key.import", "Bitte wählen Sie eine PKCS#12 Keystore Datei für den Import"},
         {"multiple.keys.message", "Bitte wählen Sie den zu importierenden Schlüssel"},

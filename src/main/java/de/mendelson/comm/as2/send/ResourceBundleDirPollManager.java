@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleDirPollManager.java 18    7.12.18 9:51 Heller $
+//$Header: /as2/de/mendelson/comm/as2/send/ResourceBundleDirPollManager.java 19    19/01/22 16:17 Heller $
 package de.mendelson.comm.as2.send;
 import de.mendelson.util.MecResourceBundle;
 /*
@@ -12,7 +12,7 @@ import de.mendelson.util.MecResourceBundle;
 /**
  * ResourceBundle to localize a mendelson product
  * @author S.Heller
- * @version $Revision: 18 $
+ * @version $Revision: 19 $
  */
 public class ResourceBundleDirPollManager extends MecResourceBundle{
     
@@ -29,6 +29,7 @@ public class ResourceBundleDirPollManager extends MecResourceBundle{
         {"manager.status.modified", "Directory poll manager changed poll states, {0} directories are monitored" },
         {"poll.stopped", "[Directory poll manager] Poll for relationship \"{0}/{1}\" stopped." },
         {"poll.started", "[Directory poll manager] Poll for relationship \"{0}/{1}\" started. Ignore files: \"{2}\". Poll interval: {3}s" },
+        {"poll.stopped.notscheduled", "[Directory poll manager] The system tried to stop the poll for relationship \"{0}/{1}\" - but this has not been scheduled." },
         {"poll.modified", "[Directory poll manager] Partner settings for the relationship \"{0}/{1}\" have been modified." },
         {"warning.ro", "[Directory poll manager] Outbox file {0} is read-only, ignoring." },
         {"warning.noread", "[Directory poll manager] No read access for outbox file {0}, ignoring." },

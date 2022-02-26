@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/JDialogSearchLogfile.java 9     15.10.19 15:26 Heller $
+//$Header: /as2/de/mendelson/util/clientserver/log/search/gui/JDialogSearchLogfile.java 11    27/01/22 11:34 Heller $
 package de.mendelson.util.clientserver.log.search.gui;
 
 import de.mendelson.util.DateChooserUI;
@@ -6,6 +6,7 @@ import de.mendelson.util.IStatusBar;
 import de.mendelson.util.LockingGlassPane;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.MendelsonMultiResolutionImage;
+import de.mendelson.util.TextOverlay;
 import de.mendelson.util.clientserver.BaseClient;
 import de.mendelson.util.clientserver.log.search.Logline;
 import de.mendelson.util.clientserver.log.search.ServerSideLogfileFilter;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -46,7 +48,7 @@ import javax.swing.SwingUtilities;
  * Dialog to search on the server side in the log files
  *
  * @author S.Heller
- * @version $Revision: 9 $
+ * @version $Revision: 11 $
  */
 public class JDialogSearchLogfile extends JDialog {
 
@@ -57,7 +59,7 @@ public class JDialogSearchLogfile extends JDialog {
     private Date currentEndDate = new Date();
     private DateFormat datetimeFormat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
     private final MendelsonMultiResolutionImage IMAGE_MAGNIFYING_GLASS
-            = MendelsonMultiResolutionImage.fromSVG( "/util/clientserver/log/search/gui/magnifying_glass.svg", 24, 48); 
+            = MendelsonMultiResolutionImage.fromSVG("/util/clientserver/log/search/gui/magnifying_glass.svg", 24, 48);
 
     /**
      * Creates new form JDialogSearchLogfile
@@ -75,6 +77,7 @@ public class JDialogSearchLogfile extends JDialog {
         this.statusBar = statusBar;
         this.baseClient = baseClient;
         initComponents();
+        TextOverlay.addTo(this.jTextFieldSearchText, this.rb.getResourceString("textfield.preset"));
         this.setMultiresolutionIcons();
         this.setupDateChooser();
         //hide dialog on esc
@@ -87,8 +90,6 @@ public class JDialogSearchLogfile extends JDialog {
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         this.getRootPane().registerKeyboardAction(actionListenerESC, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         this.getRootPane().setDefaultButton(this.jButtonSearch);
-        this.jTextFieldSearchText.setText(this.rb.getResourceString("textfield.preset"));  
-        
     }
 
     private void setMultiresolutionIcons() {
@@ -129,7 +130,9 @@ public class JDialogSearchLogfile extends JDialog {
         super.setVisible(flag);
     }
 
-    /**Defines the date chooser and the used colors*/
+    /**
+     * Defines the date chooser and the used colors
+     */
     private void setupDateChooser() {
         this.jDateChooserStartDate.setUI(new DateChooserUI());
         this.jDateChooserStartDate.setLocale(Locale.getDefault());
@@ -220,7 +223,7 @@ public class JDialogSearchLogfile extends JDialog {
                                 builder.append(rb.getResourceString("no.data.mdnid",
                                         ((ServerSideLogfileFilterImplAS2) filter).getMDNId()));
                             }
-                            if (((ServerSideLogfileFilterImplAS2) filter).getUserdefinedId()!= null) {
+                            if (((ServerSideLogfileFilterImplAS2) filter).getUserdefinedId() != null) {
                                 builder.append(rb.getResourceString("no.data.uid",
                                         ((ServerSideLogfileFilterImplAS2) filter).getUserdefinedId()));
                             }
@@ -234,7 +237,9 @@ public class JDialogSearchLogfile extends JDialog {
                 }
             }
         };
-        Executors.newSingleThreadExecutor().submit(runnable);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(runnable);
+        executor.shutdown();
     }
 
     /**

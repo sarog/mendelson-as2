@@ -150,7 +150,6 @@ public class HTTPServerConfigInfoProcessor {
         String hostname = null;
         BufferedReader in = null;
         try {
-            // NETSEC
             URL whatismyip = new URL("http://mendelson-e-c.com/mendelson_whatsmyip.php");
             in = new BufferedReader(new InputStreamReader(
                     whatismyip.openStream()));

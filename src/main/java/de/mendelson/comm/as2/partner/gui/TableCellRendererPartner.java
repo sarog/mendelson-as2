@@ -1,4 +1,4 @@
-//$Header: /as2/de/mendelson/comm/as2/partner/gui/TableCellRendererPartner.java 4     6.05.19 11:16 Heller $
+//$Header: /as2/de/mendelson/comm/as2/partner/gui/TableCellRendererPartner.java 5     27.07.21 15:33 Heller $
 package de.mendelson.comm.as2.partner.gui;
 
 import de.mendelson.comm.as2.partner.Partner;
@@ -18,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
 /** 
  * Renders a partner in a JTable column
  * @author S.Heller
- * @version $Revision: 4 $
+ * @version $Revision: 5 $
  */
 public class TableCellRendererPartner extends DefaultTableCellRenderer implements TableCellRenderer {
 
@@ -74,7 +74,7 @@ public class TableCellRendererPartner extends DefaultTableCellRenderer implement
             //expecting AS2 id
             PartnerListRequest request = new PartnerListRequest(PartnerListRequest.LIST_BY_AS2_ID);
             request.setAdditionalListOptionStr((String) value);
-            List<Partner> partnerList = ((PartnerListResponse)this.baseClient.sendSync(request)).getList();
+            List<Partner> partnerList = ((PartnerListResponse)this.baseClient.sendSync(request, Partner.TIMEOUT_PARTNER_REQUEST)).getList();
             if( partnerList != null && partnerList.size() > 0 ){
                 this.renderPartner(partnerList.get(0));
             }else {

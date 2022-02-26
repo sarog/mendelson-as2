@@ -1,11 +1,13 @@
-//$Header: /as2/de/mendelson/util/systemevents/notification/NotificationAccessDBImplAS2.java 6     10.09.20 12:57 Heller $
+//$Header: /as2/de/mendelson/util/systemevents/notification/NotificationAccessDBImplAS2.java 7     26.08.21 14:00 Heller $
 package de.mendelson.util.systemevents.notification;
 
+import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.systemevents.SystemEvent;
 import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Types;
 
 /*
@@ -19,7 +21,7 @@ import java.sql.Types;
  * Stores the notification data for the AS2
  *
  * @author S.Heller
- * @version $Revision: 6 $
+ * @version $Revision: 7 $
  */
 public class NotificationAccessDBImplAS2 implements NotificationAccessDB {
 
@@ -28,10 +30,12 @@ public class NotificationAccessDBImplAS2 implements NotificationAccessDB {
      */
     private Connection configConnection = null;
     private Connection runtimeConnection = null;
+    private IDBDriverManager dbDriverManager;
 
-    public NotificationAccessDBImplAS2(Connection configConnection, Connection runtimeConnection) {
+    public NotificationAccessDBImplAS2(IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         this.configConnection = configConnection;
         this.runtimeConnection = runtimeConnection;
+        this.dbDriverManager = dbDriverManager;
     }
 
     /**
@@ -96,9 +100,16 @@ public class NotificationAccessDBImplAS2 implements NotificationAccessDB {
     @Override
     public void updateNotification(NotificationData notificationData) {
         NotificationDataImplAS2 data = (NotificationDataImplAS2) notificationData;
+        Connection configConnectionNoAutoCommit = null;
+        String transactionName = "Notification_updateNotification";
         PreparedStatement statement = null;
+        Statement transactionStatement = null;
         try {
-            statement = this.configConnection.prepareStatement(
+            configConnectionNoAutoCommit = this.dbDriverManager.getConnectionWithoutErrorHandling(IDBDriverManager.DB_CONFIG);
+            configConnectionNoAutoCommit.setAutoCommit(false);
+            transactionStatement = configConnectionNoAutoCommit.createStatement();
+            this.dbDriverManager.startTransaction(transactionStatement, transactionName);
+            statement = configConnectionNoAutoCommit.prepareStatement(
                     "UPDATE notification SET mailhost=?,mailhostport=?,notificationemailaddress=?,"
                     + "notifycertexpire=?,notifytransactionerror=?,notifycem=?,notifysystemfailure=?,replyto=?,usesmtpauth=?,"
                     + "smtpauthuser=?,smtpauthpass=?,notifyresend=?,security=?,maxnotificationspermin=?,notifyconnectionproblem=?,"
@@ -127,13 +138,33 @@ public class NotificationAccessDBImplAS2 implements NotificationAccessDB {
             statement.setInt(14, data.getMaxNotificationsPerMin());
             statement.setInt(15, data.notifyConnectionProblem() ? 1 : 0);
             statement.setInt(16, data.notifyPostprocessingProblem() ? 1 : 0);
-            statement.execute();
+            statement.executeUpdate();
+            this.dbDriverManager.commitTransaction(transactionStatement, transactionName);
         } catch (Exception e) {
+            try {
+                this.dbDriverManager.rollbackTransaction(transactionStatement);
+            } catch (Exception ex) {
+                SystemEventManagerImplAS2.systemFailure(ex, SystemEvent.TYPE_DATABASE_ANY);
+            }
             SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY, statement);
         } finally {
             if (statement != null) {
                 try {
                     statement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (transactionStatement != null) {
+                try {
+                    transactionStatement.close();
+                } catch (Exception e) {
+                    SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
+                }
+            }
+            if (configConnectionNoAutoCommit != null) {
+                try {
+                    configConnectionNoAutoCommit.close();
                 } catch (Exception e) {
                     SystemEventManagerImplAS2.systemFailure(e, SystemEvent.TYPE_DATABASE_ANY);
                 }
