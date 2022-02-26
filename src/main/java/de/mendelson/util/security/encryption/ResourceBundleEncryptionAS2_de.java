@@ -27,7 +27,7 @@ public class ResourceBundleEncryptionAS2_de extends MecResourceBundle {
     /**List of messages in the specific language*/
     static final Object[][] CONTENTS = {        
         {"encryption." + EncryptionConstantsAS2.ENCRYPTION_UNKNOWN, "Unbekannt"},
-        {"encryption." + EncryptionConstantsAS2.ENCRYPTION_NONE, "Unverschlüsselt"},
+        {"encryption." + EncryptionConstantsAS2.ENCRYPTION_NONE, "UnverschlÃ¼sselt"},
         {"encryption." + EncryptionConstantsAS2.ENCRYPTION_3DES, "3DES"},
         {"encryption." + EncryptionConstantsAS2.ENCRYPTION_RC2_40, "RC2-40"},
         {"encryption." + EncryptionConstantsAS2.ENCRYPTION_RC2_64, "RC2-64"},
