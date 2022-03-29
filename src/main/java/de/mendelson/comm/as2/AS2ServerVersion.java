@@ -59,7 +59,7 @@ public class AS2ServerVersion {
     }
 
     /**
-     * The data base has a version. It is found in the column actualversion of
+     * The database has a version. It is found in the column `actualversion` of
      * the table version. If the found version does not match the version
      * defined here, an auto update of the database is performed.
      */
@@ -68,7 +68,7 @@ public class AS2ServerVersion {
     }
 
     /**
-     * The data base has a version. It is found in the column actualversion of
+     * The data base has a version. It is found in the column `actualversion` of
      * the table version. If the found version does not match the version
      * defined here, an auto update of the database is performed.
      */

@@ -316,7 +316,7 @@ public class DialogMessageDetails extends JDialog implements ListSelectionListen
                                     new Object[]{
                                         overviewInfo.getSenderId(),
                                         overviewInfo.getReceiverId(),}));
-                        } else if (dispositionState.contains(AS2Exception.AUTHENTIFICATION_ERROR)) {
+                        } else if (dispositionState.contains(AS2Exception.AUTHENTICATION_FAILED)) {
                             this.jLabelTransactionStateDetails.setVisible(true);
                             this.jLabelTransactionStateDetails.setText(this.rb.getResourceString("transactionstate.error.authentication-failed"));
                         } else if (dispositionState.contains(AS2Exception.DECOMPRESSSION_ERROR)) {

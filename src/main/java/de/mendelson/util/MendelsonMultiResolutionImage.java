@@ -232,8 +232,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
                 throw new IllegalArgumentException("Resource missing: " + svgURLStr);
             }
             // find out the initial size of the SVG to compute the scale factor
-            SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(
-                    XMLResourceDescriptor.getXMLParserClassName());
+            SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName());
             UserAgent agent = new UserAgentAdapter();
             DocumentLoader loader = new DocumentLoader(agent);
             BridgeContext context = new BridgeContext(agent, loader);
@@ -243,7 +242,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
             GraphicsNode root = builder.build(context, document);
             double width = root.getBounds().getWidth();
             double height = root.getBounds().getHeight();
-            //try to find out the canvas size. If this fails just take the bounds of the root node
+            // try to find out the canvas size. If this fails just take the bounds of the root node
             Element documentElement = document.getDocumentElement();
             if (documentElement.hasAttribute("width") && documentElement.hasAttribute("height")) {
                 String canvasSizeWidthStr = document.getDocumentElement().getAttribute("width");
@@ -261,12 +260,12 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
                 }
             }
             float scalingfactor = (float) (height / width);
-            //transcode the SVG to a BufferedImage
+            // transcode the SVG to a BufferedImage
             TranscoderInput transcoderInput = new TranscoderInput(document);
             BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
             int step = 1;
-            //use larger steps if this is not just a small pixel perfect icon. Else the prerendering process
-            //will take some time. Means the larger the image is the less resolutions are pre rendered
+            // use larger steps if this is not just a small pixel perfect icon, else the pre-rendering process
+            // will take some time. Means the larger the image is the less resolutions are pre rendered
             if (initialSize > 64) {
                 step = 2;
             }
@@ -284,13 +283,13 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
                 transcoder.setDimensions(variantWidth, variantHeight);
                 transcoder.transcode(transcoderInput, null);
                 BufferedImage resolutionVariant = transcoder.getBufferedImage();
-                //add the overlay if this is defined for this resource
+                // add the overlay if this is defined for this resource
                 if (overlayImage != null) {
                     BufferedImage bufferedOverlayImage = overlayImage.getResolutionVariant(variantWidth, variantHeight);
                     Graphics g = resolutionVariant.getGraphics();
                     g.drawImage(bufferedOverlayImage, 0, 0, null);
                 }
-                //filter the created image if this is requested
+                // filter the created image if this is requested
                 synchronized (svgImageOperations) {
                     for (BufferedImageOp imageOperation : svgImageOperations) {
                         resolutionVariant = imageOperation.filter(resolutionVariant, null);
@@ -331,7 +330,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
      */
     public MendelsonMultiResolutionImage toMinResolution(int minResolution) {
         int newBaseImageIndex = 0;
-        //find start index of images that matches the min resolution        
+        // find start index of images that matches the min resolution
         for (int i = 0; i < this.resolutionVariants.size(); i++) {
             Image resolutionVariantImage = this.resolutionVariants.get(i);
             if (minResolution <= resolutionVariantImage.getWidth(null)
@@ -340,7 +339,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
                 break;
             }
         }
-        //check if the base index is already at the right place for the requested resolution 
+        // check if the base index is already at the right place for the requested resolution
         //- then no resolution change is required and the current image could be returned without a change
         if (newBaseImageIndex == this.baseImageIndex) {
             return (this);
@@ -371,7 +370,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
                 return (BufferedImage) resolutionVariantImage;
             }
         }
-        //nothings fits: return the image with the hightest resolution
+        // nothing fits: return the image with the highest resolution
         return (BufferedImage) (this.resolutionVariants.get(this.resolutionVariants.size() - 1));
     }
 
@@ -438,7 +437,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
 
         public BufferedImageTranscoder() {
             super();
-            //assumed the SVG is in the right structure...
+            // assumed the SVG is in the right structure...
             super.hints.put(ImageTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
         }
 
@@ -478,8 +477,7 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
          *
          * @param image the image to write
          * @param output the output where to store the image
-         * @param TranscoderException if an error occured while storing the
-         * image
+         * @param TranscoderException if an error occurred while storing the image
          */
         @Override
         public void writeImage(BufferedImage image, TranscoderOutput output)
@@ -503,5 +501,4 @@ public class MendelsonMultiResolutionImage extends AbstractMultiResolutionImage 
             super.setImageSize(width, height);
         }
     }
-
 }

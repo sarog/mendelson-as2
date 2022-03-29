@@ -15,11 +15,11 @@ import de.mendelson.comm.as2.message.AS2Message;
  * @version $Revision: 2 $
  */
 public class AS2Exception extends Exception{
-    
+
     /**authentication-failed*/
-    public static final String AUTHENTIFICATION_ERROR = "authentication-failed";
+    public static final String AUTHENTICATION_FAILED = "authentication-failed";
     /**decompression-failed*/
-    public static final String DECOMPRESSSION_ERROR = "decompression-failed";
+    public static final String DECOMPRESSSION_ERROR  = "decompression-failed";
     /**decryption-failed*/
     public static final String DECRYPTION_ERROR = "decryption-failed";
     /**insufficient-message-security*/
@@ -30,22 +30,22 @@ public class AS2Exception extends Exception{
     public static final String PROCESSING_ERROR = "unexpected-processing-error";
     /**unknown-trading-partner*/
     public static final String UNKNOWN_TRADING_PARTNER_ERROR = "unknown-trading-partner";
-    
+
     private String errorType;
-    
+
     private AS2Message as2Message;
 
     /**Creates a new exception
      *@param ERROR_TYPE One of the error types as defined in this class
-     *@param message detailled error message
+     *@param errorMessage detailed error message
      */
-    public AS2Exception( final String ERROR_TYPE, String errorMessage, AS2Message as2Message ){
+    public AS2Exception(final String ERROR_TYPE, String errorMessage, AS2Message as2Message) {
         super( errorMessage );
-        this.errorType = ERROR_TYPE;        
+        this.errorType = ERROR_TYPE;
         this.as2Message = as2Message;
     }
-    
-    
+
+
     public String getErrorType() {
         return errorType;
     }
@@ -53,5 +53,5 @@ public class AS2Exception extends Exception{
     public AS2Message getAS2Message() {
         return as2Message;
     }
-        
+
 }

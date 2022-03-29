@@ -43,8 +43,8 @@ public class AS2 {
         System.out.println("java " + AS2.class.getName() + " <options>");
         System.out.println("Start up a " + AS2ServerVersion.getProductNameShortcut() + " server ");
         System.out.println("Options are:");
-        System.out.println("-lang <String>: Language to use for the client/server, nonpersistent. Possible values are \"en\", \"fr\" and \"de\".");
-        System.out.println("-country <String>: Country/region to use for the client/server, nonpersistent. Possible values are \"DE\", \"US\", \"FR\", \"GB\"...");
+        System.out.println("-lang <String>: Language to use for the client/server, non-persistent. Possible values are \"en\", \"fr\" and \"de\".");
+        System.out.println("-country <String>: Country/region to use for the client/server, non-persistent. Possible values are \"DE\", \"US\", \"FR\", \"GB\"...");
         System.out.println("-nohttpserver: Do not start the integrated HTTP server, only useful if you are integrating the product into an other web container");
         System.out.println("-mode <String>: Sets up the LIGHT or DARK mode for the client - default is LIGHT");
     }

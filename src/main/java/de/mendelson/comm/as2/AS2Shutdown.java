@@ -29,14 +29,14 @@ public class AS2Shutdown {
         System.out.println("Usage:");
         System.out.println("java " + AS2Shutdown.class.getName() + " <parameter>");
         System.out.println("Conditional parameter:");
-        System.out.println("-user <String>: User name for the login process, default to \"admin\"");
+        System.out.println("-user <String>: User name for the login process, defaults to \"admin\"");
         System.out.println("-password <String>: Password for the login process, defaults to \"admin\"");
     }
 
     /**
      * Method to start the server on from the command line
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         String user = "admin";
         String password = "admin";
         int optind;

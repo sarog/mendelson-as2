@@ -1277,7 +1277,7 @@ public class AS2MessageParser {
                             }), info);
                 }
             }
-            throw new AS2Exception(AS2Exception.AUTHENTIFICATION_ERROR,
+            throw new AS2Exception(AS2Exception.AUTHENTICATION_FAILED,
                     "Error verifying the senders digital signature: " + e.getMessage() + ".",
                     message);
         } finally {
@@ -1505,7 +1505,7 @@ public class AS2MessageParser {
                         }),
                         info);
             }
-            throw new AS2Exception(AS2Exception.AUTHENTIFICATION_ERROR,
+            throw new AS2Exception(AS2Exception.AUTHENTICATION_FAILED,
                     "Error decrypting the inbound AS2 message: Recipient certificate does not match.", message);
         }
         //Streamed decryption. Its also possible to use in memory decryption using getContent but that uses
