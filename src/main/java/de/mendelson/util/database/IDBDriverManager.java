@@ -1,11 +1,7 @@
 //$Header: /mendelson_business_integration/de/mendelson/util/database/IDBDriverManager.java 8     7.12.21 11:06 Heller $
 package de.mendelson.util.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -14,6 +10,7 @@ import java.sql.Statement;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Interface for all supported database drivers
  *
@@ -22,71 +19,68 @@ import java.sql.Statement;
  */
 public interface IDBDriverManager {
 
-    public static int DB_CONFIG = 1;
-    public static int DB_RUNTIME = 2;
-    public static int DB_DEPRICATED = 3;
-    
+    int DB_CONFIG     = 1;
+    int DB_RUNTIME    = 2;
+    int DB_DEPRECATED = 3;
+
     /**
      * Setup the driver manager, initialize the connection pool
-     *
      */
-    public void setupConnectionPool();
+    void setupConnectionPool();
 
     /**
      * shutdown the connection pool
      */
-    public void shutdownConnectionPool() throws SQLException;
+    void shutdownConnectionPool() throws SQLException;
 
     /**
      * Creates a new locale database
      *
-     * @return true if it was created successfully
      * @param DB_TYPE of the database that should be created, as defined in this
-     * class
+     *                class
+     * @return true if it was created successfully
      */
-    public boolean createDatabase(final int DB_TYPE) throws Exception;
+    boolean createDatabase(final int DB_TYPE) throws Exception;
 
     /**
      * Returns a connection to the database
      *
      * @param DB_TYPE of the database that should be created, as defined in this
-     * class
+     *                class
      */
-    public Connection getConnectionWithoutErrorHandling(final int DB_TYPE)
-            throws SQLException;
-    
+    Connection getConnectionWithoutErrorHandling(final int DB_TYPE) throws SQLException;
+
     /**
      * Returns the SQL statement that is used to lock a table on database level
      * exclusive for a transaction
      *
-     * @param tablename The name of the tables to lock exclusive for all access
-     * (read/write) operations
+     * @param tablenames The name of the tables to lock exclusive for all access
+     *                  (read/write) operations
      * @return
      */
-    public void setTableLockExclusive(Statement statement, String[] tablenames) throws SQLException;
+    void setTableLockExclusive(Statement statement, String[] tablenames) throws SQLException;
 
     /**
      * Returns the SQL statement that is used to lock a table on database level
-     * for an INSERT or UPDATE operation. The lock level should be that high that 
+     * for an INSERT or UPDATE operation. The lock level should be that high that
      * no other session could perform an update or insert operation to the same table(s)
      * meanwhile
-     * 
      *
-     * @param tablename The name of the tables to lock exclusive for all access
-     * (read/write) operations
+     * @param tablenames The name of the tables to lock exclusive for all access
+     *                  (read/write) operations
      * @return
      */
-    public void setTableLockINSERTAndUPDATE(Statement statement, String[] tablenames) throws SQLException;
+    void setTableLockINSERTAndUPDATE(Statement statement, String[] tablenames) throws SQLException;
 
     /**
      * Returns the SQL statement that is used to lock a table on database level
      * for a DELETE operation
      *
-     * @param tablename The name of the tables to lock exclusive for all access
-     * (read/write) operations
+     * @param tablenames The name of the tables to lock exclusive for all access
+     *                  (read/write) operations
      * @return
      */
-    public void setTableLockDELETE(Statement statement, String[] tablenames) throws SQLException;
+    void setTableLockDELETE(Statement statement, String[] tablenames) throws SQLException;
 
     /**
      * Starts a transaction. Implementations might do nothing as this concept is
@@ -95,60 +89,57 @@ public interface IDBDriverManager {
      * @param statement
      * @param transactionName
      */
-    public void startTransaction(Statement statement, String transactionName) throws SQLException;
+    void startTransaction(Statement statement, String transactionName) throws SQLException;
 
     /**
      * Commits a transaction
      *
      * @param transactionName
      */
-    public void commitTransaction(Statement statement, String transactionName) throws SQLException;
+    void commitTransaction(Statement statement, String transactionName) throws SQLException;
 
-    
     /**
      * Rollback a transaction
      */
-    public void rollbackTransaction(Statement statement) throws SQLException;
-    
-    
+    void rollbackTransaction(Statement statement) throws SQLException;
+
     /**
      * Sets text data as parameter to a stored procedure. The handling depends
      * if the database supports java objects. PostgreSQL for example could not
      * deal with the JDBC type JAVA_OBJECT
      */
-    public void setTextParameterAsJavaObject(PreparedStatement statement, int index, String text) throws SQLException;
-    
+    void setTextParameterAsJavaObject(PreparedStatement statement, int index, String text) throws SQLException;
+
     /**
      * Reads a binary object from the database and returns a String that
      * contains it. Will return null if the read data was null. Reading and
-     * writing binary objects differs relating the used database system. 
+     * writing binary objects differs relating the used database system.
      * PostgreSQL for example could not deal with the JDBC type JAVA_OBJECT
      */
-    public String readTextStoredAsJavaObject(ResultSet result, String columnName) throws Exception;
-    
-    
+    String readTextStoredAsJavaObject(ResultSet result, String columnName) throws Exception;
+
     /**
      * Reads a binary object from the database and returns a byte array that
      * contains it. Will return null if the read data was null. Reading and
      * writing binary objects differs relating the used database system
      */
-    public Object readObjectStoredAsJavaObject(ResultSet result, String columnName) throws Exception;
-    
+    Object readObjectStoredAsJavaObject(ResultSet result, String columnName) throws Exception;
+
     /**
      * Sets text data as parameter to a stored procedure. The handling depends
      * if the database supports java objects
-     *
      */
-    public void setObjectParameterAsJavaObject(PreparedStatement statement, int index, Object obj) throws Exception;
-    
-    
+    void setObjectParameterAsJavaObject(PreparedStatement statement, int index, Object obj) throws Exception;
+
     /**
      * Reads a binary object from the database and returns a byte array that
      * contains it. Will return null if the read data was null. Reading and
      * writing binary objects differs relating the used database system
      */
-    public byte[] readBytesStoredAsJavaObject(ResultSet result, String columnName) throws Exception;
-    
-    /**Returns some connection pool information for debug purpose*/
-    public String getPoolInformation(int DB_TYPE);
+    byte[] readBytesStoredAsJavaObject(ResultSet result, String columnName) throws Exception;
+
+    /**
+     * Returns some connection pool information for debug purpose
+     */
+    String getPoolInformation(int DB_TYPE);
 }

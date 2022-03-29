@@ -139,7 +139,7 @@ public class DBDriverManagerHSQL extends AbstractDBDriverManagerHSQL implements 
             name = name + "_CONFIG";
         } else if (DB_TYPE == IDBDriverManager.DB_RUNTIME) {
             name = name + "_RUNTIME";
-        } else if (DB_TYPE != IDBDriverManager.DB_DEPRICATED) {
+        } else if (DB_TYPE != IDBDriverManager.DB_DEPRECATED) {
             throw new RuntimeException("Unknown DB type requested in DBDriverManager.");
         }
         return (name);
@@ -154,7 +154,7 @@ public class DBDriverManagerHSQL extends AbstractDBDriverManagerHSQL implements 
             alias = alias + "config";
         } else if (DB_TYPE == DBDriverManagerHSQL.DB_RUNTIME) {
             alias = alias + "runtime";
-        } else if (DB_TYPE != IDBDriverManager.DB_DEPRICATED) {
+        } else if (DB_TYPE != IDBDriverManager.DB_DEPRECATED) {
             throw new RuntimeException("Unknown DB type requested in DBDriverManager.");
         }
         return (alias);
@@ -181,7 +181,7 @@ public class DBDriverManagerHSQL extends AbstractDBDriverManagerHSQL implements 
             } else if (DB_TYPE == DBDriverManagerHSQL.DB_RUNTIME) {
                 dbVersion = AS2ServerVersion.getRequiredDBVersionRuntime();
                 createResource = SQLScriptExecutor.SCRIPT_RESOURCE_RUNTIME;
-            } else if (DB_TYPE != DBDriverManagerHSQL.DB_DEPRICATED) {
+            } else if (DB_TYPE != DBDriverManagerHSQL.DB_DEPRECATED) {
                 throw new RuntimeException("Unknown DB type requested in DBDriverManager.");
             }
             Logger.getLogger(AS2Server.SERVER_LOGGER_NAME).info(rb.getResourceString("creating.database." + DB_TYPE));
@@ -280,7 +280,7 @@ public class DBDriverManagerHSQL extends AbstractDBDriverManagerHSQL implements 
                         getConnectionURI("localhost", DB_TYPE),
                         DB_USER_NAME, DB_PASSWORD);
             }
-        } else if (DB_TYPE == DB_DEPRICATED) {
+        } else if (DB_TYPE == DB_DEPRECATED) {
             //deprecated connection: no pooling
             connection = DriverManager.getConnection(
                     getConnectionURI("localhost", DB_TYPE),

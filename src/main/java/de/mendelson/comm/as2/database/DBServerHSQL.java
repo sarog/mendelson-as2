@@ -412,7 +412,7 @@ public class DBServerHSQL implements IDBServer {
         } else if (DB_TYPE == IDBDriverManager.DB_RUNTIME) {
             dbName = rb.getResourceString("database." + IDBDriverManager.DB_RUNTIME);
             requiredDBVersion = AS2ServerVersion.getRequiredDBVersionRuntime();
-        } else if (DB_TYPE != IDBDriverManager.DB_DEPRICATED) {
+        } else if (DB_TYPE != IDBDriverManager.DB_DEPRECATED) {
             throw new RuntimeException("Unknown DB type requested in DBServer:updateDB.");
         }
         int foundVersion = this.getActualDBVersion(connection);
@@ -563,7 +563,7 @@ public class DBServerHSQL implements IDBServer {
             updateResource = SQLScriptExecutor.SCRIPT_RESOURCE_CONFIG;
         } else if (DB_TYPE == IDBDriverManager.DB_RUNTIME) {
             updateResource = SQLScriptExecutor.SCRIPT_RESOURCE_RUNTIME;
-        } else if (DB_TYPE != IDBDriverManager.DB_DEPRICATED) {
+        } else if (DB_TYPE != IDBDriverManager.DB_DEPRECATED) {
             throw new RuntimeException("Unknown DB type requested in DBServer.");
         }
         //sql file to execute for the update process
@@ -614,7 +614,7 @@ public class DBServerHSQL implements IDBServer {
      * version where only a single database exists (< end of 2011)
      */
     private void createDeprecatedCheck() throws Exception {
-        Path deprecatedFile = Paths.get(this.driverManager.getDBName(DBDriverManagerHSQL.DB_DEPRICATED) + ".script");
+        Path deprecatedFile = Paths.get(this.driverManager.getDBName(DBDriverManagerHSQL.DB_DEPRECATED) + ".script");
         Path configFile = Paths.get(this.driverManager.getDBName(DBDriverManagerHSQL.DB_CONFIG) + ".script");
         Path runtimeFile = Paths.get(this.driverManager.getDBName(DBDriverManagerHSQL.DB_RUNTIME) + ".script");
         //create new Database
@@ -632,7 +632,7 @@ public class DBServerHSQL implements IDBServer {
      * of these split databases could be any from 0 to 50.
      */
     private void copyDeprecatedDatabaseTo(String targetBase) throws IOException {
-        String sourceBase = this.driverManager.getDBName(DBDriverManagerHSQL.DB_DEPRICATED);
+        String sourceBase = this.driverManager.getDBName(DBDriverManagerHSQL.DB_DEPRECATED);
         this.copyFile(sourceBase + ".backup", targetBase + ".backup");
         this.copyFile(sourceBase + ".data", targetBase + ".data");
         this.copyFile(sourceBase + ".properties", targetBase + ".properties");

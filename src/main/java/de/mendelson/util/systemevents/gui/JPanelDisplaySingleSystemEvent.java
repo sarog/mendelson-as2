@@ -37,8 +37,7 @@ public class JPanelDisplaySingleSystemEvent extends JPanel {
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleDialogSystemEvent.class.getName());
-        } //load up  resourcebundle        
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
         initComponents();

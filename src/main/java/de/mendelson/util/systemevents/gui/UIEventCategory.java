@@ -34,8 +34,7 @@ public class UIEventCategory implements Comparable<UIEventCategory> {
         try {
             this.rbSystemEvent = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleSystemEvent.class.getName());
-        } //load up  resourcebundle        
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
     }

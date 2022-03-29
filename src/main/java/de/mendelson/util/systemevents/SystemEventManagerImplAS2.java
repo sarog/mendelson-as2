@@ -63,8 +63,7 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleNotification.class.getName());
-        } //load up  resourcebundle        
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
     }

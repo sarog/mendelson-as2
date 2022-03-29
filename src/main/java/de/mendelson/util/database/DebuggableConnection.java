@@ -1,21 +1,7 @@
 //$Header: /mec_as2/de/mendelson/util/database/DebuggableConnection.java 9     2/02/22 12:59 Heller $
 package de.mendelson.util.database;
 
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Struct;
+import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -38,19 +24,20 @@ import java.util.logging.Logger;
  */
 public class DebuggableConnection implements Connection {
 
-    private Connection connection = null;
-    private Logger connectionLogger = null;
-    private String connectionName = "Unknown connection";
     /**
      * Counter for the unique query ids
      */
     private final static AtomicLong currentId = new AtomicLong(0);
 
+    private Connection connection;
+    private Logger     connectionLogger;
+    private String     connectionName   = "Unknown connection";
+
     /**
      * Creates a new instance of DebuggableConnection
      */
     public DebuggableConnection(Connection connection) {
-        this( connection, null, null);
+        this(connection, null, null);
     }
 
     /**
@@ -59,31 +46,63 @@ public class DebuggableConnection implements Connection {
     public DebuggableConnection(Connection connection, Logger connectionLogger, String connectionName) {
         this.connection = connection;
         this.connectionLogger = connectionLogger;
-        if( connectionName == null ){
+        if (connectionName == null) {
             connectionName = "";
-        }        
-            String uniqueId = this.createId();
-            this.connectionName = connectionName + " " + uniqueId;
-        if( this.connectionLogger != null ){
-            this.connectionLogger.info( "New DB connection with the internal id [" + this.connectionName + "] has been established");
+        }
+        String uniqueId = this.createId();
+        this.connectionName = connectionName + " " + uniqueId;
+        if (this.connectionLogger != null) {
+            this.connectionLogger.info("New DB connection with the internal id [" + this.connectionName + "] has been established");
         }
     }
-     
+
     /**
      * Creates a new id in the format yyyyMMddHHmm-nn
      */
     private static String createId() {
-        StringBuilder idBuffer = new StringBuilder()
-                .append("CONNECTION-")
-                .append(currentId.getAndIncrement());
+        StringBuilder idBuffer = new StringBuilder().append("CONNECTION-").append(currentId.getAndIncrement());
         return (idBuffer.toString());
     }
-    
-    public String getConnectionName(){
-        return( this.connectionName);
+
+    public String getConnectionName() {
+        return (this.connectionName);
     }
-    
-    
+
+    @Override
+    public Statement createStatement() throws SQLException {
+        return (new DebuggableStatement(this, this.connection.createStatement(), this.connectionLogger, this.connectionName));
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String str) throws SQLException {
+        try {
+            PreparedStatement statement = this.connection.prepareStatement(str);
+            return (new DebuggablePreparedStatement(this, str, statement, this.connectionLogger, this.connectionName));
+        } catch (SQLSyntaxErrorException e) {
+            throw new SQLSyntaxErrorException(e.getMessage() + " [" + str + "]");
+        }
+    }
+
+    @Override
+    public CallableStatement prepareCall(String str) throws SQLException {
+        return (this.connection.prepareCall(str));
+    }
+
+    @Override
+    public String nativeSQL(String str) throws SQLException {
+        return (this.connection.nativeSQL(str));
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return (this.connection.unwrap(iface));
+    }
+
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return (this.connection.isWrapperFor(iface));
+    }
+
     @Override
     public void clearWarnings() throws SQLException {
         this.connection.clearWarnings();
@@ -92,22 +111,17 @@ public class DebuggableConnection implements Connection {
     @Override
     public void close() throws SQLException {
         this.connection.close();
-        if( this.connectionLogger != null ){
-            this.connectionLogger.info( "The DB connection with the internal id [" + this.connectionName + "] has been closed");
+        if (this.connectionLogger != null) {
+            this.connectionLogger.info("The DB connection with the internal id [" + this.connectionName + "] has been closed");
         }
     }
 
     @Override
     public void commit() throws SQLException {
         this.connection.commit();
-        if( this.connectionLogger != null ){
-            this.connectionLogger.info( "COMMIT performed on DB connection [" + this.connectionName + "] ");
+        if (this.connectionLogger != null) {
+            this.connectionLogger.info("COMMIT performed on DB connection [" + this.connectionName + "] ");
         }
-    }
-
-    @Override
-    public Statement createStatement() throws SQLException {
-        return (new DebuggableStatement(this, this.connection.createStatement(), this.connectionLogger, this.connectionName));
     }
 
     @Override
@@ -166,16 +180,6 @@ public class DebuggableConnection implements Connection {
     }
 
     @Override
-    public String nativeSQL(String str) throws SQLException {
-        return (this.connection.nativeSQL(str));
-    }
-
-    @Override
-    public CallableStatement prepareCall(String str) throws SQLException {
-        return (this.connection.prepareCall(str));
-    }
-
-    @Override
     public CallableStatement prepareCall(String str, int param, int param2) throws SQLException {
         return (this.connection.prepareCall(str, param, param2));
     }
@@ -183,16 +187,6 @@ public class DebuggableConnection implements Connection {
     @Override
     public CallableStatement prepareCall(String str, int param, int param2, int param3) throws SQLException {
         return (this.connection.prepareCall(str, param, param2, param3));
-    }
-
-    @Override
-    public PreparedStatement prepareStatement(String str) throws SQLException {
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(str);
-            return (new DebuggablePreparedStatement(this, str, statement, this.connectionLogger, this.connectionName));
-        } catch (SQLSyntaxErrorException e) {
-            throw new SQLSyntaxErrorException(e.getMessage() + " [" + str + "]");
-        }
     }
 
     @Override
@@ -252,16 +246,16 @@ public class DebuggableConnection implements Connection {
 
     @Override
     public void rollback() throws SQLException {
-        if( this.connectionLogger != null ){
-            this.connectionLogger.info( "ROLLBACK performed on DB connection [" + this.connectionName + "]");
+        if (this.connectionLogger != null) {
+            this.connectionLogger.info("ROLLBACK performed on DB connection [" + this.connectionName + "]");
         }
         this.connection.rollback();
     }
 
     @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-        if( this.connectionLogger != null ){
-            this.connectionLogger.info( "ROLLBACK FROM SAVEPOINT performed on DB connection [" + this.connectionName + "]");
+        if (this.connectionLogger != null) {
+            this.connectionLogger.info("ROLLBACK FROM SAVEPOINT performed on DB connection [" + this.connectionName + "]");
         }
         this.connection.rollback(savepoint);
     }
@@ -359,16 +353,6 @@ public class DebuggableConnection implements Connection {
     @Override
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
         return (this.connection.createStruct(typeName, attributes));
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return (this.connection.unwrap(iface));
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return (this.connection.isWrapperFor(iface));
     }
 
     @Override

@@ -11,6 +11,13 @@ import de.mendelson.util.systemevents.SystemEventManagerImplAS2;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/*
+ * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
+ *
+ * This software is subject to the license agreement set forth in the license.
+ * Please read and agree to all terms before using this software.
+ * Other product and brand names are trademarks of their respective owners.
+ */
 /**
  * Thread that is executed if the VM will shut down (that means the server is
  * shut down)
@@ -24,6 +31,7 @@ public class AS2ShutdownThread extends Thread {
     private MecResourceBundle rb;
 
     public AS2ShutdownThread(IDBServer dbServer) {
+
         this.dbServer = dbServer;
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(

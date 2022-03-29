@@ -4,6 +4,7 @@ package de.mendelson.util.systemevents;
 import de.mendelson.util.MecResourceBundle;
 import de.mendelson.util.clientserver.messages.LoginRequest;
 import de.mendelson.util.clientserver.messages.LoginState;
+
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
@@ -34,24 +35,21 @@ public abstract class SystemEventManager {
 
     private DateFormat eventFileDateFormat = new SimpleDateFormat("HH-mm-ss-SSS");
     private DateFormat dailySubDirFormat = new SimpleDateFormat("yyyyMMdd");
+
     /**
-     * Always 
-     * localize your output
+     * Always localize your output
      */
     private MecResourceBundle rb = null;
 
-
     protected SystemEventManager() {
-        //Load resourcebundle
+        // Load resourcebundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleSystemEventManager.class.getName());
-        } //load up  resourcebundle        
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
     }
-
 
     public static String getHostname() {
         try {
@@ -82,20 +80,18 @@ public abstract class SystemEventManager {
     /**
      * Throws a new system event that a login was successful
      * @param tlsProtocol The used TLS protocol or null if this could not be determined or the connection is unsecured
-     * @param tlsProtocol The used TLS cipher suite or null if this could not be determined or the connection is unsecured
+     * @param tlsCipherSuite The used TLS cipher suite or null if this could not be determined or the connection is unsecured
      * 
      */
-    public void newEventClientLoginSuccess(LoginState loginState, SocketAddress remoteAddress, String sessionId,
-            LoginRequest loginRequest, String tlsProtocol, String tlsCipherSuite) {
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_USER,
-                SystemEvent.TYPE_CLIENT_LOGIN_SUCCESS);
+    public void newEventClientLoginSuccess(LoginState loginState, SocketAddress remoteAddress, String sessionId, LoginRequest loginRequest, String tlsProtocol, String tlsCipherSuite) {
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_USER, SystemEvent.TYPE_CLIENT_LOGIN_SUCCESS);
         StringBuilder builder = new StringBuilder();
-        builder.append( this.rb.getResourceString("label.body.tlsprotocol", (tlsProtocol==null?"--":tlsProtocol))).append( "\n");     
-        builder.append( this.rb.getResourceString("label.body.tlsciphersuite", (tlsCipherSuite==null?"--":tlsCipherSuite))).append( "\n");
-        builder.append( this.rb.getResourceString("label.body.clientip", remoteAddress.toString())).append( "\n");        
-        builder.append( this.rb.getResourceString("label.body.processid", loginRequest.getPID())).append( "\n");        
-        builder.append( this.rb.getResourceString("label.body.clientos", loginRequest.getClientOSName())).append( "\n");   
-        builder.append( this.rb.getResourceString("label.body.details", loginState.getStateDetails())).append( "\n");   
+        builder.append(this.rb.getResourceString("label.body.tlsprotocol", (tlsProtocol == null ? "--" : tlsProtocol))).append("\n");
+        builder.append(this.rb.getResourceString("label.body.tlsciphersuite", (tlsCipherSuite == null ? "--" : tlsCipherSuite))).append("\n");
+        builder.append(this.rb.getResourceString("label.body.clientip", remoteAddress.toString())).append("\n");
+        builder.append(this.rb.getResourceString("label.body.processid", loginRequest.getPID())).append("\n");
+        builder.append(this.rb.getResourceString("label.body.clientos", loginRequest.getClientOSName())).append("\n");
+        builder.append(this.rb.getResourceString("label.body.details", loginState.getStateDetails())).append("\n");
         event.setBody(builder.toString());
         event.setSubject(this.rb.getResourceString("label.subject.login.success", loginState.getUser().getName()));
         try {

@@ -1,11 +1,7 @@
 //$Header: /oftp2/de/mendelson/util/database/AbstractDBDriverManagerHSQL.java 5     26.02.21 17:48 Heller $
 package de.mendelson.util.database;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -14,6 +10,7 @@ import java.sql.ResultSet;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Class needed to access the database
  *
@@ -24,6 +21,7 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
 
     @Override
     public void setTableLockExclusive(Statement statement, String[] tablenames) throws SQLException {
+
         StringBuilder builder = new StringBuilder();
         builder.append("LOCK TABLE ");
         for (int i = 0; i < tablenames.length; i++) {
@@ -37,7 +35,8 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
     }
 
     @Override
-    public void setTableLockDELETE(Statement statement, String[] tablenames) throws SQLException {
+    public void setTableLockINSERTAndUPDATE(Statement statement, String[] tablenames) throws SQLException {
+
         StringBuilder builder = new StringBuilder();
         builder.append("LOCK TABLE ");
         for (int i = 0; i < tablenames.length; i++) {
@@ -51,7 +50,8 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
     }
 
     @Override
-    public void setTableLockINSERTAndUPDATE(Statement statement, String[] tablenames) throws SQLException {
+    public void setTableLockDELETE(Statement statement, String[] tablenames) throws SQLException {
+
         StringBuilder builder = new StringBuilder();
         builder.append("LOCK TABLE ");
         for (int i = 0; i < tablenames.length; i++) {
@@ -66,6 +66,7 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
 
     @Override
     public void startTransaction(Statement statement, String transactionName) throws SQLException {
+
         if (statement.getConnection().getAutoCommit()) {
             throw new SQLException("Transaction " + transactionName + " started on database connection that is in auto commit mode");
         }
@@ -74,16 +75,19 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
 
     @Override
     public void commitTransaction(Statement statement, String transactionName) throws SQLException {
+
         statement.execute("COMMIT");
     }
 
     @Override
     public void rollbackTransaction(Statement statement) throws SQLException {
+
         statement.execute("ROLLBACK");
     }
 
     @Override
     public void setTextParameterAsJavaObject(PreparedStatement statement, int index, String text) throws SQLException {
+
         if (text == null) {
             statement.setNull(index, Types.JAVA_OBJECT);
         } else {
@@ -98,6 +102,7 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
      */
     @Override
     public String readTextStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
+
         Object object = result.getObject(columnName);
         if (!result.wasNull()) {
             if (object instanceof String) {
@@ -116,6 +121,7 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
      */
     @Override
     public Object readObjectStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
+
         Object object = result.getObject(columnName);
         if (!result.wasNull()) {
             return (object);
@@ -128,10 +134,10 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
     /**
      * Sets text data as parameter to a stored procedure. The handling depends
      * if the database supports java objects
-     *
      */
     @Override
     public void setObjectParameterAsJavaObject(PreparedStatement statement, int index, Object obj) throws Exception {
+
         if (obj == null) {
             statement.setNull(index, Types.JAVA_OBJECT);
         } else {
@@ -146,11 +152,11 @@ public abstract class AbstractDBDriverManagerHSQL implements IDBDriverManager {
      */
     @Override
     public byte[] readBytesStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
+
         Object object = result.getObject(columnName);
         if (!result.wasNull()) {
             return ((byte[]) object);
         }
         return (null);
     }
-
 }

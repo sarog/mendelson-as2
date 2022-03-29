@@ -1,9 +1,9 @@
 //$Header: /mec_as2/de/mendelson/util/database/AbstractDBDriverManagerMySQL.java 3     2/02/22 13:44 Heller $
 package de.mendelson.util.database;
 
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /*
@@ -13,6 +13,7 @@ import java.sql.Statement;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Class needed to access the database
  *
@@ -20,18 +21,17 @@ import java.sql.Statement;
  * @version $Revision: 3 $
  */
 public abstract class AbstractDBDriverManagerMySQL implements IDBDriverManager {
-@Override
+
+    @Override
     public void setTableLockExclusive(Statement b, String a[]) throws SQLException {
         throw new IllegalAccessError();
     }
 
-  
     @Override
     public void setTableLockINSERTAndUPDATE(Statement b, String[] a) throws SQLException {
         throw new IllegalAccessError();
     }
 
-   
     @Override
     public void setTableLockDELETE(Statement b, String[] a) throws SQLException {
         throw new IllegalAccessError();
@@ -62,13 +62,11 @@ public abstract class AbstractDBDriverManagerMySQL implements IDBDriverManager {
         throw new IllegalAccessError();
     }
 
-   
     @Override
     public Object readObjectStoredAsJavaObject(ResultSet a, String b) throws Exception {
         throw new IllegalAccessError();
     }
 
-   
     @Override
     public void setObjectParameterAsJavaObject(PreparedStatement a, int b, Object c) throws Exception {
         throw new IllegalAccessError();
@@ -83,6 +81,4 @@ public abstract class AbstractDBDriverManagerMySQL implements IDBDriverManager {
     public byte[] readBytesStoredAsJavaObject(ResultSet a, String b) throws Exception {
         throw new IllegalAccessError();
     }
-
-
 }

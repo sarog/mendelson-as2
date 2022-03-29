@@ -1,11 +1,7 @@
 //$Header: /mec_oftp2/de/mendelson/util/database/DebuggableStatement.java 6     2/02/22 10:16 Heller $
 package de.mendelson.util.database;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
@@ -16,6 +12,7 @@ import java.util.logging.Logger;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Database statement that could be debugged
  *
@@ -24,26 +21,28 @@ import java.util.logging.Logger;
  */
 public class DebuggableStatement implements Statement {
 
-    private Statement statement;
-    private Logger connectionLogger = null;
-    private String connectionName = "Unknown connection";
-    private DebuggableConnection connection;
     /**
      * Counter for the unique query ids
      */
     private final static AtomicLong currentId = new AtomicLong(0);
+
+    private Statement            statement;
+    private Logger               connectionLogger;
+    private DebuggableConnection connection;
+
+    private String connectionName = "Unknown connection";
+
+    public DebuggableStatement(DebuggableConnection connection, Statement statement) {
+        this(connection, statement, null, null);
+    }
 
     public DebuggableStatement(DebuggableConnection connection, Statement statement, Logger connectionLogger, String connectionName) {
         this.connection = connection;
         this.statement = statement;
         this.connectionLogger = connectionLogger;
         if (connectionName != null) {
-        this.connectionName = connectionName;
-    }
-    }
-
-    public DebuggableStatement(DebuggableConnection connection, Statement statement) {
-        this(connection, statement, null, null);
+            this.connectionName = connectionName;
+        }
     }
 
     /**
@@ -55,8 +54,84 @@ public class DebuggableStatement implements Statement {
     }
 
     @Override
-    public void addBatch(String str) throws SQLException {
-        this.statement.addBatch(str);
+    public ResultSet executeQuery(String str) throws SQLException {
+        String uniqueQueryName = null;
+        if (this.connectionLogger != null) {
+            uniqueQueryName = createId();
+            this.connectionLogger.info("[" + this.connectionName + "] [execute query " + uniqueQueryName + "] " + str);
+        }
+        try {
+            ResultSet result = this.statement.executeQuery(str);
+            return (result);
+        } catch (SQLException e) {
+            if (this.connectionLogger != null) {
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] " + e.getClass().getSimpleName() + " SQLState: " + e.getSQLState() + " - " + e.getMessage();
+                errorMessage = errorMessage.replace("\n", "; ");
+                this.connectionLogger.info(errorMessage);
+            }
+            throw e;
+        }
+    }
+
+    @Override
+    public int executeUpdate(String str) throws SQLException {
+        String uniqueQueryName = null;
+        if (this.connectionLogger != null) {
+            uniqueQueryName = createId();
+            this.connectionLogger.info("[" + this.connectionName + "] [execute update query " + uniqueQueryName + "] " + str);
+        }
+
+        try {
+            int resultInt = this.statement.executeUpdate(str);
+            return (resultInt);
+        } catch (SQLException e) {
+            if (this.connectionLogger != null) {
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] " + e.getClass().getSimpleName() + " SQLState: " + e.getSQLState() + " - " + e.getMessage();
+                errorMessage = errorMessage.replace("\n", "; ");
+                this.connectionLogger.info(errorMessage);
+            }
+            throw e;
+        }
+    }
+
+    @Override
+    public void close() throws SQLException {
+        this.statement.close();
+    }
+
+    @Override
+    public int getMaxFieldSize() throws SQLException {
+        return (this.statement.getMaxFieldSize());
+    }
+
+    @Override
+    public void setMaxFieldSize(int param) throws SQLException {
+        this.statement.setMaxFieldSize(param);
+    }
+
+    @Override
+    public int getMaxRows() throws SQLException {
+        return (this.statement.getMaxRows());
+    }
+
+    @Override
+    public void setMaxRows(int param) throws SQLException {
+        this.statement.setMaxRows(param);
+    }
+
+    @Override
+    public void setEscapeProcessing(boolean param) throws SQLException {
+        this.statement.setEscapeProcessing(param);
+    }
+
+    @Override
+    public int getQueryTimeout() throws SQLException {
+        return (this.statement.getQueryTimeout());
+    }
+
+    @Override
+    public void setQueryTimeout(int param) throws SQLException {
+        this.statement.setQueryTimeout(param);
     }
 
     @Override
@@ -65,8 +140,8 @@ public class DebuggableStatement implements Statement {
     }
 
     @Override
-    public void clearBatch() throws SQLException {
-        this.statement.clearBatch();
+    public SQLWarning getWarnings() throws SQLException {
+        return (this.statement.getWarnings());
     }
 
     @Override
@@ -75,8 +150,8 @@ public class DebuggableStatement implements Statement {
     }
 
     @Override
-    public void close() throws SQLException {
-        this.statement.close();
+    public void setCursorName(String str) throws SQLException {
+        this.statement.setCursorName(str);
     }
 
     @Override
@@ -86,20 +161,61 @@ public class DebuggableStatement implements Statement {
             uniqueQueryName = createId();
             this.connectionLogger.info("[" + this.connectionName + "] [execute query " + uniqueQueryName + "] " + str);
         }
+
         try {
             boolean returnValue = this.statement.execute(str);
             return (returnValue);
         } catch (SQLException e) {
             if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
-                        + e.getClass().getSimpleName()
-                        + " SQLState: " + e.getSQLState()
-                        + " - " + e.getMessage();
+                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] " + e.getClass().getSimpleName() + " SQLState: " + e.getSQLState() + " - " + e.getMessage();
                 errorMessage = errorMessage.replace("\n", "; ");
                 this.connectionLogger.info(errorMessage);
             }
             throw e;
         }
+    }
+
+    @Override
+    public ResultSet getResultSet() throws SQLException {
+        return (this.statement.getResultSet());
+    }
+
+    @Override
+    public int getUpdateCount() throws SQLException {
+        return (this.statement.getUpdateCount());
+    }
+
+    @Override
+    public boolean getMoreResults() throws SQLException {
+        return (this.statement.getMoreResults());
+    }
+
+    /**
+     * Creates a new id in the format yyyyMMddHHmm-nn
+     */
+    private static String createId() {
+        StringBuilder idBuffer = new StringBuilder().append("STATEMENT-").append(currentId.getAndIncrement());
+        return (idBuffer.toString());
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return (this.statement.unwrap(iface));
+    }
+
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return (this.statement.isWrapperFor(iface));
+    }
+
+    @Override
+    public void addBatch(String str) throws SQLException {
+        this.statement.addBatch(str);
+    }
+
+    @Override
+    public void clearBatch() throws SQLException {
+        this.statement.clearBatch();
     }
 
     @Override
@@ -120,53 +236,6 @@ public class DebuggableStatement implements Statement {
     @Override
     public int[] executeBatch() throws SQLException {
         return (this.statement.executeBatch());
-    }
-
-    @Override
-    public ResultSet executeQuery(String str) throws SQLException {
-        String uniqueQueryName = null;
-        if (this.connectionLogger != null) {
-            uniqueQueryName = createId();
-            this.connectionLogger.info("[" + this.connectionName + "] [execute query " + uniqueQueryName + "] " + str);
-        }
-        try {
-            ResultSet result = this.statement.executeQuery(str);
-            return (result);
-        } catch (SQLException e) {
-            if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
-                        + e.getClass().getSimpleName()
-                        + " SQLState: " + e.getSQLState()
-                        + " - " + e.getMessage();
-                errorMessage = errorMessage.replace("\n", "; ");
-                this.connectionLogger.info(errorMessage);
-            }
-            throw e;
-        }
-    }
-
-    @Override
-    public int executeUpdate(String str) throws SQLException {
-        String uniqueQueryName = null;
-        if (this.connectionLogger != null) {
-            uniqueQueryName = createId();
-            this.connectionLogger.info("[" + this.connectionName + "] [execute update query " + uniqueQueryName + "] " + str);
-        }
-        try {
-            int resultInt = this.statement.executeUpdate(str);
-            return (resultInt);
-
-        } catch (SQLException e) {
-            if (this.connectionLogger != null) {
-                String errorMessage = "[" + this.connectionName + "] [Problem in " + uniqueQueryName + "] "
-                        + e.getClass().getSimpleName()
-                        + " SQLState: " + e.getSQLState()
-                        + " - " + e.getMessage();
-                errorMessage = errorMessage.replace("\n", "; ");
-                this.connectionLogger.info(errorMessage);
-            }
-            throw e;
-        }
     }
 
     @Override
@@ -205,33 +274,8 @@ public class DebuggableStatement implements Statement {
     }
 
     @Override
-    public int getMaxFieldSize() throws SQLException {
-        return (this.statement.getMaxFieldSize());
-    }
-
-    @Override
-    public int getMaxRows() throws SQLException {
-        return (this.statement.getMaxRows());
-    }
-
-    @Override
-    public boolean getMoreResults() throws SQLException {
-        return (this.statement.getMoreResults());
-    }
-
-    @Override
     public boolean getMoreResults(int param) throws SQLException {
         return (this.statement.getMoreResults(param));
-    }
-
-    @Override
-    public int getQueryTimeout() throws SQLException {
-        return (this.statement.getQueryTimeout());
-    }
-
-    @Override
-    public ResultSet getResultSet() throws SQLException {
-        return (this.statement.getResultSet());
     }
 
     @Override
@@ -250,26 +294,6 @@ public class DebuggableStatement implements Statement {
     }
 
     @Override
-    public int getUpdateCount() throws SQLException {
-        return (this.statement.getUpdateCount());
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        return (this.statement.getWarnings());
-    }
-
-    @Override
-    public void setCursorName(String str) throws SQLException {
-        this.statement.setCursorName(str);
-    }
-
-    @Override
-    public void setEscapeProcessing(boolean param) throws SQLException {
-        this.statement.setEscapeProcessing(param);
-    }
-
-    @Override
     public void setFetchDirection(int param) throws SQLException {
         this.statement.setFetchDirection(param);
     }
@@ -277,21 +301,6 @@ public class DebuggableStatement implements Statement {
     @Override
     public void setFetchSize(int param) throws SQLException {
         this.statement.setFetchSize(param);
-    }
-
-    @Override
-    public void setMaxFieldSize(int param) throws SQLException {
-        this.statement.setMaxFieldSize(param);
-    }
-
-    @Override
-    public void setMaxRows(int param) throws SQLException {
-        this.statement.setMaxRows(param);
-    }
-
-    @Override
-    public void setQueryTimeout(int param) throws SQLException {
-        this.statement.setQueryTimeout(param);
     }
 
     @Override
@@ -310,16 +319,6 @@ public class DebuggableStatement implements Statement {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return (this.statement.unwrap(iface));
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return (this.statement.isWrapperFor(iface));
-    }
-
-    @Override
     public void closeOnCompletion() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -327,15 +326,5 @@ public class DebuggableStatement implements Statement {
     @Override
     public boolean isCloseOnCompletion() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Creates a new id in the format yyyyMMddHHmm-nn
-     */
-    private static String createId() {
-        StringBuilder idBuffer = new StringBuilder()
-                .append("STATEMENT-")
-                .append(currentId.getAndIncrement());
-        return (idBuffer.toString());
     }
 }

@@ -13,6 +13,7 @@ import java.sql.Statement;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Class needed to access the database
  *
@@ -20,18 +21,17 @@ import java.sql.Statement;
  * @version $Revision: 3 $
  */
 public abstract class AbstractDBDriverManagerPostgreSQL implements IDBDriverManager {
+
     @Override
     public void setTableLockExclusive(Statement statement, String tablenames[]) throws SQLException {
         throw new IllegalAccessError();
     }
 
-  
     @Override
     public void setTableLockINSERTAndUPDATE(Statement statement, String[] tablenames) throws SQLException {
         throw new IllegalAccessError();
     }
 
-   
     @Override
     public void setTableLockDELETE(Statement statement, String[] tablenames) throws SQLException {
         throw new IllegalAccessError();
@@ -62,13 +62,11 @@ public abstract class AbstractDBDriverManagerPostgreSQL implements IDBDriverMana
         throw new IllegalAccessError();
     }
 
-   
     @Override
     public Object readObjectStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
         throw new IllegalAccessError();
     }
 
-   
     @Override
     public void setObjectParameterAsJavaObject(PreparedStatement statement, int index, Object obj) throws Exception {
         throw new IllegalAccessError();
@@ -83,5 +81,4 @@ public abstract class AbstractDBDriverManagerPostgreSQL implements IDBDriverMana
     public byte[] readBytesStoredAsJavaObject(ResultSet result, String columnName) throws Exception {
         throw new IllegalAccessError();
     }
-
 }

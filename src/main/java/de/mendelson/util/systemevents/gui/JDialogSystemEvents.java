@@ -75,8 +75,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
                     ResourceBundleDialogSystemEvent.class.getName());
             this.rbSystemEvent = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleSystemEvent.class.getName());
-        } //load up  resourcebundle        
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
         this.statusBar = statusBar;
