@@ -38,7 +38,7 @@ public class TableModelSystemEvents extends AbstractTableModel {
      * Load resources
      */
     public TableModelSystemEvents() {
-        //Load resourcebundle
+        // Load resource bundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleDialogSystemEvent.class.getName());

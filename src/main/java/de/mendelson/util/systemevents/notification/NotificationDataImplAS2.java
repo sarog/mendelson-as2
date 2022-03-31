@@ -1,10 +1,11 @@
 //$Header: /as2/de/mendelson/util/systemevents/notification/NotificationDataImplAS2.java 6     10.09.20 12:57 Heller $
 package de.mendelson.util.systemevents.notification;
 
-import java.io.Serializable;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.io.Serializable;
 
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
@@ -135,25 +136,25 @@ public class NotificationDataImplAS2 extends NotificationData implements Seriali
                 if (key.equals("mailserver")) {
                     notification.setMailServer(value);
                 } else if (key.equals("mailserverport")) {
-                    notification.setMailServerPort(Integer.valueOf(value).intValue());
+                    notification.setMailServerPort(Integer.parseInt(value));
                 } else if (key.equals("notificationmail")) {
                     notification.setNotificationMail(value);
                 } else if (key.equals("notifycertexpire")) {
                     notification.setNotifyCertExpire(value.equalsIgnoreCase("true"));
                 } else if (key.equals("notifytransactionerror")) {
                     notification.setNotifyTransactionError(value.equalsIgnoreCase("true"));
-                }else if (key.equals("notifysystemfailure")) {
+                } else if (key.equals("notifysystemfailure")) {
                     notification.setNotifySystemFailure(value.equalsIgnoreCase("true"));
-                }else if (key.equals("notifyconnectionproblem")) {
+                } else if (key.equals("notifyconnectionproblem")) {
                     notification.setNotifyConnectionProblem(value.equalsIgnoreCase("true"));
-                }else if (key.equals("notifycem")) {
+                } else if (key.equals("notifycem")) {
                     notification.setNotifyCEM(value.equalsIgnoreCase("true"));
                 } else if (key.equals("replyto")) {
                     notification.setReplyTo(value);
-                }else if (key.equals("connectionsecurity")) {
-                    notification.setConnectionSecurity(Integer.valueOf(value).intValue());
-                }else if (key.equals("maxnotificationspermin")) {
-                    notification.setMaxNotificationsPerMin(Integer.valueOf(value).intValue());
+                } else if (key.equals("connectionsecurity")) {
+                    notification.setConnectionSecurity(Integer.parseInt(value));
+                } else if (key.equals("maxnotificationspermin")) {
+                    notification.setMaxNotificationsPerMin(Integer.parseInt(value));
                 }
             }
         }

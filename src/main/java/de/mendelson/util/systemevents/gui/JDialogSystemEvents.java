@@ -69,7 +69,7 @@ public class JDialogSystemEvents extends JDialog implements ListSelectionListene
      */
     public JDialogSystemEvents(JFrame parent, BaseClient baseClient, IStatusBar statusBar) {
         super(parent, true);
-        //Load resourcebundle
+        // Load resource bundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleDialogSystemEvent.class.getName());

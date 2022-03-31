@@ -30,7 +30,7 @@ public class UIEventCategory implements Comparable<UIEventCategory> {
 
     public UIEventCategory(int category) {
         this.category = category;
-        //Load resourcebundle
+        // Load resource bundle
         try {
             this.rbSystemEvent = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleSystemEvent.class.getName());

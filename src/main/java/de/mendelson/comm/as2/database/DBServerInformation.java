@@ -10,20 +10,21 @@ import java.io.Serializable;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Stores some information of the used data base system - just for information purpose
  *
  * @author S.Heller
  * @version $Revision: 3 $
  */
-public class DBServerInformation implements Serializable{
-    
-    private String productName = "UNKNOWN";
+public class DBServerInformation implements Serializable {
+
+    private String productName    = "UNKNOWN";
     private String productVersion = "UNKNOWN";
-    private String host = "UNKNOWN";
-    private String jdbcVersion = "UNKNOWN";
-    
-    public DBServerInformation(){
+    private String host           = "UNKNOWN";
+    private String jdbcVersion    = "UNKNOWN";
+
+    public DBServerInformation() {
     }
 
     /**
@@ -34,24 +35,17 @@ public class DBServerInformation implements Serializable{
     }
 
     /**
-     * @return the productVersion
-     */
-    public String getProductVersion() {
-        return productVersion;
-    }
-
-    /**
-     * @return the address
-     */
-    public String getHost() {
-        return host;
-    }
-
-    /**
      * @param productName the productName to set
      */
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    /**
+     * @return the productVersion
+     */
+    public String getProductVersion() {
+        return productVersion;
     }
 
     /**
@@ -62,7 +56,14 @@ public class DBServerInformation implements Serializable{
     }
 
     /**
-     * @param address the address to set
+     * @return the address
+     */
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * @param host the address to set
      */
     public void setHost(String host) {
         this.host = host;

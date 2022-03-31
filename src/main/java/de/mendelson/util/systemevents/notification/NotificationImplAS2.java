@@ -45,12 +45,11 @@ public class NotificationImplAS2 extends Notification {
             IDBDriverManager dbDriverManager, 
             Connection configConnection, Connection runtimeConnection) {
         super(notificationData, new NotificationAccessDBImplAS2(dbDriverManager, configConnection, runtimeConnection));
-        //Load resourcebundle
+        // Load resource bundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleNotification.class.getName());
-        } //load up  resourcebundle
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
     }
@@ -60,12 +59,11 @@ public class NotificationImplAS2 extends Notification {
      */
     public NotificationImplAS2(IDBDriverManager dbDriverManager,Connection configConnection, Connection runtimeConnection) {
         super(new NotificationAccessDBImplAS2(dbDriverManager, configConnection, runtimeConnection));
-        //Load resourcebundle
+        // Load resource bundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleNotification.class.getName());
-        } //load up  resourcebundle
-        catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
         }
     }

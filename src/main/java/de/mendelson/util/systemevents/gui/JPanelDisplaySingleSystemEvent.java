@@ -33,7 +33,7 @@ public class JPanelDisplaySingleSystemEvent extends JPanel {
      * Creates new form JPanelDisplaySingleSystemEvent
      */
     public JPanelDisplaySingleSystemEvent() {
-        //Load resourcebundle
+        // Load resource bundle
         try {
             this.rb = (MecResourceBundle) ResourceBundle.getBundle(
                     ResourceBundleDialogSystemEvent.class.getName());

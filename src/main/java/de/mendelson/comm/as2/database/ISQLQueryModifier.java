@@ -8,6 +8,7 @@ package de.mendelson.comm.as2.database;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Interface for all classes that modify SQL statements
  *
@@ -17,6 +18,6 @@ package de.mendelson.comm.as2.database;
  */
 public interface ISQLQueryModifier {
 
-    public String modifyQuery(String query);
+    String modifyQuery(String query);
 
 }

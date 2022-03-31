@@ -42,6 +42,7 @@ import org.hsqldb.server.ServerConstants;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Class to start a dedicated SQL database server
  *
@@ -51,7 +52,6 @@ import org.hsqldb.server.ServerConstants;
  */
 public class DBServerHSQL implements IDBServer {
 
-    
     public static final int DB_PORT = 3336;
     /**
      * Resourcebundle to localize messages of the DB server

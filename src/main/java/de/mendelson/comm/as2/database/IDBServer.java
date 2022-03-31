@@ -8,6 +8,7 @@ package de.mendelson.comm.as2.database;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Interface for all DB Servers
  *
@@ -17,16 +18,17 @@ package de.mendelson.comm.as2.database;
  */
 public interface IDBServer {
 
+    /**
+     * Returns the product information of the database
+     */
+    DBServerInformation getDBServerInformation();
 
-    /**Returns the product information of the database*/
-    public DBServerInformation getDBServerInformation();
-
-    public void ensureServerIsRunning() throws Exception;
+    void ensureServerIsRunning() throws Exception;
     
     /**
      * Sends a shutdown signal to the DB. This makes only sense if the database
      * runs in an embedded thread
      */
-    public void shutdown();
+    void shutdown();
 
 }

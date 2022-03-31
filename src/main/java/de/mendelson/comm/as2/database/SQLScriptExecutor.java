@@ -4,6 +4,7 @@ package de.mendelson.comm.as2.database;
 import de.mendelson.comm.as2.AS2ServerVersion;
 import de.mendelson.comm.as2.server.AS2Server;
 import de.mendelson.util.ConsoleProgressBar;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,6 +34,7 @@ import java.util.logging.Logger;
 public class SQLScriptExecutor {
 
    private Logger logger = Logger.getLogger(AS2Server.SERVER_LOGGER_NAME);
+
     /**Directory where the SQL scripts are found*/
     public static final String SCRIPT_RESOURCE_CONFIG = "/sqlscript/config/";
     public static final String SCRIPT_RESOURCE_RUNTIME = "/sqlscript/runtime/";
@@ -72,7 +74,9 @@ public class SQLScriptExecutor {
         }
     }
 
-    /**Checks if the resource exist
+    /**
+     * Checks if the resource exist
+     *
      * @param resource Resource to check for existence
      */
     public boolean resourceExists(String resource) {
@@ -95,7 +99,6 @@ public class SQLScriptExecutor {
     /**Executes a SQL script to make changes to the database
      * @param resource FULL Resource of the sql script, e.g. "/sqlscript/config/script.sql"
      * @param connection connection to the database
-     *@return true if everything worked fine
      */
     public void executeScript(Connection connection, String resource) throws Exception {
         InputStream is = null;

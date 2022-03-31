@@ -17,11 +17,12 @@ package de.mendelson.comm.as2.database.migration.clientserver;
 public class HSQLDBMigrationVersionMismatchException extends Exception {
 
     public static final long serialVersionUID = 1L;
-    private int requiredVersionConfigDB = -1;
+
+    private int requiredVersionConfigDB  = -1;
     private int requiredVersionRuntimeDB = -1;
-    private int foundVersionRuntimeDB = -1;
-    private int foundVersionConfigDB = -1;
-    
+    private int foundVersionRuntimeDB    = -1;
+    private int foundVersionConfigDB     = -1;
+
     public HSQLDBMigrationVersionMismatchException() {
     }
 

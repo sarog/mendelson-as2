@@ -21,16 +21,13 @@ import de.mendelson.util.database.IDBDriverManager;
 import de.mendelson.util.security.cert.CertificateManager;
 import de.mendelson.util.security.cert.KeystoreCertificate;
 import de.mendelson.util.systemevents.notification.ResourceBundleNotification;
+
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /*
@@ -40,6 +37,7 @@ import java.util.ResourceBundle;
  * Please read and agree to all terms before using this software. Other product
  * and brand names are trademarks of their respective owners.
  */
+
 /**
  * Performs the notification for an event
  *
@@ -49,211 +47,22 @@ import java.util.ResourceBundle;
 public class SystemEventManagerImplAS2 extends SystemEventManager {
 
     private PreferencesAS2 preferences = new PreferencesAS2();
+
     /**
      * localize your output
      */
-    private MecResourceBundle rb = null;
+    private MecResourceBundle rb;
 
     /**
      * Constructor without notification data, will perform a lookup in the db
      */
     public SystemEventManagerImplAS2() {
         super();
-        //Load resourcebundle
+        // Load resourcebundle
         try {
-            this.rb = (MecResourceBundle) ResourceBundle.getBundle(
-                    ResourceBundleNotification.class.getName());
+            this.rb = (MecResourceBundle) ResourceBundle.getBundle(ResourceBundleNotification.class.getName());
         } catch (MissingResourceException e) {
             throw new RuntimeException("Oops..resource bundle " + e.getClassName() + " not found.");
-        }
-    }
-
-    public void newEventResendDetected(AS2MessageInfo newMessageInfo, AS2MessageInfo alreadyExistingMessageInfo,
-            Partner sender, Partner receiver) throws Exception {
-        String template = "template_notification_resend_detected";
-        Properties replacement = new Properties();
-        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-        replacement.setProperty("${HOST}", this.getHostname());
-        replacement.setProperty("${EXISTING_MESSAGE_INIT_TIME}", alreadyExistingMessageInfo.getInitDate().toString());
-        replacement.setProperty("${MESSAGEID}", newMessageInfo.getMessageId());
-        replacement.setProperty("${SENDER}", sender.getName());
-        replacement.setProperty("${RECEIVER}", receiver.getName());
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING,
-                SystemEvent.ORIGIN_TRANSACTION,
-                SystemEvent.TYPE_TRANSACTION_REJECTED_RESEND);
-        event.readFromNotificationTemplate(template, replacement);
-        this.storeEventToFile(event);
-    }
-
-    /**
-     * 
-     * @param messageInfo might be null if this is unknown
-     * @param sender might be null if this is unknown
-     * @param receiver might be null if this is unknown
-     * @throws Exception 
-     */
-    public void newEventPostprocessingError(String errorText, String messageId,
-            Partner sender, Partner receiver, int processType, int eventType) throws Exception{
-        String template = "template_notification_postprocessing_error";
-        Properties replacement = new Properties();
-        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-        replacement.setProperty("${HOST}", this.getHostname());
-        replacement.setProperty("${EVENT_TYPE}", ProcessingEvent.getLocalizedEventType(eventType));        
-        replacement.setProperty("${PROCESS_TYPE}", ProcessingEvent.getLocalizedProcessType(processType));        
-        replacement.setProperty("${MESSAGEID}", messageId);
-        if( errorText == null ){
-            errorText = "[null]";
-        }
-        replacement.setProperty("${ERROR_MESSAGE}", errorText);
-        String senderName = "UNKNOWN";
-        String receiverName = "UNKNOWN";        
-        if( sender != null ){
-            senderName = sender.getName();
-        }
-        if( receiver != null ){
-            receiverName = receiver.getName();
-        }
-        replacement.setProperty("${SENDER}", senderName);
-        replacement.setProperty("${RECEIVER}", receiverName);
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING,
-                SystemEvent.ORIGIN_TRANSACTION,
-                SystemEvent.TYPE_POST_PROCESSING);
-        event.readFromNotificationTemplate(template, replacement);
-        this.storeEventToFile(event);
-    }
-    
-    
-    /**
-     * The system has imported a new certificate into the SSL keystore. The SSL
-     * connector has to be restarted before these changes are taken
-     */
-    public void newEventSSLCertificateAddedByCEM(Partner partner, KeystoreCertificate cert) throws Exception {
-        String template = "template_notification_cem_ssl_cert_added";
-        Properties replacement = new Properties();
-        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-        replacement.setProperty("${HOST}", this.getHostname());
-        replacement.setProperty("${PARTNER}", partner.getName());
-        StringBuilder techInfo = new StringBuilder();
-        String alias = cert.getAlias();
-        techInfo.append(alias).append(":\n");
-        for (int i = 0; i < alias.length() + 1; i++) {
-            techInfo.append("-");
-        }
-        techInfo.append("\n");
-        techInfo.append(cert.getInfo());
-        techInfo.append("\n");
-        replacement.setProperty("${CERTIFICATETECHDETAILS}", techInfo.toString());
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_CERTIFICATE_EXCHANGE_ANY);
-        event.readFromNotificationTemplate(template, replacement);
-        this.storeEventToFile(event);
-    }
-
-    /**
-     * The system has imported a new certificate into the SSL keystore. The SSL
-     * connector has to be restarted before these changes are taken
-     */
-    public void newEventEncSignCertificateAddedByCEM(Partner partner, KeystoreCertificate cert) throws Exception {
-        String template = "template_notification_cem_enc_sign_cert_added";
-        Properties replacement = new Properties();
-        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-        replacement.setProperty("${HOST}", this.getHostname());
-        replacement.setProperty("${PARTNER}", partner.getName());
-        StringBuilder techInfo = new StringBuilder();
-        String alias = cert.getAlias();
-        techInfo.append(alias).append(":\n");
-        for (int i = 0; i < alias.length() + 1; i++) {
-            techInfo.append("-");
-        }
-        techInfo.append("\n");
-        techInfo.append(cert.getInfo());
-        techInfo.append("\n");
-        replacement.setProperty("${CERTIFICATETECHDETAILS}", techInfo.toString());
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_CERTIFICATE_EXCHANGE_ANY);
-        event.readFromNotificationTemplate(template, replacement);
-        this.storeEventToFile(event);
-    }
-
-    /**
-     * This is just a check routine - if the send quota has been exceeded
-     *
-     * @param partner
-     */
-    public void newEventPartnerSendQuotaExceededCheck(Partner localStation, Partner partner,
-            IDBDriverManager dbDriverManager, 
-            Connection configConnection, Connection runtimeConnection) {
-        StatisticOverviewEntry entry = null;
-        QuotaAccessDB access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
-        entry = access.getStatisticOverview(
-                localStation.getAS2Identification(), partner.getAS2Identification());
-        if (partner.isNotifySendEnabled() && partner.getNotifySend() == entry.getSendMessageCount()) {
-            String template = "template_notification_sendquota_exceeded";
-            Properties replacement = new Properties();
-            replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-            replacement.setProperty("${HOST}", this.getHostname());
-            replacement.setProperty("${PARTNER}", partner.getName());
-            replacement.setProperty("${QUOTA}", String.valueOf(partner.getNotifySend()));
-            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_SYSTEM,
-                    SystemEvent.TYPE_QUOTA_SEND_EXCEEDED);
-            try {
-                event.readFromNotificationTemplate(template, replacement);
-                this.storeEventToFile(event);
-            } catch (Exception e) {
-                return;
-            }
-        }
-    }
-
-    /**
-     * Sends a notification if the receive quota has been exceeded
-     *
-     * @param partner
-     */
-    public void newEventPartnerReceiveQuotaExceededCheck(Partner localStation, Partner partner,
-            IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
-        StatisticOverviewEntry entry = null;
-        QuotaAccessDB access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
-        entry = access.getStatisticOverview(
-                localStation.getAS2Identification(), partner.getAS2Identification());
-        if (partner.isNotifyReceiveEnabled() && partner.getNotifyReceive() == entry.getReceivedMessageCount()) {
-            String template = "template_notification_receivequota_exceeded";
-            Properties replacement = new Properties();
-            replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-            replacement.setProperty("${HOST}", this.getHostname());
-            replacement.setProperty("${PARTNER}", partner.getName());
-            replacement.setProperty("${QUOTA}", String.valueOf(partner.getNotifyReceive()));
-            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_SYSTEM,
-                    SystemEvent.TYPE_QUOTA_RECEIVE_EXCEEDED);
-            try {
-                event.readFromNotificationTemplate(template, replacement);
-                this.storeEventToFile(event);
-            } catch (Exception e) {
-                return;
-            }
-        }
-    }
-
-    /**
-     * Sends a notification if an outbound connection problem occured
-     *
-     * @param partner
-     */
-    public void newEventConnectionProblem(Partner receiver, AS2Info as2Info, String errorMessage, String hint) {
-        String template = "template_notification_connectionproblem";
-        Properties replacement = new Properties();
-        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
-        replacement.setProperty("${HOST}", SystemEventManagerImplAS2.getHostname());
-        replacement.setProperty("${PARTNER}", receiver.getName());
-        replacement.setProperty("${URL}", receiver.getURL());
-        replacement.setProperty("${MESSAGE}", errorMessage);
-        replacement.setProperty("${MESSAGE_ID}", as2Info.getMessageId());
-        replacement.setProperty("${HINT}", hint);
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_ERROR, SystemEvent.ORIGIN_TRANSACTION,
-                SystemEvent.TYPE_CONNECTIVITY_ANY);
-        try {
-            event.readFromNotificationTemplate(template, replacement);
-            this.storeEventToFile(event);
-        } catch (Exception e) {
-            return;
         }
     }
 
@@ -285,6 +94,14 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
 
     /**
      * Convenience method to send a notification to the administrator that
+     * something unexpected happened to the system
+     */
+    public static void systemFailure(Throwable exception, int eventType) {
+        systemFailure(exception, eventType, null);
+    }
+
+    /**
+     * Convenience method to send a notification to the administrator that
      * something unexpected happened to the system. This is for a SQL related
      * problem and will display additional information about SQL parameters of
      * the query of a statement
@@ -294,15 +111,15 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
             return;
         }
         try {
-            String template = "template_notification_systemproblem";
+            String     template    = "template_notification_systemproblem";
             Properties replacement = new Properties();
             replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
             replacement.setProperty("${HOST}", getHostname());
             String exceptionCategory = exception.getClass().getName().substring(exception.getClass().getName().lastIndexOf(".") + 1);
             replacement.setProperty("${CATEGORY}", exceptionCategory);
             replacement.setProperty("${MESSAGE}", exception.getMessage());
-            StackTraceElement[] trace = exception.getStackTrace();
-            StringBuilder builder = new StringBuilder();
+            StackTraceElement[] trace   = exception.getStackTrace();
+            StringBuilder       builder = new StringBuilder();
             for (StackTraceElement element : trace) {
                 builder.append(element.toString());
                 builder.append("\n");
@@ -327,16 +144,179 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      * Convenience method to send a notification to the administrator that
      * something unexpected happened to the system
      */
-    public static void systemFailure(Throwable exception, int eventType) {
-        systemFailure(exception, eventType, null);
+    public static void systemFailure(Throwable exception) {
+        systemFailure(exception, SystemEvent.TYPE_OTHER, null);
+    }
+
+    public void newEventResendDetected(AS2MessageInfo newMessageInfo, AS2MessageInfo alreadyExistingMessageInfo, Partner sender, Partner receiver) throws Exception {
+        String     template    = "template_notification_resend_detected";
+        Properties replacement = new Properties();
+        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+        replacement.setProperty("${HOST}", this.getHostname());
+        replacement.setProperty("${EXISTING_MESSAGE_INIT_TIME}", alreadyExistingMessageInfo.getInitDate().toString());
+        replacement.setProperty("${MESSAGEID}", newMessageInfo.getMessageId());
+        replacement.setProperty("${SENDER}", sender.getName());
+        replacement.setProperty("${RECEIVER}", receiver.getName());
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_TRANSACTION_REJECTED_RESEND);
+        event.readFromNotificationTemplate(template, replacement);
+        this.storeEventToFile(event);
     }
 
     /**
-     * Convenience method to send a notification to the administrator that
-     * something unexpected happened to the system
+     * @param messageInfo might be null if this is unknown
+     * @param sender      might be null if this is unknown
+     * @param receiver    might be null if this is unknown
+     * @throws Exception
      */
-    public static void systemFailure(Throwable exception) {
-        systemFailure(exception, SystemEvent.TYPE_OTHER, null);
+    public void newEventPostprocessingError(String errorText, String messageId, Partner sender, Partner receiver, int processType, int eventType) throws Exception {
+        String template = "template_notification_postprocessing_error";
+
+        Properties replacement = new Properties();
+        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+        replacement.setProperty("${HOST}", this.getHostname());
+        replacement.setProperty("${EVENT_TYPE}", ProcessingEvent.getLocalizedEventType(eventType));
+        replacement.setProperty("${PROCESS_TYPE}", ProcessingEvent.getLocalizedProcessType(processType));
+        replacement.setProperty("${MESSAGEID}", messageId);
+        if (errorText == null) {
+            errorText = "[null]";
+        }
+        replacement.setProperty("${ERROR_MESSAGE}", errorText);
+        String senderName   = "UNKNOWN";
+        String receiverName = "UNKNOWN";
+        if (sender != null) {
+            senderName = sender.getName();
+        }
+        if (receiver != null) {
+            receiverName = receiver.getName();
+        }
+        replacement.setProperty("${SENDER}", senderName);
+        replacement.setProperty("${RECEIVER}", receiverName);
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_POST_PROCESSING);
+        event.readFromNotificationTemplate(template, replacement);
+        this.storeEventToFile(event);
+    }
+
+    /**
+     * The system has imported a new certificate into the SSL keystore. The SSL
+     * connector has to be restarted before these changes are taken
+     */
+    public void newEventSSLCertificateAddedByCEM(Partner partner, KeystoreCertificate cert) throws Exception {
+        String template = "template_notification_cem_ssl_cert_added";
+
+        Properties replacement = new Properties();
+        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+        replacement.setProperty("${HOST}", this.getHostname());
+        replacement.setProperty("${PARTNER}", partner.getName());
+        StringBuilder techInfo = new StringBuilder();
+        String        alias    = cert.getAlias();
+        techInfo.append(alias).append(":\n");
+        for (int i = 0; i < alias.length() + 1; i++) {
+            techInfo.append("-");
+        }
+        techInfo.append("\n");
+        techInfo.append(cert.getInfo());
+        techInfo.append("\n");
+        replacement.setProperty("${CERTIFICATETECHDETAILS}", techInfo.toString());
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_CERTIFICATE_EXCHANGE_ANY);
+        event.readFromNotificationTemplate(template, replacement);
+        this.storeEventToFile(event);
+    }
+
+    /**
+     * The system has imported a new certificate into the SSL keystore. The SSL
+     * connector has to be restarted before these changes are taken
+     */
+    public void newEventEncSignCertificateAddedByCEM(Partner partner, KeystoreCertificate cert) throws Exception {
+        String template = "template_notification_cem_enc_sign_cert_added";
+
+        Properties replacement = new Properties();
+        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+        replacement.setProperty("${HOST}", this.getHostname());
+        replacement.setProperty("${PARTNER}", partner.getName());
+        StringBuilder techInfo = new StringBuilder();
+        String        alias    = cert.getAlias();
+        techInfo.append(alias).append(":\n");
+        for (int i = 0; i < alias.length() + 1; i++) {
+            techInfo.append("-");
+        }
+        techInfo.append("\n");
+        techInfo.append(cert.getInfo());
+        techInfo.append("\n");
+        replacement.setProperty("${CERTIFICATETECHDETAILS}", techInfo.toString());
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_CERTIFICATE_EXCHANGE_ANY);
+        event.readFromNotificationTemplate(template, replacement);
+        this.storeEventToFile(event);
+    }
+
+    /**
+     * This is just a check routine - if the send quota has been exceeded
+     */
+    public void newEventPartnerSendQuotaExceededCheck(Partner localStation, Partner partner, IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
+        StatisticOverviewEntry entry  = null;
+        QuotaAccessDB          access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        entry = access.getStatisticOverview(localStation.getAS2Identification(), partner.getAS2Identification());
+        if (partner.isNotifySendEnabled() && partner.getNotifySend() == entry.getSendMessageCount()) {
+            String     template    = "template_notification_sendquota_exceeded";
+            Properties replacement = new Properties();
+            replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+            replacement.setProperty("${HOST}", this.getHostname());
+            replacement.setProperty("${PARTNER}", partner.getName());
+            replacement.setProperty("${QUOTA}", String.valueOf(partner.getNotifySend()));
+            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_SYSTEM, SystemEvent.TYPE_QUOTA_SEND_EXCEEDED);
+            try {
+                event.readFromNotificationTemplate(template, replacement);
+                this.storeEventToFile(event);
+            } catch (Exception e) {
+                return;
+            }
+        }
+    }
+
+    /**
+     * Sends a notification if the receive quota has been exceeded
+     */
+    public void newEventPartnerReceiveQuotaExceededCheck(Partner localStation, Partner partner, IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
+        StatisticOverviewEntry entry  = null;
+        QuotaAccessDB          access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        entry = access.getStatisticOverview(localStation.getAS2Identification(), partner.getAS2Identification());
+        if (partner.isNotifyReceiveEnabled() && partner.getNotifyReceive() == entry.getReceivedMessageCount()) {
+            String     template    = "template_notification_receivequota_exceeded";
+            Properties replacement = new Properties();
+            replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+            replacement.setProperty("${HOST}", this.getHostname());
+            replacement.setProperty("${PARTNER}", partner.getName());
+            replacement.setProperty("${QUOTA}", String.valueOf(partner.getNotifyReceive()));
+            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_SYSTEM, SystemEvent.TYPE_QUOTA_RECEIVE_EXCEEDED);
+            try {
+                event.readFromNotificationTemplate(template, replacement);
+                this.storeEventToFile(event);
+            } catch (Exception e) {
+                return;
+            }
+        }
+    }
+
+    /**
+     * Sends a notification if an outbound connection problem occured
+     */
+    public void newEventConnectionProblem(Partner receiver, AS2Info as2Info, String errorMessage, String hint) {
+        String template = "template_notification_connectionproblem";
+
+        Properties replacement = new Properties();
+        replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
+        replacement.setProperty("${HOST}", SystemEventManagerImplAS2.getHostname());
+        replacement.setProperty("${PARTNER}", receiver.getName());
+        replacement.setProperty("${URL}", receiver.getURL());
+        replacement.setProperty("${MESSAGE}", errorMessage);
+        replacement.setProperty("${MESSAGE_ID}", as2Info.getMessageId());
+        replacement.setProperty("${HINT}", hint);
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_ERROR, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_CONNECTIVITY_ANY);
+        try {
+            event.readFromNotificationTemplate(template, replacement);
+            this.storeEventToFile(event);
+        } catch (Exception e) {
+            return;
+        }
     }
 
     /**
@@ -344,21 +324,18 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      *
      * @param partner
      */
-    public void newEventPartnerSendReceiveQuotaExceededCheck(Partner localStation, Partner partner,
-            IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
-        StatisticOverviewEntry entry = null;
-        QuotaAccessDB access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
-        entry = access.getStatisticOverview(
-                localStation.getAS2Identification(), partner.getAS2Identification());
+    public void newEventPartnerSendReceiveQuotaExceededCheck(Partner localStation, Partner partner, IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
+        StatisticOverviewEntry entry  = null;
+        QuotaAccessDB          access = new QuotaAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        entry = access.getStatisticOverview(localStation.getAS2Identification(), partner.getAS2Identification());
         if (partner.isNotifySendReceiveEnabled() && partner.getNotifySendReceive() == entry.getSendMessageCount() + entry.getReceivedMessageCount()) {
-            String template = "template_notification_sendreceivequota_exceeded";
+            String     template    = "template_notification_sendreceivequota_exceeded";
             Properties replacement = new Properties();
             replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
             replacement.setProperty("${HOST}", this.getHostname());
             replacement.setProperty("${PARTNER}", partner.getName());
             replacement.setProperty("${QUOTA}", String.valueOf(partner.getNotifyReceive()));
-            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_SYSTEM,
-                    SystemEvent.TYPE_QUOTA_SEND_RECEIVE_EXCEEDED);
+            SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_WARNING, SystemEvent.ORIGIN_SYSTEM, SystemEvent.TYPE_QUOTA_SEND_RECEIVE_EXCEEDED);
             try {
                 event.readFromNotificationTemplate(template, replacement);
                 this.storeEventToFile(event);
@@ -398,14 +375,13 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      */
     public void newEventCEMRequestReceived(Partner initiator, String requestId) throws Exception {
         String templateName = "template_notification_cem_request_received";
+
         Properties replacement = new Properties();
         replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
         replacement.setProperty("${HOST}", this.getHostname());
         replacement.setProperty("${PARTNER}", initiator.getName());
         replacement.setProperty("${REQUEST_ID}", requestId);
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO,
-                SystemEvent.ORIGIN_TRANSACTION,
-                SystemEvent.TYPE_CERTIFICATE_EXCHANGE_REQUEST_RECEIVED);
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_TRANSACTION, SystemEvent.TYPE_CERTIFICATE_EXCHANGE_REQUEST_RECEIVED);
         event.readFromNotificationTemplate(templateName, replacement);
         this.storeEventToFile(event);
     }
@@ -415,15 +391,15 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
      */
     public void newEventCertificateChangeShouldHappenNowByCEM(CertificateManager manager, Partner partner, int category) throws Exception {
         String templateName = "template_notification_cem_cert_changed";
+
         Properties replacement = new Properties();
         replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
         replacement.setProperty("${HOST}", this.getHostname());
         replacement.setProperty("${PARTNER}", partner.getName());
-        String description = partner.getPartnerCertificateInformationList().getCertificatePurposeDescription(
-                manager, partner, category);
+        String description = partner.getPartnerCertificateInformationList().getCertificatePurposeDescription(manager, partner, category);
         replacement.setProperty("${CERTIFICATEDESCRIPTION}", description);
-        StringBuilder techInfo = new StringBuilder();
-        PartnerCertificateInformation info = partner.getCertificateInformation(category);
+        StringBuilder                 techInfo = new StringBuilder();
+        PartnerCertificateInformation info     = partner.getCertificateInformation(category);
         if (info != null) {
             KeystoreCertificate certificate = manager.getKeystoreCertificateByFingerprintSHA1(info.getFingerprintSHA1());
             if (certificate != null) {
@@ -438,38 +414,22 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
             }
         }
         replacement.setProperty("${CERTIFICATETECHDETAILS}", techInfo.toString());
-        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO,
-                SystemEvent.ORIGIN_SYSTEM,
-                SystemEvent.TYPE_CERTIFICATE_EXCHANGE_ANY);
+        SystemEvent event = new SystemEvent(SystemEvent.SEVERITY_INFO, SystemEvent.ORIGIN_SYSTEM, SystemEvent.TYPE_CERTIFICATE_EXCHANGE_ANY);
         event.readFromNotificationTemplate(templateName, replacement);
         this.storeEventToFile(event);
     }
 
     /**
-     * Returns the message info object a a passed message id from the database
-     */
-    private AS2MessageInfo lookupMessageInfo(String messageId, IDBDriverManager dbDriverManager, 
-            Connection configConnection, Connection runtimeConnection) throws Exception {
-        MessageAccessDB messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
-        AS2MessageInfo info = messageAccess.getLastMessageEntry(messageId);
-        if (info == null) {
-            throw new Exception("No message entry found for " + messageId);
-        }
-        return (info);
-    }
-
-    /**
      * Sends an email that an error occurred in a transaction
      */
-    public void newEventTransactionError(String messageId, IDBDriverManager dbDriverManager, 
-            Connection configConnection, Connection runtimeConnection) {
+    public void newEventTransactionError(String messageId, IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) {
         AS2MessageInfo info = null;
         try {
             //get additional properties for the notification eMail
-            String senderName = "Unknown";
+            String senderName   = "Unknown";
             String receiverName = "Unknown";
             info = this.lookupMessageInfo(messageId, dbDriverManager, configConnection, runtimeConnection);
-            //lookup partner            
+            //lookup partner
             PartnerAccessDB partnerAccess = new PartnerAccessDB(dbDriverManager);
             if (info.getSenderId() != null) {
                 Partner sender = partnerAccess.getPartner(info.getSenderId());
@@ -483,10 +443,10 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
                     receiverName = receiver.getName();
                 }
             }
-            LogAccessDB logAccess = new LogAccessDB(dbDriverManager);
-            StringBuilder log = new StringBuilder();
-            List<LogEntry> entries = logAccess.getLog(runtimeConnection, messageId);
-            DateFormat format = DateFormat.getDateTimeInstance();
+            LogAccessDB    logAccess = new LogAccessDB(dbDriverManager);
+            StringBuilder  log       = new StringBuilder();
+            List<LogEntry> entries   = logAccess.getLog(runtimeConnection, messageId);
+            DateFormat     format    = DateFormat.getDateTimeInstance();
             for (LogEntry entry : entries) {
                 if (log.length() > 0) {
                     log.append("\n");
@@ -494,8 +454,8 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
                 log.append("[").append(format.format(new Date(entry.getMillis()))).append("] ");
                 log.append(entry.getMessage());
             }
-            String templateName = "template_notification_transaction_error";
-            Properties replacement = new Properties();
+            String     templateName = "template_notification_transaction_error";
+            Properties replacement  = new Properties();
             replacement.setProperty("${PRODUCTNAME}", AS2ServerVersion.getProductName());
             replacement.setProperty("${HOST}", this.getHostname());
             replacement.setProperty("${MESSAGEID}", messageId);
@@ -515,9 +475,20 @@ public class SystemEventManagerImplAS2 extends SystemEventManager {
         }
     }
 
+    /**
+     * Returns the message info object a a passed message id from the database
+     */
+    private AS2MessageInfo lookupMessageInfo(String messageId, IDBDriverManager dbDriverManager, Connection configConnection, Connection runtimeConnection) throws Exception {
+        MessageAccessDB messageAccess = new MessageAccessDB(dbDriverManager, configConnection, runtimeConnection);
+        AS2MessageInfo  info          = messageAccess.getLastMessageEntry(messageId);
+        if (info == null) {
+            throw new Exception("No message entry found for " + messageId);
+        }
+        return (info);
+    }
+
     @Override
     public Path getStorageMainDir() {
         return (AS2Server.LOG_DIR);
     }
-
 }

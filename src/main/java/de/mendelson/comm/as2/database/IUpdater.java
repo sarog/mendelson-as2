@@ -1,5 +1,6 @@
 package de.mendelson.comm.as2.database;
-import java.sql.*;
+
+import java.sql.Connection;
 /*
  * Copyright (C) mendelson-e-commerce GmbH Berlin Germany
  *
@@ -7,20 +8,26 @@ import java.sql.*;
  * Please read and agree to all terms before using this software.
  * Other product and brand names are trademarks of their respective owners.
  */
+
 /**
  * Interface that has to be included for all update classes in the
  * sql update directory
+ *
  * @author S.Heller
  * @version $Revision: 1 $
  * @since build 128
  */
-public interface IUpdater{
+public interface IUpdater {
 
-    /**Return if the update was successfully*/
-    public boolean updateWasSuccessfully();
-    
-    /**Starts the update process*/
-    public void startUpdate( Connection connection ) throws Exception;
-    
+    /**
+     * Return if the update was successfully
+     */
+    boolean updateWasSuccessfully();
+
+    /**
+     * Starts the update process
+     */
+    void startUpdate(Connection connection) throws Exception;
+
 }
 

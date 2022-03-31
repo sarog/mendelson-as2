@@ -1,9 +1,9 @@
 //$Header: /as2/de/mendelson/comm/as2/database/migration/clientserver/HSQLDBPartnerResponse.java 1     28.07.21 9:08 Heller $
 package de.mendelson.comm.as2.database.migration.clientserver;
 
-import de.mendelson.comm.as2.configurationcheck.ConfigurationIssue;
 import de.mendelson.comm.as2.partner.Partner;
 import de.mendelson.util.clientserver.messages.ClientServerResponse;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.List;
 public class HSQLDBPartnerResponse extends ClientServerResponse implements Serializable {
 
     public static final long serialVersionUID = 1L;
+
     private List<Partner> partnerList = new ArrayList<Partner>();
 
     public HSQLDBPartnerResponse(HSQLDBPartnerRequest request) {
@@ -36,7 +37,7 @@ public class HSQLDBPartnerResponse extends ClientServerResponse implements Seria
     }
 
     public void addPartner(List<Partner> partnerList) {
-        this.partnerList.addAll( partnerList);
+        this.partnerList.addAll(partnerList);
     }
 
     public List<Partner> getPartner() {
