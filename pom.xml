@@ -171,6 +171,7 @@
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
                     <includeEmptyDirs>true</includeEmptyDirs>
                     <outputDirectory>${assembly-directory}</outputDirectory>
@@ -207,7 +208,7 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <includes>**</includes>
-                                    <excludes>META-INF/**</excludes>
+                                    <excludes>META-INF/**,demo-base/**</excludes>
                                     <outputDirectory>${root-dist-directory}</outputDirectory>
                                 </artifactItem>
                                 <!--
@@ -262,7 +263,7 @@
                                     <outputDirectory>${assembly-directory}/webapps</outputDirectory>
                                     <destFileName>webas2.war</destFileName>
                                 </artifactItem>
-                                &lt;!&ndash;<artifactItem>
+                                <artifactItem>
                                     <groupId>org.eclipse.jetty</groupId>
                                     <artifactId>jetty-websocket</artifactId>
                                     <version>${jettyVersion}</version>
@@ -305,6 +306,12 @@
             <version>${jettyVersion}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-xml</artifactId>
+            <version>${jettyVersion}</version>
+        </dependency>
+
         <!-- todo: replace with jetty-home on 9.4.x upgrade -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -319,26 +326,6 @@
                 <exclusion>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>test-jetty-webapp</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>test-*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>example-*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>apache-*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.fcgi</groupId>
-                    <artifactId>fcgi-server</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.spdy</groupId>
-                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -439,14 +426,14 @@
             <version>${vaadinVersion}</version>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client</artifactId>
             <version>${vaadinVersion}</version>
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>${flatlafVersion}</version>
@@ -465,12 +452,24 @@
             <artifactId>flatlaf-swingx</artifactId>
             <version>${flatlafVersion}</version>
             <scope>runtime</scope>
-        </dependency>-->
+        </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
             <version>2.8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.15</version>
         </dependency>
 
         <dependency>
@@ -481,10 +480,16 @@
 
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-all</artifactId>
             <version>1.13</version>
             <type>pom</type>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -496,6 +501,12 @@
             <groupId>com.l2fprod.common</groupId>
             <artifactId>l2fprod-common-buttonbar</artifactId>
             <version>6.9.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.intarsys.opensource</groupId>
+            <artifactId>isrt</artifactId>
+            <version>4.8</version>
         </dependency>
 
         <dependency>
@@ -529,7 +540,7 @@
             <version>1.0.0</version>
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jewt4</artifactId>
             <version>1.0.0</version>
@@ -539,7 +550,7 @@
             <groupId>com.oracle</groupId>
             <artifactId>icebrowser</artifactId>
             <version>1.0.0</version>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 
